@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Moreau Baptiste — Game Developer</title>
+<meta name="description" content="Portfolio de Moreau Baptiste, Game Developer (Unity / Unreal), étudiant en Master. Projets, stack technique et contact." />
+
+<!-- ============================================================
+     POLICES (chargées en ligne par le navigateur)
+     - Sora        : titres / display
+     - Inter       : corps de texte
+     - JetBrains Mono : libellés "debug", clin d'oeil JetBrains/Rider
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   1. TOKENS — change la couleur d'accent ici si tu veux
+   ============================================================ */
+:root{
+  --bg:        #0E1116;   /* fond viewport, presque noir bleuté */
+  --bg-2:      #11151B;
+  --surface:   #161A21;   /* cartes */
+  --surface-2: #1B212A;
+  --line:      #252B36;   /* filets / bordures */
+  --text:      #E8EAED;
+  --muted:     #8A93A3;
+  --muted-2:   #5C6573;
+  --accent:    #2A52BE;   /* bleu foncé (accent principal) */
+  --accent-dim:#2A52BE22;
+  --cyan:      #57D7E6;   /* accent froid secondaire, très parcimonieux */
+
+  --maxw: 1120px;
+  --radius: 14px;
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter', system-ui, sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+a{ color:inherit; text-decoration:none; }
+img, video{ display:block; max-width:100%; }
+
+::selection{ background:var(--accent); color:#0B0D11; }
+
+:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+  border-radius:4px;
+}
+
+.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:24px; }
+
+.mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+/* ============================================================
+   3. FOND ANIMÉ (canvas plein écran, fixe)
+   ============================================================ */
+#field{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+/* grille en perspective douce, dérive en parallaxe au scroll */
+.grid-bg{
+  position:fixed; inset:-10% 0; z-index:1; pointer-events:none;
+  background-image:
+    linear-gradient(to right,  rgba(42,82,190,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42,82,190,.07) 1px, transparent 1px);
+  background-size:48px 48px;
+  background-position:0 0;
+  -webkit-mask-image:radial-gradient(120% 85% at 50% 28%, #000 22%, transparent 78%);
+          mask-image:radial-gradient(120% 85% at 50% 28%, #000 22%, transparent 78%);
+  will-change:background-position;
+}
+/* voile pour garder le texte lisible par-dessus la simulation */
+.field-veil{
+  position:fixed; inset:0; z-index:2; pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% 0%, transparent 40%, var(--bg) 100%),
+    linear-gradient(180deg, rgba(14,17,22,.30) 0%, rgba(14,17,22,.55) 60%, var(--bg) 100%);
+}
+/* tout le contenu passe au-dessus du fond */
+.page{ position:relative; z-index:3; }
+
+@media (prefers-reduced-motion: reduce){
+  .grid-bg{ will-change:auto; }
+}
+
+/* ============================================================
+   4. BARRE DE NAV ("debug bar")
+   ============================================================ */
+.nav{
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:blur(10px);
+  background:rgba(14,17,22,.72);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{ display:flex; align-items:center; gap:24px; height:60px; }
+.brand{
+  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
+  font-size:16px; display:flex; align-items:center; gap:9px;
+}
+.brand .dot{ width:9px; height:9px; border-radius:2px; background:var(--accent);
+  box-shadow:0 0 12px var(--accent); }
+
+.nav-links{ display:flex; gap:4px; margin-left:auto; }
+.nav-links a{
+  font-size:13.5px; color:var(--muted); padding:7px 12px; border-radius:8px;
+  transition:color .2s var(--ease), background .2s var(--ease);
+}
+.nav-links a:hover{ color:var(--text); background:var(--surface); }
+.nav-links a.active{ color:var(--text); }
+.nav-links a.active::after{
+  content:''; display:block; height:2px; margin-top:5px; border-radius:2px;
+  background:var(--accent);
+}
+
+/* HUD : libellé build + fps + entités */
+.hud{
+  margin-left:18px; font-size:11.5px; color:var(--muted-2);
+  display:flex; gap:14px; align-items:center; white-space:nowrap;
+}
+.hud b{ color:var(--accent); font-weight:500; }
+
+.burger{
+  display:none; margin-left:auto; width:40px; height:40px; border:1px solid var(--line);
+  background:var(--surface); border-radius:10px; color:var(--text); cursor:pointer;
+  align-items:center; justify-content:center;
+}
+
+@media (max-width:760px){
+  .nav-links{
+    position:absolute; top:60px; left:0; right:0; flex-direction:column; gap:0;
+    background:rgba(14,17,22,.96); border-bottom:1px solid var(--line); padding:8px;
+    display:none;
+  }
+  .nav-links.open{ display:flex; }
+  .nav-links a{ padding:12px; }
+  .nav-links a.active::after{ display:none; }
+  .hud{ display:none; }
+  .burger{ display:flex; }
+}
+
+/* ============================================================
+   5. HERO
+   ============================================================ */
+.hero{ padding:120px 0 96px; }
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:15px; color:var(--accent);
+  letter-spacing:.04em; margin-bottom:22px;
+}
+.eyebrow::before{ content:'// '; color:var(--muted-2); }
+
+.hero h1{
+  font-family:'Sora',sans-serif; font-weight:800; letter-spacing:-.03em;
+  font-size:clamp(42px, 8vw, 84px); line-height:.98; margin-bottom:20px;
+}
+.hero h1 .accent{ color:var(--accent); }
+
+.hero .lead{
+  font-size:clamp(17px,2.4vw,21px); color:var(--muted); max-width:620px;
+  margin-bottom:36px;
+}
+
+.cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+.btn{
+  font-family:'Sora',sans-serif; font-weight:600; font-size:14.5px;
+  padding:13px 22px; border-radius:11px; cursor:pointer; border:1px solid transparent;
+  transition:transform .15s var(--ease), background .2s var(--ease), border-color .2s var(--ease);
+  display:inline-flex; align-items:center; gap:9px;
+}
+.btn:hover{ transform:translateY(-2px); }
+.btn-primary{ background:var(--accent); color:#0B0D11; }
+.btn-primary:hover{ background:#3a68da; }
+.btn-ghost{ background:transparent; color:var(--text); border-color:var(--line); }
+.btn-ghost:hover{ border-color:var(--accent); }
+
+/* ============================================================
+   6. SECTIONS génériques
+   ============================================================ */
+.section{ padding:96px 0; border-top:1px solid var(--line); }
+.section-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:48px; }
+.section-num{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent);
+}
+.section-head h2{
+  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
+  font-size:clamp(26px,4vw,38px);
+}
+
+/* ============================================================
+   7. PROJETS
+   ============================================================ */
+.projects{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
+.project.featured{ grid-column:1 / -1; }
+
+.project{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  overflow:hidden; display:flex; flex-direction:column;
+  transition:border-color .25s var(--ease), transform .25s var(--ease);
+}
+.project:hover{ border-color:#37404f; transform:translateY(-3px); }
+
+.project.featured{ flex-direction:row; }
+@media (max-width:760px){ .project.featured{ flex-direction:column; } }
+
+.media{
+  position:relative; aspect-ratio:16/9; background:var(--surface-2);
+  border-bottom:1px solid var(--line); overflow:hidden;
+}
+.project.featured .media{
+  flex:1 1 56%; border-bottom:none; border-right:1px solid var(--line); aspect-ratio:auto;
+}
+@media (max-width:760px){
+  .project.featured .media{ border-right:none; border-bottom:1px solid var(--line); aspect-ratio:16/9; }
+}
+.media img, .media video{ width:100%; height:100%; object-fit:cover; }
+
+/* emplacement média vide (à remplacer par ton gif/mp4/png) */
+.media-empty{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:8px; color:var(--muted-2);
+  background:
+    repeating-linear-gradient(45deg, #181d25 0 12px, #161a21 12px 24px);
+}
+.media-empty .mono{ font-size:12px; }
+.media-empty svg{ opacity:.5; }
+
+.body{ padding:24px; display:flex; flex-direction:column; gap:14px; flex:1; }
+.project.featured .body{ flex:1 1 44%; justify-content:center; gap:16px; }
+
+.role{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted);
+  letter-spacing:.03em; text-transform:uppercase;
+}
+/* partie surlignée du rôle (ex. "Gameplay Programmer") */
+.role .hl{
+  color:var(--text); background:var(--accent-dim);
+  border:1px solid var(--accent); border-radius:5px; padding:1px 6px;
+}
+.project h3{ font-family:'Sora',sans-serif; font-weight:700; font-size:21px; letter-spacing:-.01em; }
+.project .note{ color:var(--muted); font-size:14.5px; }
+
+.tags{ display:flex; flex-wrap:wrap; gap:7px; margin-top:2px; }
+.tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted);
+  padding:4px 9px; border:1px solid var(--line); border-radius:6px; background:var(--bg-2);
+}
+/* tag mis en avant : ajoute hot:true dans les données du projet */
+.tag.hot{
+  color:var(--text); border-color:var(--accent); background:var(--accent-dim);
+}
+
+.links{ display:flex; gap:18px; margin-top:auto; padding-top:6px; }
+.links a{
+  font-size:13.5px; font-weight:600; color:var(--text); display:inline-flex; align-items:center; gap:6px;
+  border-bottom:1px solid transparent; transition:color .2s var(--ease), border-color .2s var(--ease);
+}
+.links a:hover{ color:var(--accent); border-color:var(--accent); }
+.links a.muted{ color:var(--muted); }
+.links a.muted:hover{ color:var(--accent); }
+
+/* ============================================================
+   8. SKILLS (lecture type "debug readout")
+   ============================================================ */
+.skills{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.skill-col{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px;
+}
+.skill-col h4{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent);
+  text-transform:uppercase; letter-spacing:.05em; margin-bottom:16px;
+}
+.skill-col ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
+.skill-col li{ font-size:15px; display:flex; align-items:center; gap:10px; }
+.skill-col li::before{ content:'▸'; color:var(--muted-2); font-size:12px; }
+
+/* ============================================================
+   9. ABOUT
+   ============================================================ */
+.about{ display:grid; grid-template-columns:200px 1fr; gap:40px; align-items:start; }
+.avatar{
+  aspect-ratio:1; border-radius:var(--radius); border:1px solid var(--line);
+  background:var(--surface-2); overflow:hidden; display:flex; align-items:center; justify-content:center;
+  color:var(--muted-2);
+}
+.avatar img{ width:100%; height:100%; object-fit:cover; }
+.about-text p{ color:var(--muted); margin-bottom:16px; max-width:62ch; }
+.about-text p strong{ color:var(--text); font-weight:600; }
+@media (max-width:680px){ .about{ grid-template-columns:1fr; } .avatar{ max-width:160px; } }
+
+/* ============================================================
+   10. CONTACT
+   ============================================================ */
+.contact-card{
+  background:linear-gradient(180deg,var(--surface),var(--bg-2));
+  border:1px solid var(--line); border-radius:var(--radius); padding:48px;
+  text-align:center;
+}
+.contact-card h2{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(24px,4vw,34px); margin-bottom:12px; letter-spacing:-.02em; }
+.contact-card p{ color:var(--muted); margin-bottom:28px; }
+.socials{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+/* ============================================================
+   11. FOOTER
+   ============================================================ */
+.footer{
+  border-top:1px solid var(--line); padding:32px 0;
+  display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  color:var(--muted-2); font-size:13px;
+}
+.footer .mono{ font-size:12px; }
+
+/* ============================================================
+   12. ANIMATIONS d'apparition au scroll
+   ============================================================ */
+.reveal{ opacity:0; transform:translateY(20px); transition:opacity .6s var(--ease), transform .6s var(--ease); }
+.reveal.in{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: reduce){
+  .reveal{ opacity:1; transform:none; transition:none; }
+}
+
+/* responsive grilles */
+@media (max-width:760px){
+  .projects{ grid-template-columns:1fr; }
+  .skills{ grid-template-columns:1fr; }
+  .hero{ padding:80px 0 64px; }
+  .section{ padding:72px 0; }
+  .contact-card{ padding:32px 20px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- FOND : simulation de particules -->
+<canvas id="field"></canvas>
+<div class="grid-bg" id="gridBg"></div>
+<div class="field-veil"></div>
+
+<div class="page">
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a href="#top" class="brand"><span class="dot"></span>MOREAU&nbsp;BAPTISTE</a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#work">Work</a>
+        <a href="#skills">Skills</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div class="hud mono">
+        <span>BUILD&nbsp;<b id="ver">0.1.0</b></span>
+        <span>◷&nbsp;<b id="fps">60</b>&nbsp;fps</span>
+        <span>◆&nbsp;<b id="ent">0</b>&nbsp;entities</span>
+      </div>
+
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header id="top" class="hero">
+    <div class="wrap">
+        <p class="eyebrow" style="font-size:25px">Gameplay Programmer · Unity</p>
+      <h1>Building games that<br><span class="accent">feel</span> right to play.</h1>
+      <p class="lead">
+        Moreau Baptiste — Game Developer, étudiant en 4<sup>e</sup> année de Master.
+        Je conçois des mécaniques de jeu sous Unity (et bientôt Unreal), du prototype
+        au gameplay jouable. Mes projets ci-dessous.
+      </p>
+      <div class="cta-row">
+        <a href="#work" class="btn btn-primary">
+          View work
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <!-- Place ton PDF à côté de index.html et nomme-le CV_Moreau_Baptiste.pdf -->
+        <a href="CV_Moreau_Baptiste.pdf" download class="btn btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          Download CV
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== WORK ===================== -->
+  <section id="work" class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-num">01</span>
+        <h2>My work</h2>
+      </div>
+      <!-- les cartes sont générées par JS depuis le tableau PROJECTS plus bas -->
+      <div class="projects" id="projects"></div>
+    </div>
+  </section>
+
+  <!-- ===================== SKILLS ===================== -->
+  <section id="skills" class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-num">02</span>
+        <h2>Tech stack</h2>
+      </div>
+      <div class="skills">
+        <div class="skill-col reveal">
+          <h4>Engines</h4>
+          <ul>
+            <li>Unity &nbsp;<span class="mono" style="color:var(--muted-2);font-size:12px">// main</span></li>
+            <li>Unreal Engine 5 &nbsp;<span class="mono" style="color:var(--muted-2);font-size:12px">// en cours</span></li>
+            <li>URP / shaders</li>
+          </ul>
+        </div>
+        <div class="skill-col reveal">
+          <h4>Languages</h4>
+          <ul>
+            <li>C# &nbsp;<span class="mono" style="color:var(--muted-2);font-size:12px">// main</span></li>
+            <li>C++ (Unreal)</li>
+            <li>HLSL / shaders</li>
+          </ul>
+        </div>
+        <div class="skill-col reveal">
+          <h4>Focus</h4>
+          <ul>
+            <li>Gameplay &amp; mécaniques</li>
+            <li>Game feel</li>
+            <li>Prototypage</li>
+            <li>Git · versioning</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about" class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="section-num">03</span>
+        <h2>About</h2>
+      </div>
+      <div class="about reveal">
+        <div class="avatar">
+          <!-- TODO: <img src="assets/me.jpg" alt="Your Name" /> -->
+          <span class="mono" style="font-size:12px">photo</span>
+        </div>
+        <div class="about-text">
+          <p><strong>[Placeholder — à remplir plus tard.]</strong> Une ou deux phrases sur qui tu es et ce qui te motive en game dev.</p>
+          <p>[Placeholder] Le type de jeux que tu veux faire, la partie du code que tu préfères (gameplay, outils, IA…), et ton parcours Unity → Unreal.</p>
+          <p><strong>Proximité de Paris</strong> · étudiant en 4<sup>e</sup> année de Master · ouvert aux opportunités.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact" class="section">
+    <div class="wrap">
+      <div class="contact-card reveal">
+        <h2>Let's build something.</h2>
+        <p>Open to gameplay / engine roles and collaborations. The fastest way to reach me:</p>
+        <div class="socials">
+          <a href="mailto:moreaubapt@gmail.com" class="btn btn-primary">Email me</a>
+          <a href="https://github.com/Ploumplim" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
+          <a href="https://www.linkedin.com/in/moreau-baptiste" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer wrap">
+    <span>© <span id="year"></span> Moreau Baptiste</span>
+    <span class="mono">made with Rider · no engine required</span>
+  </footer>
+
+</div><!-- /.page -->
+
+<script>
+/* ============================================================
+   A. DONNÉES PROJETS  ←←← C'EST ICI QUE TU AJOUTES TES PROJETS
+   --------------------------------------------------------
+   Pour ajouter un projet : copie un bloc { ... } et remplis-le.
+   media.type :
+     'video'  → src = "assets/demo.mp4", poster = "assets/cover.jpg"
+     'image'  → src = "assets/cover.gif" (gif animé ou png)
+     'empty'  → emplacement vide (par défaut)
+   ============================================================ */
+const PROJECTS = [
+  {
+    featured: true,
+    title: "Deep Dive Repair",
+    role: "Gameplay Programmer · Game Designer · Ui Programmer",
+    note: "Dive in the ocean's deepest place to help and save crewmates in danger ! Repair their submarines and survive the abyss's threats in a co-op game.",
+    tags: ["Unity", "C#", "Co-op", "Gameplay", "Game systems"], 
+      media: {type : "image", src: "assets/DeepDiveRepairMain.png"},
+      //media: { type: "youtube", id: "cM09wvRl7jY" },
+    links: [
+      { label: "Case study", href: "deep-dive-repair.html" },
+      { label: "itch.io", href: "https://bragidev.itch.io/deepdiverepair", muted: true }
+    ]
+  },
+  {
+    title: "Blitz Ball",
+    role: "Gameplay Programmer · Level Designer · Ui Programmer · Game Designer",
+    note: "Versus Arcade Game · Try to goal with bounces while and ball effects !",
+    tags: ["Unity", "C#", "Versus", "Fighting"],
+      media: {type : "image", src: "assets/BlitzBallMain.png"},
+    links: [
+      { label: "Devlog", href: "#" },
+      { label: "Source", href: "#", muted: true }
+    ]
+  },
+  {
+    title: "Over the Garden",
+    role: "Gameplay Programmer  · Game Artist  · Game Designer",
+    note: "affrontez des légumes impitoyables sur un champ de bataille. Plantez-les pour \n" +
+        "obtenir une récolte abondante et remporter la partie.",
+    tags: ["Construct3D", "Blueprint", "Beat'em Up"],
+      media: {type : "image", src: "assets/OverTheGardenMain.png"},
+    links: [
+      { label: "itch.io", href: "https://ploumplim.itch.io/over-the-garden"},
+      { label: "Breakdown", href: "#", muted: true }
+    ]
+  }
+];
+
+/* ---- rendu des cartes ---- */
+const iconPlay = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+function mediaHTML(m){
+  if(m.type === "youtube"){
+    return `<iframe src="https://www.youtube.com/embed/${m.id}" title="YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>`;
+  }
+  if(m.type === "video"){
+    return `<video src="${m.src}" ${m.poster?`poster="${m.poster}"`:""} muted loop playsinline autoplay></video>`;
+  }
+  if(m.type === "image"){
+    return `<img src="${m.src}" alt="" loading="lazy" />`;
+  }
+  return `<div class="media-empty">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span class="mono">16:9 · gif / mp4 / png</span>
+          </div>`;
+}
+function projectHTML(p){
+  const tags  = p.tags.map(t => {
+    const isObj = typeof t === "object";
+    const label = isObj ? t.label : t;
+    const hot   = isObj && t.hot ? " hot" : "";
+    return `<span class="tag${hot}">${label}</span>`;
+  }).join("");
+  const links = p.links.map(l =>
+    `<a href="${l.href}" class="${l.muted?'muted':''}">${l.muted?'':iconPlay}${l.label}</a>`).join("");
+  return `<article class="project reveal ${p.featured?'featured':''}">
+      <div class="media">${mediaHTML(p.media)}</div>
+      <div class="body">
+        <span class="role">${p.role.replaceAll("Gameplay Programmer", '<span class="hl">Gameplay Programmer</span>')}</span>
+        <h3>${p.title}</h3>
+        <p class="note">${p.note}</p>
+        <div class="tags">${tags}</div>
+        <div class="links">${links}</div>
+      </div>
+    </article>`;
+}
+document.getElementById("projects").innerHTML = PROJECTS.map(projectHTML).join("");
+
+/* ============================================================
+   B. INTERACTIONS (nav, reveal, année)
+   ============================================================ */
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// burger mobile
+const burger = document.getElementById("burger");
+const navLinks = document.getElementById("navLinks");
+burger.addEventListener("click", () => {
+  const open = navLinks.classList.toggle("open");
+  burger.setAttribute("aria-expanded", open);
+});
+navLinks.querySelectorAll("a").forEach(a =>
+  a.addEventListener("click", () => navLinks.classList.remove("open")));
+
+// reveal au scroll
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add("in"); revealObs.unobserve(e.target); } });
+}, { threshold:.12 });
+document.querySelectorAll(".reveal").forEach(el => revealObs.observe(el));
+
+// lien de nav actif selon la section visible
+const sections = [...document.querySelectorAll("section[id], header[id]")];
+const linkFor = id => document.querySelector(`.nav-links a[href="#${id}"]`);
+const navObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    const link = linkFor(e.target.id);
+    if(link && e.isIntersecting){
+      document.querySelectorAll(".nav-links a").forEach(a => a.classList.remove("active"));
+      link.classList.add("active");
+    }
+  });
+}, { rootMargin:"-45% 0px -50% 0px" });
+sections.forEach(s => navObs.observe(s));
+
+/* ============================================================
+   C. FOND : CHAMP DE VECTEURS (simulation de particules)
+   --------------------------------------------------------
+   Des particules suivent un champ d'angles calculé à partir
+   de sinusoïdes superposées → mouvement organique type "fluide".
+   Traînées via un léger fondu du canvas à chaque frame.
+   ============================================================ */
+(function flowField(){
+  const canvas = document.getElementById("field");
+  const ctx = canvas.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let W, H, DPR, particles = [];
+  const isMobile = window.matchMedia("(max-width:760px)").matches;
+
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio || 1, 1.4); // plafonné : le fond plein écran est rempli à chaque frame
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width  = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    // densité de particules adaptée à la surface
+    const target = Math.min(Math.round((W*H)/(isMobile?16000:9000)), isMobile?140:340);
+    particles = Array.from({length: target}, (_, i) => ({
+      i,                                     // index pour la grille spatiale (connexions)
+      x: Math.random()*W, y: Math.random()*H,
+      hot: Math.random() < 0.12              // quelques particules "chaudes" plus visibles
+    }));
+    document.getElementById("ent").textContent = particles.length;
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#0E1116";
+    ctx.fillRect(0,0,W,H);
+  }
+
+  // champ d'angle : superposition de sinus → pseudo bruit fluide
+  function angle(x, y, t){
+    const s = 0.0016;
+    const a = Math.sin(x*s + t*0.00020) + Math.cos(y*s - t*0.00015);
+    const b = Math.cos(x*s*0.7 - t*0.00012) + Math.sin(y*s*1.3 + t*0.00018);
+    return (a + b) * Math.PI;
+  }
+
+  const SPEED = 0.85;
+  // connexions : on relie les particules proches (effet "réseau").
+  // désactivé sur mobile pour préserver les perfs.
+  const LINK = !isMobile;
+  const LINK_DIST = 108;                 // portée max d'une connexion (px)
+  const CELL = LINK_DIST;                // taille de cellule de la grille spatiale
+  const grid = new Map();                // clé "cx,cy" → tableau de particules
+  let last = performance.now(), fpsAcc = 0, fpsCount = 0;
+
+  // dessine les liens entre particules voisines via un binning spatial → ~O(n)
+  function drawLinks(){
+    grid.clear();
+    for(const p of particles){
+      const key = ((p.x / CELL) | 0) + "," + ((p.y / CELL) | 0);
+      let bucket = grid.get(key);
+      if(!bucket){ bucket = []; grid.set(key, bucket); }
+      bucket.push(p);
+    }
+    ctx.lineWidth = 1;
+    const max2 = LINK_DIST * LINK_DIST;
+    for(const p of particles){
+      const cx = (p.x / CELL) | 0, cy = (p.y / CELL) | 0;
+      // seules les cellules "en avant" → chaque paire est traitée une fois
+      for(let ox = 0; ox <= 1; ox++){
+        for(let oy = (ox === 0 ? 0 : -1); oy <= 1; oy++){
+          const bucket = grid.get((cx + ox) + "," + (cy + oy));
+          if(!bucket) continue;
+          for(const q of bucket){
+            if(q.i <= p.i) continue;          // évite les doublons / l'auto-lien
+            const dx = p.x - q.x, dy = p.y - q.y;
+            const d2 = dx*dx + dy*dy;
+            if(d2 > max2) continue;
+            const a = (1 - Math.sqrt(d2) / LINK_DIST) * 0.11;
+            ctx.strokeStyle = (p.hot || q.hot)
+              ? "rgba(87,215,230," + (a * 1.4) + ")"   // cyan si une particule est "chaude"
+              : "rgba(120,150,210," + a + ")";          // bleu froid discret
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+  }
+
+  function frame(now){
+    const t = now;
+    // fondu (laisse une traînée) — couleur de fond translucide
+    ctx.fillStyle = "rgba(14,17,22,0.055)";
+    ctx.fillRect(0,0,W,H);
+
+    for(const p of particles){
+      const ang = angle(p.x, p.y, t);
+      p.x += Math.cos(ang) * SPEED;
+      p.y += Math.sin(ang) * SPEED;
+      // wrap autour des bords
+      if(p.x < 0) p.x = W; else if(p.x > W) p.x = 0;
+      if(p.y < 0) p.y = H; else if(p.y > H) p.y = 0;
+    }
+
+    if(LINK) drawLinks();                  // liens d'abord, points par-dessus
+
+    for(const p of particles){
+      if(p.hot){
+        ctx.fillStyle = "rgba(42,82,190,0.65)";   // accent bleu foncé
+        ctx.fillRect(p.x, p.y, 1.6, 1.6);
+      } else {
+        ctx.fillStyle = "rgba(150,170,200,0.28)";  // froid discret
+        ctx.fillRect(p.x, p.y, 1.2, 1.2);
+      }
+    }
+
+    // compteur FPS (lissé)
+    const dt = now - last; last = now;
+    fpsAcc += 1000/dt; fpsCount++;
+    if(fpsCount >= 20){
+      document.getElementById("fps").textContent = Math.round(fpsAcc/fpsCount);
+      fpsAcc = 0; fpsCount = 0;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // rendu statique unique si l'utilisateur préfère moins de mouvement
+  function staticFrame(){
+    for(const p of particles){
+      const ang = angle(p.x, p.y, 0);
+      for(let i=0;i<60;i++){
+        p.x += Math.cos(angle(p.x,p.y,0))*1.4;
+        p.y += Math.sin(angle(p.x,p.y,0))*1.4;
+        if(p.x<0)p.x=W; else if(p.x>W)p.x=0;
+        if(p.y<0)p.y=H; else if(p.y>H)p.y=0;
+        ctx.fillStyle = p.hot ? "rgba(42,82,190,0.45)" : "rgba(150,170,200,0.18)";
+        ctx.fillRect(p.x,p.y,1.2,1.2);
+      }
+    }
+    document.getElementById("fps").textContent = "0";
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+
+  // parallaxe : la grille dérive doucement quand on scrolle (modulo = boucle sans couture)
+  const gridBg = document.getElementById("gridBg");
+  if(gridBg && !reduce){
+    let ticking = false;
+    const updateGrid = () => {
+      const off = (window.scrollY * 0.28) % 48;
+      gridBg.style.backgroundPosition = "0 " + off + "px";
+      ticking = false;
+    };
+    window.addEventListener("scroll", () => {
+      if(!ticking){ requestAnimationFrame(updateGrid); ticking = true; }
+    }, { passive:true });
+  }
+
+  if(reduce) staticFrame();
+  else requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

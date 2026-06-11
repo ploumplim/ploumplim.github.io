@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Deep Dive Repair — Étude de cas · Moreau Baptiste</title>
+<meta name="description" content="Étude de cas : conception du système de tâches et du spawn par zones de Deep Dive Repair, jeu de coopération Unity / C#." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   TOKENS — repris de index.html pour rester cohérent
+   ============================================================ */
+:root{
+  --bg:        #0E1116;
+  --bg-2:      #11151B;
+  --surface:   #161A21;
+  --surface-2: #1B212A;
+  --line:      #252B36;
+  --text:      #E8EAED;
+  --muted:     #8A93A3;
+  --muted-2:   #5C6573;
+  --accent:    #2A52BE;
+  --accent-dim:#2A52BE22;
+  --cyan:      #57D7E6;
+
+  --maxw: 1120px;
+  --radius: 14px;
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter', system-ui, sans-serif;
+  font-size:16px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{ color:inherit; text-decoration:none; }
+img, video{ display:block; max-width:100%; }
+::selection{ background:var(--accent); color:#0B0D11; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+
+.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:24px; }
+.mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+
+/* grille de fond fixe, comme la home */
+.grid-bg{
+  position:fixed; inset:-10% 0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(to right,  rgba(42,82,190,.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42,82,190,.06) 1px, transparent 1px);
+  background-size:48px 48px;
+  -webkit-mask-image:radial-gradient(120% 80% at 50% 0%, #000 18%, transparent 75%);
+          mask-image:radial-gradient(120% 80% at 50% 0%, #000 18%, transparent 75%);
+}
+.page{ position:relative; z-index:1; }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:blur(10px);
+  background:rgba(14,17,22,.72);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{ display:flex; align-items:center; gap:16px; height:60px; }
+.brand{
+  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
+  font-size:16px; display:flex; align-items:center; gap:9px;
+}
+.brand .dot{ width:9px; height:9px; border-radius:2px; background:var(--accent); box-shadow:0 0 12px var(--accent); }
+.back{
+  margin-left:auto; font-size:13.5px; color:var(--muted); padding:7px 12px; border-radius:8px;
+  display:inline-flex; align-items:center; gap:7px;
+  transition:color .2s var(--ease), background .2s var(--ease);
+}
+.back:hover{ color:var(--text); background:var(--surface); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{ padding:84px 0 56px; }
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent);
+  letter-spacing:.04em; margin-bottom:18px;
+}
+.eyebrow::before{ content:'// '; color:var(--muted-2); }
+.hero h1{
+  font-family:'Sora',sans-serif; font-weight:800; letter-spacing:-.03em;
+  font-size:clamp(38px, 7vw, 68px); line-height:1.0; margin-bottom:18px;
+}
+.hero h1 .accent{ color:var(--accent); }
+.role-line{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.04em; margin-bottom:28px;
+}
+.lead{ font-size:clamp(17px,2.2vw,20px); color:var(--text); max-width:760px; }
+.lead p{ margin-bottom:14px; color:var(--muted); }
+.lead p strong{ color:var(--text); font-weight:600; }
+
+.tags{ display:flex; flex-wrap:wrap; gap:7px; margin-top:26px; }
+.tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted);
+  padding:4px 9px; border:1px solid var(--line); border-radius:6px; background:var(--bg-2);
+}
+
+/* bandeau média principal */
+.cover{
+  margin-top:40px; position:relative; aspect-ratio:16/9; overflow:hidden;
+  background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius);
+}
+.cover img, .cover video{ width:100%; height:100%; object-fit:cover; }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.section{ padding:72px 0; border-top:1px solid var(--line); }
+.section-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:18px; }
+.section-num{ font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent); }
+.section-head h2{
+  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
+  font-size:clamp(24px,4vw,34px);
+}
+.section > .wrap > p{ color:var(--muted); max-width:760px; margin-bottom:16px; }
+.section > .wrap > p strong{ color:var(--text); font-weight:600; }
+.credit{
+  display:inline-flex; align-items:center; gap:9px; margin-bottom:28px;
+  font-size:14px; color:var(--muted);
+  padding:8px 14px; border:1px solid var(--line); border-radius:10px; background:var(--surface);
+}
+.credit b{ color:var(--text); font-weight:600; }
+
+/* ============================================================
+   EMPLACEMENT MÉDIA (GIF / mp4 / png à remplacer)
+   ============================================================ */
+.media-slot{
+  position:relative; aspect-ratio:16/9; overflow:hidden;
+  background:var(--surface-2); border:1px solid var(--line); border-radius:12px;
+}
+.media-slot img, .media-slot video{ width:100%; height:100%; object-fit:cover; }
+.media-empty{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:8px; color:var(--muted-2);
+  background:repeating-linear-gradient(45deg, #181d25 0 12px, #161a21 12px 24px);
+}
+.media-empty .mono{ font-size:12px; }
+.media-empty svg{ opacity:.5; }
+
+/* ============================================================
+   TÂCHES — média d'un côté, texte de l'autre (alterné)
+   ============================================================ */
+.task{
+  display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center;
+  padding:28px 0;
+}
+.task + .task{ border-top:1px solid var(--line); }
+.task:nth-child(even) .task-media{ order:2; }      /* alterne le côté du média */
+.task-label{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--accent);
+  text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;
+}
+.task h3{ font-family:'Sora',sans-serif; font-weight:700; font-size:22px; margin-bottom:12px; }
+.task p{ color:var(--muted); margin-bottom:16px; }
+.task ul{ list-style:none; display:flex; flex-direction:column; gap:9px; }
+.task li{ font-size:14.5px; color:var(--text); display:flex; gap:10px; align-items:baseline; }
+.task li::before{ content:'▸'; color:var(--accent); font-size:12px; }
+.task li.warn::before{ content:'!'; color:var(--cyan); font-weight:700; }
+
+@media (max-width:760px){
+  .task{ grid-template-columns:1fr; gap:18px; }
+  .task:nth-child(even) .task-media{ order:0; }
+}
+
+/* zones de spawn : liste d'étapes + média large */
+.steps{ display:flex; flex-direction:column; gap:12px; margin:8px 0 28px; max-width:760px; }
+.step{
+  display:flex; gap:14px; align-items:flex-start;
+  padding:16px 18px; border:1px solid var(--line); border-radius:12px; background:var(--surface);
+}
+.step .n{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent);
+  border:1px solid var(--line); border-radius:8px; padding:2px 9px; flex:none; margin-top:2px;
+}
+.step p{ margin:0; color:var(--muted); }
+.step p strong{ color:var(--text); }
+
+/* ============================================================
+   FOOTER + CTA
+   ============================================================ */
+.cta{
+  margin-top:8px;
+  background:linear-gradient(180deg,var(--surface),var(--bg-2));
+  border:1px solid var(--line); border-radius:var(--radius); padding:40px; text-align:center;
+}
+.cta h2{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(22px,4vw,30px); margin-bottom:10px; letter-spacing:-.02em; }
+.cta p{ color:var(--muted); margin-bottom:24px; }
+.btn{
+  font-family:'Sora',sans-serif; font-weight:600; font-size:14.5px;
+  padding:13px 22px; border-radius:11px; cursor:pointer; border:1px solid transparent;
+  transition:transform .15s var(--ease), background .2s var(--ease), border-color .2s var(--ease);
+  display:inline-flex; align-items:center; gap:9px;
+}
+.btn:hover{ transform:translateY(-2px); }
+.btn-primary{ background:var(--accent); color:#0B0D11; }
+.btn-primary:hover{ background:#3a68da; }
+.btn-ghost{ background:transparent; color:var(--text); border-color:var(--line); }
+.btn-ghost:hover{ border-color:var(--accent); }
+
+.footer{
+  border-top:1px solid var(--line); padding:32px 0; margin-top:8px;
+  display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  color:var(--muted-2); font-size:13px;
+}
+.footer .mono{ font-size:12px; }
+</style>
+</head>
+
+<body>
+
+<div class="grid-bg"></div>
+
+<div class="page">
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a href="index.html#top" class="brand"><span class="dot"></span>MOREAU&nbsp;BAPTISTE</a>
+      <a href="index.html#work" class="back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        Retour aux projets
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">unity · c# · coopération</p>
+      <h1>Deep&nbsp;Dive&nbsp;<span class="accent">Repair</span></h1>
+      <p class="role-line">Gameplay Programmer · Système de tâches</p>
+
+      <div class="lead">
+        <p>Jouez en coopération en incarnant deux petits robots chargés de sauver des sous-marins en détresse.</p>
+        <p>Réalisez plusieurs petites tâches pour réparer les divers problèmes du sous-marin, tout en maintenant son moteur en marche afin d'atteindre un port en sécurité.</p>
+        <p>Utilisez les objets à votre disposition… et même votre partenaire&nbsp;! Lancez-vous mutuellement pour faciliter vos déplacements à travers le sous-marin et surmonter les obstacles.</p>
+      </div>
+
+      <div class="tags">
+        <span class="tag">Unity</span>
+        <span class="tag">C#</span>
+        <span class="tag">Co-op local</span>
+        <span class="tag">Gameplay systems</span>
+        <span class="tag">Game feel</span>
+      </div>
+
+      <!-- MÉDIA PRINCIPAL : remplace le bloc .media-empty par :
+           <video src="assets/deepdive.mp4" poster="assets/deepdive.jpg" muted loop playsinline autoplay></video>
+           ou  <img src="assets/deepdive.jpg" alt="Deep Dive Repair" /> -->
+      <div class="cover">
+        <div class="media-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span class="mono">trailer / screenshot 16:9 → assets/deepdive.mp4</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== MON TRAVAIL ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2>Mon travail : le système de tâches</h2>
+      </div>
+
+      <div class="credit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Conçu en binôme avec <b>Nathan Modeste</b> — système global des tâches
+      </div>
+
+      <p>Les tâches constituent le cœur du gameplay et ont donc occupé une place centrale dans la production du jeu. Elles représentent l'unique levier d'action du joueur, à la fois comme mécanique de progression et comme système de survie.</p>
+      <p>Leur design devait répondre à plusieurs impératifs : être <strong>compréhensible rapidement</strong>, s'exécuter de manière <strong>fluide</strong> et permettre un <strong>enchaînement naturel</strong> afin de maintenir un bon rythme de jeu. La conception de chaque tâche a nécessité une attention particulière, car elle conditionne directement l'engagement du joueur et l'équilibre global de l'expérience.</p>
+      <p>Nous voulions une activité répétitive sans qu'elle ne devienne ennuyeuse. Chaque tâche devait donc <strong>prendre un peu de temps au joueur</strong> — jamais une exécution instantanée — afin de jouer sur le chrono général de la partie qui défile peu à peu. Nous avons abouti à <strong>6 tâches différentes</strong>.</p>
+    </div>
+  </section>
+
+  <!-- ===================== LES TÂCHES ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2>Les tâches en détail</h2>
+      </div>
+
+      <!-- ── TÂCHE PRESSOIR ── -->
+      <div class="task">
+        <!-- remplace .media-empty par <img src="assets/task-pressoir.gif" alt="Tâche Pressoir"/> -->
+        <div class="task-media media-slot">
+          <div class="media-empty"><span class="mono">gif → assets/task-pressoir.gif</span></div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Tâche · Pressoir</p>
+          <h3>Marteler la touche</h3>
+          <p>Au contact de la tâche, le joueur doit appuyer de manière répétée sur la touche X pour en compléter l'exécution.</p>
+          <ul>
+            <li>Mécanique facilement reproductible</li>
+            <li>Introduit un enjeu de rythme et de rapidité lié au nombre d'appuis nécessaires</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── TÂCHE DUO ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty"><span class="mono">gif → assets/task-duo.gif</span></div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Tâche · Duo</p>
+          <h3>Synchronisation à deux</h3>
+          <p>Cette tâche nécessite la présence simultanée des deux joueurs. Pour la valider, ils doivent appuyer sur la touche indiquée au même moment.</p>
+          <ul>
+            <li>Mécanique la plus complexe à reproduire des tâches</li>
+            <li>Repose sur la coordination et la communication entre les joueurs</li>
+            <li>Offre une récompense significative en cas de réussite</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── TÂCHE TOURNEVIS ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty"><span class="mono">gif → assets/task-tournevis.gif</span></div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Tâche · Tournevis</p>
+          <h3>Visser au joystick</h3>
+          <p>Le joueur doit effectuer un mouvement rotatif avec le joystick pour simuler l'action de visser.</p>
+          <ul>
+            <li>Mécanique intuitive et facile à prendre en main</li>
+            <li>Introduit un enjeu de vitesse basé sur la rapidité d'exécution du mouvement</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── TÂCHE TIMING ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty"><span class="mono">gif → assets/task-timing.gif</span></div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Tâche · Timing</p>
+          <h3>Frapper au bon moment</h3>
+          <p>Le joueur doit appuyer sur la touche au moment précis où un repère visuel ou sonore l'indique, afin de réussir la tâche.</p>
+          <ul>
+            <li>Mécanique simple et facilement reproductible</li>
+            <li>Introduit une dimension de skill basée sur la précision du timing</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── TÂCHE BATTERIE ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty"><span class="mono">gif → assets/task-batterie.gif</span></div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Tâche · Batterie</p>
+          <h3>Viser et recharger</h3>
+          <p>Le joueur doit lancer une batterie et viser correctement pour recharger le système énergétique du sous-marin.</p>
+          <ul>
+            <li>Mécanique facilement reproductible</li>
+            <li>Introduit un enjeu de précision à travers la visée</li>
+            <li class="warn">Échec pénalisant : perte importante en cas de lancer raté</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── TÂCHE 6 (à compléter) ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty"><span class="mono">gif → assets/task-6.gif</span></div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Tâche · 6</p>
+          <h3>[ à compléter ]</h3>
+          <p>Tu mentionnes 6 tâches mais n'en as détaillé que 5 — remplace ce bloc par la sixième (nom, description, points clés).</p>
+          <ul>
+            <li>Point clé 1</li>
+            <li>Point clé 2</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== SPAWN PAR ZONES ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2>Gestion de l'apparition des tâches</h2>
+      </div>
+
+      <p>Pour assurer la continuité du gameplay, les tâches <strong>disparaissent après complétion</strong>. La vraie difficulté résidait dans leur <strong>respawn</strong>.</p>
+      <p>Pour pousser les joueurs à se déplacer, nous avons <strong>limité le nombre de tâches à l'écran</strong> et géré le spawn en fonction de la position des joueurs. Le niveau a été découpé en <strong>zones</strong>, afin de savoir en permanence où sont les joueurs — et surtout où ils ne sont pas.</p>
+
+      <div class="steps">
+        <div class="step">
+          <span class="n">01</span>
+          <p><strong>Délimitation des zones.</strong> Chaque tâche se voit attribuer une zone spécifique, déterminée par un calcul basé sur sa position à l'écran.</p>
+        </div>
+        <div class="step">
+          <span class="n">02</span>
+          <p><strong>Détection des joueurs.</strong> Le système analyse en continu dans quelle zone le joueur n'est <em>pas</em> présent.</p>
+        </div>
+        <div class="step">
+          <span class="n">03</span>
+          <p><strong>Spawn ciblé.</strong> Une nouvelle tâche apparaît dans un emplacement libre, forçant le joueur à se déplacer pour la rejoindre.</p>
+        </div>
+        <div class="step">
+          <span class="n">04</span>
+          <p><strong>Double pression.</strong> Pression <em>physique</em> du déplacement constant, et pression <em>morale</em> de la jauge de vie du sous-marin qui, peu à peu, se rapproche de zéro.</p>
+        </div>
+      </div>
+
+      <!-- remplace par <img src="assets/spawn-zones.gif"/> ou un mp4 montrant le découpage en zones -->
+      <div class="media-slot">
+        <div class="media-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+          <span class="mono">schéma des zones → assets/spawn-zones.gif</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <section class="section" style="border-bottom:1px solid var(--line)">
+    <div class="wrap">
+      <div class="cta">
+        <h2>Envie d'y jouer&nbsp;?</h2>
+        <p>Build jouable, page itch.io ou code source — ajoute tes liens ici.</p>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
+          <a href="#" class="btn btn-primary">Jouer / itch.io</a>
+          <a href="index.html#work" class="btn btn-ghost">Autres projets</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer wrap">
+    <span>© <span id="year"></span> Moreau Baptiste</span>
+    <span class="mono">Deep Dive Repair · Unity / C#</span>
+  </footer>
+
+</div><!-- /.page -->
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
