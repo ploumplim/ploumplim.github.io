@@ -184,7 +184,7 @@ img, video{ display:block; max-width:100%; }
 }
 
 /* zones de spawn : liste d'étapes + média large */
-.steps{ display:flex; flex-direction:column; gap:12px; margin:8px 0 28px; max-width:760px; }
+.steps{ display:flex; flex-direction:column; gap:12px; margin:8px 0 28px; }
 .step{
   display:flex; gap:14px; align-items:flex-start;
   padding:16px 18px; border:1px solid var(--line); border-radius:12px; background:var(--surface);
@@ -272,13 +272,107 @@ img, video{ display:block; max-width:100%; }
       </div>
     </div>
   </header>
+    <!-- ===================== MON TRAVAIL ===================== -->
+    <section class="section">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="section-num">01</span>
+                <h2>My work: Character controller</h2>
+            </div>
 
+            <p>Local co-op was a deliberate design choice: sharing the same screen turns coordination into something <strong>physical and immediate</strong>. Even movement is cooperative — players can <strong>throw one another</strong> across the submarine, so each robot is both a teammate and a tool.</p>
+
+            <p>On the programming side, I built the <strong>character controller</strong>: the input layer driving two local players, and the custom physics behind everything the robots do — moving, jumping, and throwing. The goal was a controller that felt <strong>responsive and predictable</strong>, while staying robust enough for a couch session where controllers get unplugged and plugged back in.</p>
+
+            <!-- ── INPUT SYSTEM ── -->
+            <div class="task">
+              <div class="task-media media-slot">
+                <div class="media-empty">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
+                    <img src="assets/DDRGif/Controller.png" alt="Tâche Pressoir" />
+                </div>
+              </div>
+              <div class="task-body">
+                <p class="task-label">Input · New Input System</p>
+                <h3>Two players, hot-pluggable controllers</h3>
+                <p>The controller is built on Unity's <strong>New Input System</strong>, with a dedicated action map per player so both robots can be driven independently on the same machine.</p>
+                <ul>
+                  <li>Clean separation between input and gameplay logic through action maps and callbacks</li>
+                  <li>Each player is paired to a specific device, avoiding any input mix-up between the two robots</li>
+                  <li class="warn">Controller reconnection: a pad unplugged mid-game is detected and <strong>re-paired to the same player</strong>, so a disconnection never breaks the run</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- ── JUMP PHYSICS ── -->
+            <div class="task">
+              <div class="task-media media-slot">
+                <div class="media-empty">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 20h16"/><path d="M12 16V5M8 9l4-4 4 4"/></svg>
+                  <span class="mono">gif → assets/cc-jump.gif</span>
+                </div>
+              </div>
+              <div class="task-body">
+                <p class="task-label">Physics · Jump</p>
+                <h3>A jump that feels right</h3>
+                <p>Rather than relying on Unity's default rigidbody behaviour, the jump is driven by hand-tuned physics to get a precise, satisfying arc.</p>
+                <ul>
+                  <li>Controlled rise and fall, tuned by hand for good game feel</li>
+                  <li>Apex and landing weighted so the jump reads clearly and stays easy to aim</li>
+                  <li>Consistent height regardless of frame rate thanks to fixed-step physics</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- ── THROW PHYSICS ── -->
+            <div class="task">
+              <div class="task-media media-slot">
+                <div class="media-empty">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 18c6-10 12-10 18 0"/><circle cx="3" cy="18" r="1.6"/><circle cx="21" cy="18" r="1.6"/></svg>
+                  <span class="mono">gif → assets/cc-throw.gif</span>
+                </div>
+              </div>
+              <div class="task-body">
+                <p class="task-label">Physics · Throw</p>
+                <h3>Throwing your partner</h3>
+                <p>A key co-op mechanic: a player can grab and <strong>throw the other robot</strong> (or objects) across the submarine. The throw is fully physics-driven so the trajectory stays readable and repeatable.</p>
+                <ul>
+                  <li>Launch direction and force derived from aim and charge for predictable arcs</li>
+                  <li>Thrown body handed back to the physics simulation cleanly, with the right velocity</li>
+                  <li>Tuned to be useful for traversal without feeling floaty or random</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- ── CUSTOM GRAVITY ── -->
+            <div class="task">
+              <div class="task-media media-slot">
+                <div class="media-empty">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3v14M8 13l4 4 4-4"/><path d="M5 21h14"/></svg>
+                  <span class="mono">gif → assets/cc-gravity.gif</span>
+                </div>
+              </div>
+              <div class="task-body">
+                <p class="task-label">Physics · Gravity</p>
+                <h3>Custom gravity</h3>
+                <p>Each character runs on a <strong>custom gravity model</strong> instead of Unity's global gravity, giving full control over how the robots fall and how weighty they feel.</p>
+                <ul>
+                  <li>Per-character gravity tuned independently from the rest of the physics world</li>
+                  <li>Stronger fall gravity for a snappier, less floaty descent</li>
+                  <li>Single shared knob to balance jump, throw, and fall together as one coherent feel</li>
+                </ul>
+              </div>
+            </div>
+        </div>
+    </section>
+    
+    
   <!-- ===================== MON TRAVAIL ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">01</span>
-        <h2>My work: the task system</h2>
+        <h2>My work: The Task system</h2>
       </div>
 
       <p>The tasks are the core of the gameplay and therefore held a central place in the game's production. They are the player's only means of action, serving both as a progression mechanic and as a survival system.</p>
@@ -431,7 +525,7 @@ img, video{ display:block; max-width:100%; }
       <div class="media-slot">
         <div class="media-empty">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
-          <span class="mono">zone diagram → assets/spawn-zones.gif</span>
+            <img src="assets/DDRGif/DelimitationLevel.png" alt="LevelZone" />
         </div>
       </div>
     </div>
