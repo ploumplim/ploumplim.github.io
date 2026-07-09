@@ -237,6 +237,13 @@ img, video{ display:block; max-width:100%; }
 }
 .media img, .media video{ width:100%; height:100%; object-fit:cover; }
 
+/* média & titre cliquables vers la page projet */
+.media-link{ display:block; width:100%; height:100%; }
+.media-link img, .media-link video{ transition:transform .4s var(--ease); }
+.project:hover .media-link img, .project:hover .media-link video{ transform:scale(1.04); }
+.title-link{ transition:color .2s var(--ease); }
+.title-link:hover{ color:var(--cyan); }
+
 /* emplacement média vide (à remplacer par ton gif/mp4/png) */
 .media-empty{
   position:absolute; inset:0; display:flex; flex-direction:column;
@@ -516,6 +523,7 @@ const PROJECTS = [
   {
     featured: true,
     title: "Deep Dive Repair",
+    page: "deep-dive-repair.html",
     role: "Gameplay Programmer · Game Designer · Ui Programmer",
     note: "Dive in the ocean's deepest place to help and save crewmates in danger ! Repair their submarines and survive the abyss's threats in a co-op game.",
     tags: ["Unity", "C#", "Co-op", "Gameplay", "Game systems"], 
@@ -528,6 +536,7 @@ const PROJECTS = [
   },
   {
     title: "Blitz Ball",
+    page: "blitz-ball.html",
     role: "Gameplay Programmer · Level Designer · Ui Programmer · Game Designer",
     note: "Versus Arcade Game · Try to goal with bounces while and ball effects !",
     tags: ["Unity", "C#", "Versus", "Fighting"],
@@ -539,6 +548,7 @@ const PROJECTS = [
   },
   {
     title: "Over the Garden",
+    page: "over-the-garden.html",
     role: "Gameplay Programmer  · Game Artist  · Game Designer",
     note: "affrontez des légumes impitoyables sur un champ de bataille. Plantez-les pour \n" +
         "obtenir une récolte abondante et remporter la partie.",
@@ -577,11 +587,17 @@ function projectHTML(p){
   }).join("");
   const links = p.links.map(l =>
     `<a href="${l.href}" class="${l.muted?'muted':''}">${l.muted?'':iconPlay}${l.label}</a>`).join("");
+  const media = p.page
+    ? `<a class="media-link" href="${p.page}" aria-label="Open ${p.title} case study">${mediaHTML(p.media)}</a>`
+    : mediaHTML(p.media);
+  const heading = p.page
+    ? `<a class="title-link" href="${p.page}">${p.title}</a>`
+    : p.title;
   return `<article class="project reveal ${p.featured?'featured':''}">
-      <div class="media">${mediaHTML(p.media)}</div>
+      <div class="media">${media}</div>
       <div class="body">
         <span class="role">${p.role.replaceAll("Gameplay Programmer", '<span class="hl">Gameplay Programmer</span>')}</span>
-        <h3>${p.title}</h3>
+        <h3>${heading}</h3>
         <p class="note">${p.note}</p>
         <div class="tags">${tags}</div>
         <div class="links">${links}</div>
