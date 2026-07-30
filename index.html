@@ -16,59 +16,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
+<link rel="stylesheet" href="assets/css/base.css" />
+
 <style>
-/* ============================================================
-   1. TOKENS — change la couleur d'accent ici si tu veux
-   ============================================================ */
-:root{
-  --bg:        #0E1116;   /* fond viewport, presque noir bleuté */
-  --bg-2:      #11151B;
-  --surface:   #161A21;   /* cartes */
-  --surface-2: #1B212A;
-  --line:      #252B36;   /* filets / bordures */
-  --text:      #E8EAED;
-  --muted:     #8A93A3;
-  --muted-2:   #5C6573;
-  --accent:    #2A52BE;   /* bleu foncé (accent principal) */
-  --accent-dim:#2A52BE22;
-  --cyan:      #57D7E6;   /* accent froid secondaire, très parcimonieux */
-
-  --maxw: 1120px;
-  --radius: 14px;
-  --ease: cubic-bezier(.2,.7,.2,1);
-}
-
-/* ============================================================
-   2. BASE
-   ============================================================ */
-*{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; }
-@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
-
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Inter', system-ui, sans-serif;
-  font-size:16px;
-  line-height:1.65;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-
-a{ color:inherit; text-decoration:none; }
-img, video{ display:block; max-width:100%; }
-
-::selection{ background:var(--accent); color:#0B0D11; }
-
-:focus-visible{
-  outline:2px solid var(--accent);
-  outline-offset:3px;
-  border-radius:4px;
-}
-
-.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:24px; }
-
-.mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
 
 /* ============================================================
    3. FOND ANIMÉ (canvas plein écran, fixe)
@@ -89,8 +39,7 @@ img, video{ display:block; max-width:100%; }
     linear-gradient(to bottom, rgba(42,82,190,.07) 1px, transparent 1px);
   background-size:48px 48px;
   background-position:0 0;
-  -webkit-mask-image:radial-gradient(120% 85% at 50% 28%, #000 22%, transparent 78%);
-          mask-image:radial-gradient(120% 85% at 50% 28%, #000 22%, transparent 78%);
+  mask-image:radial-gradient(120% 85% at 50% 28%, #000 22%, transparent 78%);
   will-change:background-position;
 }
 /* voile pour garder le texte lisible par-dessus la simulation */
@@ -535,6 +484,7 @@ const PROJECTS = [
     ]
   },
   {
+    featured: true,
     title: "Blitz Ball",
     page: "blitz-ball.html",
     role: "Gameplay Programmer · Level Designer · Ui Programmer · Game Designer",
@@ -547,6 +497,7 @@ const PROJECTS = [
     ]
   },
   {
+    featured: true,
     title: "Over the Garden",
     page: "over-the-garden.html",
     role: "Gameplay Programmer  · Game Artist  · Game Designer",
@@ -565,7 +516,7 @@ const PROJECTS = [
 const iconPlay = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
 function mediaHTML(m){
   if(m.type === "youtube"){
-    return `<iframe src="https://www.youtube.com/embed/${m.id}" title="YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>`;
+    return `<iframe src="https://www.youtube.com/embed/${m.id}" title="YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>`;
   }
   if(m.type === "video"){
     return `<video src="${m.src}" ${m.poster?`poster="${m.poster}"`:""} muted loop playsinline autoplay></video>`;
@@ -731,7 +682,7 @@ sections.forEach(s => navObs.observe(s));
   function frame(now){
     const t = now;
     // fondu (laisse une traînée) — couleur de fond translucide
-    ctx.fillStyle = "rgba(14,17,22,0.055)";
+    ctx.fillStyle = "rgba(14,17,22,0.12)";
     ctx.fillRect(0,0,W,H);
 
     for(const p of particles){

@@ -1,0 +1,43 @@
+/* ============================================================
+   BASE — fondation partagée par TOUTES les pages
+   Tokens, reset, typographie. À lier en PREMIER dans le <head>.
+   ============================================================ */
+:root{
+  --bg:        #0E1116;   /* fond viewport, presque noir bleuté */
+  --bg-2:      #11151B;
+  --surface:   #161A21;   /* cartes */
+  --surface-2: #1B212A;
+  --line:      #252B36;   /* filets / bordures */
+  --text:      #E8EAED;
+  --muted:     #8A93A3;
+  --muted-2:   #5C6573;
+  --accent:    #2A52BE;   /* bleu foncé (accent principal) */
+  --accent-dim:#2A52BE22;
+  --cyan:      #57D7E6;   /* accent froid secondaire, très parcimonieux */
+
+  --maxw: 1120px;
+  --radius: 14px;
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter', system-ui, sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+a{ color:inherit; text-decoration:none; }
+img, video{ display:block; max-width:100%; }
+::selection{ background:var(--accent); color:#0B0D11; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+
+.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:24px; }
+.mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }

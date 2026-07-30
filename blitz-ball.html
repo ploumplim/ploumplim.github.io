@@ -10,208 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-<style>
-/* ============================================================
-   TOKENS — repris de index.html pour rester cohérent
-   ============================================================ */
-:root{
-  --bg:        #0E1116;
-  --bg-2:      #11151B;
-  --surface:   #161A21;
-  --surface-2: #1B212A;
-  --line:      #252B36;
-  --text:      #E8EAED;
-  --muted:     #8A93A3;
-  --muted-2:   #5C6573;
-  --accent:    #2A52BE;
-  --accent-dim:#2A52BE22;
-  --cyan:      #57D7E6;
-
-  --maxw: 1120px;
-  --radius: 14px;
-  --ease: cubic-bezier(.2,.7,.2,1);
-}
-
-*{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; }
-@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
-
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Inter', system-ui, sans-serif;
-  font-size:16px;
-  line-height:1.7;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-a{ color:inherit; text-decoration:none; }
-img, video{ display:block; max-width:100%; }
-::selection{ background:var(--accent); color:#0B0D11; }
-:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
-
-.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:24px; }
-.mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
-
-/* grille de fond fixe, comme la home */
-.grid-bg{
-  position:fixed; inset:-10% 0; z-index:0; pointer-events:none;
-  background-image:
-    linear-gradient(to right,  rgba(42,82,190,.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(42,82,190,.06) 1px, transparent 1px);
-  background-size:48px 48px;
-  -webkit-mask-image:radial-gradient(120% 80% at 50% 0%, #000 18%, transparent 75%);
-          mask-image:radial-gradient(120% 80% at 50% 0%, #000 18%, transparent 75%);
-}
-.page{ position:relative; z-index:1; }
-
-/* ============================================================
-   NAV
-   ============================================================ */
-.nav{
-  position:sticky; top:0; z-index:50;
-  backdrop-filter:blur(10px);
-  background:rgba(14,17,22,.72);
-  border-bottom:1px solid var(--line);
-}
-.nav-inner{ display:flex; align-items:center; gap:16px; height:60px; }
-.brand{
-  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
-  font-size:16px; display:flex; align-items:center; gap:9px;
-}
-.brand .dot{ width:9px; height:9px; border-radius:2px; background:var(--accent); box-shadow:0 0 12px var(--accent); }
-.back{
-  margin-left:auto; font-size:13.5px; color:var(--muted); padding:7px 12px; border-radius:8px;
-  display:inline-flex; align-items:center; gap:7px;
-  transition:color .2s var(--ease), background .2s var(--ease);
-}
-.back:hover{ color:var(--text); background:var(--surface); }
-
-/* ============================================================
-   HERO
-   ============================================================ */
-.hero{ padding:84px 0 56px; }
-.eyebrow{
-  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent);
-  letter-spacing:.04em; margin-bottom:18px;
-}
-.eyebrow::before{ content:'// '; color:var(--muted-2); }
-.hero h1{
-  font-family:'Sora',sans-serif; font-weight:800; letter-spacing:-.03em;
-  font-size:clamp(38px, 7vw, 68px); line-height:1.0; margin-bottom:18px;
-}
-.hero h1 .accent{ color:var(--accent); }
-.role-line{
-  font-family:'JetBrains Mono',monospace; font-size:clamp(15px,2vw,19px); font-weight:500;
-  color:var(--cyan);
-  text-transform:uppercase; letter-spacing:.06em; margin-bottom:28px;
-}
-.lead{ font-size:clamp(17px,2.2vw,20px); color:var(--text); max-width:760px; }
-.lead p{ margin-bottom:14px; color:var(--muted); }
-.lead p strong{ color:var(--text); font-weight:600; }
-
-.tags{ display:flex; flex-wrap:wrap; gap:7px; margin-top:26px; }
-.tag{
-  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted);
-  padding:4px 9px; border:1px solid var(--line); border-radius:6px; background:var(--bg-2);
-}
-
-/* bandeau média principal */
-.cover{
-  margin-top:40px; position:relative; aspect-ratio:16/9; overflow:hidden;
-  background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius);
-}
-.cover img, .cover video{ width:100%; height:100%; object-fit:cover; }
-
-/* ============================================================
-   SECTIONS
-   ============================================================ */
-.section{ padding:72px 0; border-top:1px solid var(--line); }
-.section-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:18px; }
-.section-num{ font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent); }
-.section-head h2{
-  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
-  font-size:clamp(24px,4vw,34px);
-}
-.section > .wrap > p{ color:var(--muted); max-width:760px; margin-bottom:16px; }
-.section > .wrap > p strong{ color:var(--text); font-weight:600; }
-.credit{
-  display:inline-flex; align-items:center; gap:9px; margin-bottom:28px;
-  font-size:14px; color:var(--muted);
-  padding:8px 14px; border:1px solid var(--line); border-radius:10px; background:var(--surface);
-}
-.credit b{ color:var(--text); font-weight:600; }
-
-/* ============================================================
-   EMPLACEMENT MÉDIA (GIF / mp4 / png à remplacer)
-   ============================================================ */
-.media-slot{
-  position:relative; aspect-ratio:16/9; overflow:hidden;
-  background:var(--surface-2); border:1px solid var(--line); border-radius:12px;
-}
-.media-slot img, .media-slot video{ width:100%; height:100%; object-fit:cover; }
-.media-empty{
-  position:absolute; inset:0; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:8px; color:var(--muted-2);
-  background:repeating-linear-gradient(45deg, #181d25 0 12px, #161a21 12px 24px);
-}
-.media-empty .mono{ font-size:12px; }
-.media-empty svg{ opacity:.5; }
-
-/* ============================================================
-   TÂCHES — média d'un côté, texte de l'autre (alterné)
-   ============================================================ */
-.task{
-  display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center;
-  padding:28px 0;
-}
-.task + .task{ border-top:1px solid var(--line); }
-.task:nth-child(even) .task-media{ order:2; }      /* alterne le côté du média */
-.task-label{
-  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--accent);
-  text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;
-}
-.task h3{ font-family:'Sora',sans-serif; font-weight:700; font-size:22px; margin-bottom:12px; }
-.task p{ color:var(--muted); margin-bottom:16px; }
-.task ul{ list-style:none; display:flex; flex-direction:column; gap:9px; }
-.task li{ font-size:14.5px; color:var(--text); display:flex; gap:10px; align-items:baseline; }
-.task li::before{ content:'▸'; color:var(--accent); font-size:12px; }
-.task li.warn::before{ content:'!'; color:var(--cyan); font-weight:700; }
-
-@media (max-width:760px){
-  .task{ grid-template-columns:1fr; gap:18px; }
-  .task:nth-child(even) .task-media{ order:0; }
-}
-
-/* ============================================================
-   FOOTER + CTA
-   ============================================================ */
-.cta{
-  margin-top:8px;
-  background:linear-gradient(180deg,var(--surface),var(--bg-2));
-  border:1px solid var(--line); border-radius:var(--radius); padding:40px; text-align:center;
-}
-.cta h2{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(22px,4vw,30px); margin-bottom:10px; letter-spacing:-.02em; }
-.cta p{ color:var(--muted); margin-bottom:24px; }
-.btn{
-  font-family:'Sora',sans-serif; font-weight:600; font-size:14.5px;
-  padding:13px 22px; border-radius:11px; cursor:pointer; border:1px solid transparent;
-  transition:transform .15s var(--ease), background .2s var(--ease), border-color .2s var(--ease);
-  display:inline-flex; align-items:center; gap:9px;
-}
-.btn:hover{ transform:translateY(-2px); }
-.btn-primary{ background:var(--accent); color:#0B0D11; }
-.btn-primary:hover{ background:#3a68da; }
-.btn-ghost{ background:transparent; color:var(--text); border-color:var(--line); }
-.btn-ghost:hover{ border-color:var(--accent); }
-
-.footer{
-  border-top:1px solid var(--line); padding:32px 0; margin-top:8px;
-  display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
-  color:var(--muted-2); font-size:13px;
-}
-.footer .mono{ font-size:12px; }
-</style>
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/project.css" />
 </head>
 
 <body>
@@ -265,9 +65,9 @@ img, video{ display:block; max-width:100%; }
         <h2>Gameplay Programming</h2>
       </div>
 
-      <p>À compléter : détaille les systèmes de gameplay que tu as programmés — physique de la balle, rebonds, effets, boucle versus — l'architecture et les choix techniques.</p>
+      <p>Built in <strong>Unity 6</strong> with the Universal Render Pipeline. The codebase is split into four independent systems: player control, ball states, level states (the main loop), and a game state machine driving all interfaces.</p>
 
-      <!-- ── BLOC 1 ── -->
+      <!-- ── ARCHITECTURE & TOOLING ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div class="media-empty">
@@ -276,17 +76,18 @@ img, video{ display:block; max-width:100%; }
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Gameplay Programming · À définir</p>
-          <h3>Titre du bloc</h3>
-          <p>À compléter.</p>
+          <p class="task-label">Architecture · Overview</p>
+          <h3>Systems &amp; tooling</h3>
+          <p>The project is organised around clearly separated systems, with tooling chosen to keep the code concise and maintainable.</p>
           <ul>
-            <li>Point clé à détailler</li>
-            <li>Point clé à détailler</li>
+            <li>Four independent systems: player control, ball states, level loop and a UI-driving game state machine</li>
+            <li>Input handled through Unity's <strong>New Input System</strong> for flexible, straightforward input code</li>
+            <li>Developed in <strong>JetBrains Rider 2024</strong> with GitHub Copilot to streamline repetitive code and refactoring</li>
           </ul>
         </div>
       </div>
 
-      <!-- ── BLOC 2 ── -->
+      <!-- ── PHYSICS ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div class="media-empty">
@@ -295,12 +96,96 @@ img, video{ display:block; max-width:100%; }
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Gameplay Programming · À définir</p>
-          <h3>Titre du bloc</h3>
-          <p>À compléter.</p>
+          <p class="task-label">Physics · Setup</p>
+          <h3>Physics-driven ball &amp; movement</h3>
+          <p>The game runs on Unity 6's built-in physics; every in-game object uses a <strong>Rigidbody</strong> for its calculations.</p>
           <ul>
-            <li>Point clé à détailler</li>
-            <li>Point clé à détailler</li>
+            <li>Default Contact Offset lowered from 0.2 to <strong>0.01</strong> for more precise, less recursive contacts, fixing several ball/player collision bugs</li>
+            <li>The player moves by scaling its speed against the left-stick Vector2 and applying it to velocity</li>
+            <li>The ball is propelled along the player's forward vector with a force derived from attack charge, base power and its current velocity, so it <strong>never slows down</strong></li>
+            <li>Walls use a frictionless physics material so the ball keeps all its speed on rebound</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── LOCAL MULTIPLAYER ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
+            <span class="mono">gif / mp4 / png → assets/…</span>
+          </div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Input · Local multiplayer</p>
+          <h3>Controller assignment</h3>
+          <p>Controller pairing runs in three steps to reliably bind each gamepad to its player.</p>
+          <ul>
+            <li>On connection, a new gamepad is registered as a <strong>pendingController</strong></li>
+            <li>It is identified through Unity's <strong>Gamepad HashSet</strong> to know which player it belongs to</li>
+            <li>The controller is then linked to all its dependent objects; a reconnecting pad is recognised and re-assigned to the same player</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── BALL STATE MACHINE ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M3 12c4 4 14 4 18 0"/></svg>
+            <span class="mono">gif / mp4 / png → assets/…</span>
+          </div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Ball · State machine</p>
+          <h3>Ball states &amp; events</h3>
+          <p>The ball is driven by a state machine that emits events the rest of the game reacts to.</p>
+          <ul>
+            <li><strong>Dropped</strong> (initial), <strong>Caught</strong> (moves to the player's "hand" along an animation curve), <strong>Flying</strong> (neutral, gravity-free, constant motion) and <strong>Hit</strong> (brief, collisions disabled to avoid self-hits)</li>
+            <li>Events: OnBallCaught, OnHit, OnHitStateStart, CaughtStateEnd, OnNeutralBounce, OnBallFlight</li>
+            <li>Tunable variables: min/max propulsion speed &amp; height, linear damping/mass, player immunity time, ball owner and a speed floor that rises with each velocity increase</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── PLAYER STATE MACHINE ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="7" r="3.5"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/></svg>
+            <span class="mono">gif / mp4 / png → assets/…</span>
+          </div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Player · State machine</p>
+          <h3>Player states</h3>
+          <p>The player is also a state machine, switching states from inputs.</p>
+          <ul>
+            <li><strong>Neutral</strong>: movement only, the gateway to every other state</li>
+            <li><strong>Sprinting</strong>: faster movement via a sprint boost, but the player can't hit or grab</li>
+            <li><strong>Hit</strong>: swings the bat while still moving freely</li>
+            <li><strong>Grab</strong>: pulls a nearby ball toward the player, with duration and range scaled by the grab charge</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── LEVEL MANAGEMENT & GOALS ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+            <span class="mono">gif / mp4 / png → assets/…</span>
+          </div>
+        </div>
+        <div class="task-body">
+          <p class="task-label">Levels · Scene management</p>
+          <h3>Multi-scene loading &amp; goals</h3>
+          <p>A multi-scene setup lets a single <strong>Level Manager</strong> work across every level without reconfiguration.</p>
+          <ul>
+            <li>A container scene holds the shared objects (Level Manager, UI, floor, lighting) and loads the level scenes on start</li>
+            <li>Levels are pre-loaded then deactivated; only the current level's objects are activated via its build index</li>
+            <li>Goals are assigned per level: a math function reads the goals list and current level to set each player's <strong>goalToDefend</strong> and <strong>goalToAttack</strong></li>
+            <li>Scoring only counts in a player's attack goal; each goal tracks its received points to follow match progress</li>
           </ul>
         </div>
       </div>
