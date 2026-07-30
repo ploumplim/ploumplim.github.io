@@ -124,8 +124,8 @@
 .task h3{ font-family:'Sora',sans-serif; font-weight:700; font-size:22px; margin-bottom:12px; }
 .task p{ color:var(--muted); margin-bottom:16px; }
 .task ul{ list-style:none; display:flex; flex-direction:column; gap:9px; }
-.task li{ font-size:14.5px; color:var(--text); display:flex; gap:10px; align-items:baseline; }
-.task li::before{ content:'▸'; color:var(--accent); font-size:12px; }
+.task li{ font-size:14.5px; color:var(--text); position:relative; padding-left:20px; }
+.task li::before{ content:'▸'; color:var(--accent); font-size:12px; position:absolute; left:0; top:0; }
 .task li.warn::before{ content:'!'; color:var(--cyan); font-weight:700; }
 
 @media (max-width:760px){
