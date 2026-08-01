@@ -117,10 +117,13 @@ a.media-slot:hover .media-zoom{ opacity:1; }
   cursor:zoom-out;
 }
 .lightbox.open{ display:flex; }
-.lightbox img{
+.lightbox img, .lightbox video{
   max-width:95%; max-height:92%; object-fit:contain;
   border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,.6);
 }
+.lightbox video{ cursor:default; }
+/* tout média cliquable → curseur loupe */
+.zoomable{ cursor:zoom-in; }
 .lightbox-close{
   position:absolute; top:18px; right:22px;
   font-size:30px; line-height:1; color:#fff; opacity:.8;

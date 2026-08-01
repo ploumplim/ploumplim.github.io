@@ -40,7 +40,7 @@
 
       <div class="lead">
         <p>Take on your friends in a <strong>1-vs-1 soccer arena</strong>! Get tricky: bend your shots off the walls, or <strong>stun your opponent</strong> by slamming the ball right into them to open up an easy goal.</p>
-        <p>Hit, dash, pull and defend your net in a fast, competitive match — seize the advantage and show them who's the best <strong>Blitzer</strong> of the two of you!</p>
+        <p>Hit, dash, pull and defend your net in a fast, competitive <strong>best-of-3</strong>, each round played to <strong>5 points</strong> — seize the advantage and show them who's the best <strong>Blitzer</strong> of the two of you!</p>
       </div>
 
       <div class="tags">
@@ -69,10 +69,9 @@
 
       <!-- ── LEVEL MANAGER ── -->
       <div class="task">
-        <a class="task-media media-slot" href="assets/BBGif/LevelManager.png" target="_blank" rel="noopener" title="Open the full architecture diagram">
+        <div class="task-media media-slot">
           <img src="assets/BBGif/LevelManager.png" alt="Level Manager architecture: Level State Manager states (Out Of Level, Setup, Round, Buffer, Exit) driving the Manage Entities/Timers/Rounds/Missions/Points modules and scoring" style="object-fit:contain" />
-          <span class="media-zoom">⤢ Click to enlarge</span>
-        </a>
+        </div>
         <div class="task-body">
           <p class="task-label">System · Scene management</p>
           <h3>Level Manager</h3>
@@ -214,10 +213,9 @@
 
       <!-- ── GAME STATE MACHINE ── -->
       <div class="task">
-        <a class="task-media media-slot" href="assets/BBGif/GameStateMachine.png" target="_blank" rel="noopener" title="Open the full Game State Machine diagram">
+        <div class="task-media media-slot">
           <img src="assets/BBGif/GameStateMachine.png" alt="Game State Machine: Menu, Option, Loading, Playing, Pause and End Game states, with the Level Manager driven during the Playing state" style="object-fit:contain" />
-          <span class="media-zoom">⤢ Click to enlarge</span>
-        </a>
+        </div>
         <div class="task-body">
           <p class="task-label">Architecture · State machine</p>
           <h3>Game State Machine</h3>
@@ -326,34 +324,9 @@
 
 </div><!-- /.page -->
 
-<!-- ===================== LIGHTBOX ===================== -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" aria-label="Close">&times;</button>
-  <img src="" alt="" />
-</div>
-
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
-
-  // Lightbox : ouvre tout <a class="media-slot"> en pop-up sur la même page
-  (function () {
-    const box = document.getElementById("lightbox");
-    const img = box.querySelector("img");
-    const close = () => box.classList.remove("open");
-
-    document.querySelectorAll("a.media-slot").forEach(link => {
-      link.addEventListener("click", e => {
-        e.preventDefault();
-        img.src = link.getAttribute("href");
-        img.alt = link.querySelector("img")?.alt || "";
-        box.classList.add("open");
-      });
-    });
-
-    box.addEventListener("click", close);
-    box.querySelector("img").addEventListener("click", e => e.stopPropagation());
-    document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
-  })();
 </script>
+<script src="assets/js/lightbox.js"></script>
 </body>
 </html>
