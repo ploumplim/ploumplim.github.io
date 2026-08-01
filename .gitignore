@@ -4,3 +4,10 @@
 # OS
 Thumbs.db
 .DS_Store
+
+# Sources vidéo lourdes (hors-repo, non déployées)
+assets/BlitzBall_source.mp4
+assets/*_original.mp4
+
+# Dossier de travail temporaire
+_gifwork/

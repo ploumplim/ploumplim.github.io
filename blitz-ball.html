@@ -39,8 +39,8 @@
       <p class="role-line">Gameplay Programmer · Level Designer · UI Programmer · Game Designer</p>
 
       <div class="lead">
-        <p>A <strong>versus arcade game</strong> where two players fight to score by making the ball bounce across the arena.</p>
-        <p>Master the <strong>bounces and ball effects</strong> to curve your shots, fool your opponent and land the perfect goal.</p>
+        <p>Take on your friends in a <strong>1-vs-1 soccer arena</strong>! Get tricky: bend your shots off the walls, or <strong>stun your opponent</strong> by slamming the ball right into them to open up an easy goal.</p>
+        <p>Hit, dash, pull and defend your net in a fast, competitive match — seize the advantage and show them who's the best <strong>Blitzer</strong> of the two of you!</p>
       </div>
 
       <div class="tags">
@@ -50,169 +50,209 @@
         <span class="tag">Fighting</span>
       </div>
 
-      <!-- MÉDIA PRINCIPAL : remplace <img> par une vidéo/gif quand tu en auras une -->
+      <!-- MÉDIA PRINCIPAL -->
       <div class="cover">
-        <img src="assets/BlitzBallMain.png" alt="Blitz Ball" />
+        <video class="video" src="assets/BlitzBall.mp4" poster="assets/BlitzBallMain.png" muted loop playsinline autoplay controls></video>
       </div>
     </div>
   </header>
 
-  <!-- ===================== GAMEPLAY PROGRAMMING ===================== -->
+  <!-- ===================== 01 · UNDER THE HOOD (SYSTEMS) ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">01</span>
-        <h2>Gameplay Programming</h2>
+        <h2>Under the hood</h2>
       </div>
 
-      <p>Built in <strong>Unity 6</strong> with the Universal Render Pipeline. The codebase is split into four independent systems: player control, ball states, level states (the main loop), and a game state machine driving all interfaces.</p>
+      <p>A <strong>versus arcade game</strong> where two players fight to score by making the ball bounce across the arena. Master the <strong>bounces and ball effects</strong> to curve your shots, fool your opponent and land the perfect goal.</p>
 
-      <!-- ── ARCHITECTURE & TOOLING ── -->
+      <!-- ── LEVEL MANAGER ── -->
       <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13 4l-2 16"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
-        </div>
+        <a class="task-media media-slot" href="assets/BBGif/LevelManager.png" target="_blank" rel="noopener" title="Open the full architecture diagram">
+          <img src="assets/BBGif/LevelManager.png" alt="Level Manager architecture: Level State Manager states (Out Of Level, Setup, Round, Buffer, Exit) driving the Manage Entities/Timers/Rounds/Missions/Points modules and scoring" style="object-fit:contain" />
+          <span class="media-zoom">⤢ Click to enlarge</span>
+        </a>
         <div class="task-body">
-          <p class="task-label">Architecture · Overview</p>
-          <h3>Systems &amp; tooling</h3>
-          <p>The project is organised around clearly separated systems, with tooling chosen to keep the code concise and maintainable.</p>
+          <p class="task-label">System · Scene management</p>
+          <h3>Level Manager</h3>
+          <p>To keep level transitions clean, a single <strong>Level Manager</strong> drives every level from one shared setup — no per-scene reconfiguration.</p>
           <ul>
-            <li>Four independent systems: player control, ball states, level loop and a UI-driving game state machine</li>
-            <li>Input handled through Unity's <strong>New Input System</strong> for flexible, straightforward input code</li>
-            <li>Developed in <strong>JetBrains Rider 2024</strong> with GitHub Copilot to streamline repetitive code and refactoring</li>
+            <li>A <strong>container scene</strong> holds the shared objects (Level Manager, UI, floor, lighting) and auto-loads every level scene from the Start menu</li>
+            <li>All levels are loaded then <strong>deactivated</strong>; only the current level's GameObjects are turned on, addressed by their <strong>Build Index</strong></li>
+            <li>Per-level goals are assigned through a <strong>math function</strong>: it sets each player's <em>goalToDefend</em> and <em>goalToAttack</em>, reversing the increments for odd player IDs so both always get one to attack and one to defend</li>
+            <li>Each goal tracks the points it receives, giving a live read on match progress</li>
           </ul>
         </div>
       </div>
 
-      <!-- ── PHYSICS ── -->
+      <!-- ── GESTION DES DONNÉES JOUEUR ── -->
       <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13 4l-2 16"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
+        <div class="task-media">
+          <svg class="player-hud" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Player data annotated on the character: ID, linked gamepad, goal and state">
+            <defs>
+              <filter id="hudGlow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="2.2" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- scan-plate + personnage -->
+            <rect x="244" y="32" width="411" height="496" rx="16" fill="#ffffff" stroke="#2A52BE" stroke-opacity="0.28"/>
+            <image href="assets/BBGif/Character.png" x="262" y="40" width="375" height="480" preserveAspectRatio="xMidYMid meet"/>
+
+            <!-- leaders -->
+            <g filter="url(#hudGlow)" fill="none" stroke="#7AA2FF" stroke-width="2">
+              <polyline points="442,88 162,88"/>
+              <polyline points="307,261 162,300"/>
+              <polyline points="562,203 736,120"/>
+              <polyline points="584,309 736,360"/>
+              <polyline points="445,500 162,452"/>
+            </g>
+
+            <!-- points d'ancrage -->
+            <g fill="#7AA2FF">
+              <circle cx="442" cy="88" r="4.5"/>
+              <circle cx="307" cy="261" r="4.5"/>
+              <circle cx="562" cy="203" r="4.5"/>
+              <circle cx="584" cy="309" r="4.5"/>
+              <circle cx="445" cy="500" r="4.5"/>
+              <circle cx="162" cy="88" r="3"/>
+              <circle cx="162" cy="300" r="3"/>
+              <circle cx="736" cy="120" r="3"/>
+              <circle cx="736" cy="360" r="3"/>
+              <circle cx="162" cy="452" r="3"/>
+            </g>
+
+            <!-- étiquettes (à l'extérieur, connexion à côté du texte → pas de croisement) -->
+            <g>
+              <text text-anchor="end" x="150" y="84"  fill="#7AA2FF" font-family="'JetBrains Mono', monospace" font-size="19" font-weight="700" letter-spacing="1">COLOR</text>
+              <text text-anchor="end" x="150" y="104" fill="#9AA4B2" font-family="Inter, sans-serif" font-size="13">Random · cap &amp; trail</text>
+
+              <text text-anchor="end" x="150" y="296" fill="#7AA2FF" font-family="'JetBrains Mono', monospace" font-size="19" font-weight="700" letter-spacing="1">GAMEPAD</text>
+              <text text-anchor="end" x="150" y="316" fill="#9AA4B2" font-family="Inter, sans-serif" font-size="13">Linked controller</text>
+
+              <text text-anchor="end" x="150" y="448" fill="#7AA2FF" font-family="'JetBrains Mono', monospace" font-size="19" font-weight="700" letter-spacing="1">ID</text>
+              <text text-anchor="end" x="150" y="468" fill="#9AA4B2" font-family="Inter, sans-serif" font-size="13">Unique per player</text>
+
+              <text text-anchor="start" x="748" y="116" fill="#7AA2FF" font-family="'JetBrains Mono', monospace" font-size="19" font-weight="700" letter-spacing="1">GOAL</text>
+              <text text-anchor="start" x="748" y="136" fill="#9AA4B2" font-family="Inter, sans-serif" font-size="13">To attack / defend</text>
+
+              <text text-anchor="start" x="748" y="356" fill="#7AA2FF" font-family="'JetBrains Mono', monospace" font-size="19" font-weight="700" letter-spacing="1">STATE</text>
+              <text text-anchor="start" x="748" y="376" fill="#9AA4B2" font-family="Inter, sans-serif" font-size="13">stun · dash · grab · hit</text>
+            </g>
+          </svg>
         </div>
         <div class="task-body">
-          <p class="task-label">Physics · Setup</p>
-          <h3>Physics-driven ball &amp; movement</h3>
-          <p>The game runs on Unity 6's built-in physics; every in-game object uses a <strong>Rigidbody</strong> for its calculations.</p>
+          <p class="task-label">System · Player data</p>
+          <h3>Gestion des données propre au joueur</h3>
+          <p>Every player is a self-contained <strong>data entity</strong> the whole game reads from — the character on the field is just the visible tip of it.</p>
           <ul>
-            <li>Default Contact Offset lowered from 0.2 to <strong>0.01</strong> for more precise, less recursive contacts, fixing several ball/player collision bugs</li>
-            <li>The player moves by scaling its speed against the left-stick Vector2 and applying it to velocity</li>
-            <li>The ball is propelled along the player's forward vector with a force derived from attack charge, base power and its current velocity, so it <strong>never slows down</strong></li>
-            <li>Walls use a frictionless physics material so the ball keeps all its speed on rebound</li>
+            <li><strong>ID</strong> — uniquely identifies each player and drives paired logic (odd/even goal assignment, spawning…)</li>
+            <li><strong>Random colour</strong> — a colour assigned per player, carried across their cap and ball trail so ownership is instantly readable</li>
+            <li><strong>Linked gamepad</strong> — the controller bound to this player, kept across disconnects</li>
+            <li><strong>Goal</strong> — the goal to attack and the goal to defend for the current level</li>
+            <li><strong>State</strong> — the player's current action: stun, dashing, grabbing, hitting…</li>
           </ul>
         </div>
       </div>
 
-      <!-- ── LOCAL MULTIPLAYER ── -->
+      <!-- ── MULTIJOUEUR LOCAL ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
+          <img src="assets/BBGif/MultiplayerHandler.png" alt="Multiplayer connection flow: pending gamepad joins, spawns player, links values, visuals and control" style="object-fit:contain; padding:16px; background:#fff" />
         </div>
         <div class="task-body">
           <p class="task-label">Input · Local multiplayer</p>
-          <h3>Controller assignment</h3>
-          <p>Controller pairing runs in three steps to reliably bind each gamepad to its player.</p>
+          <h3>Multijoueur local &amp; multiplayer handling</h3>
+          <p>Controller pairing runs in <strong>three steps</strong> to reliably bind each gamepad to its player.</p>
           <ul>
             <li>On connection, a new gamepad is registered as a <strong>pendingController</strong></li>
-            <li>It is identified through Unity's <strong>Gamepad HashSet</strong> to know which player it belongs to</li>
-            <li>The controller is then linked to all its dependent objects; a reconnecting pad is recognised and re-assigned to the same player</li>
+            <li>It is identified through Unity's <strong>GamePad HashSet</strong> to know which player it belongs to</li>
+            <li>It is then linked to all its dependent objects — <em>SpawnPlayer</em>, values, visuals and control</li>
+            <li>Because each controller is recorded in the HashSet, a <strong>reconnecting pad</strong> is recognised and re-assigned to the same player</li>
           </ul>
         </div>
       </div>
 
-      <!-- ── BALL STATE MACHINE ── -->
+      <!-- ── MENU START / PAUSE ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M3 12c4 4 14 4 18 0"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
+          <div style="position:absolute; inset:0; display:grid; grid-template-columns:1fr 1fr; gap:4px">
+            <img src="assets/BBGif/MenuStartBlitz.png" alt="Blitz Ball start menu with Play and Exit options" />
+            <img src="assets/BBGif/PauseBlitz.png" alt="In-game pause overlay" />
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Ball · State machine</p>
-          <h3>Ball states &amp; events</h3>
-          <p>The ball is driven by a state machine that emits events the rest of the game reacts to.</p>
+          <p class="task-label">UI · Menus</p>
+          <h3>Menu Start / Pause</h3>
+          <p>The everyday flow around a match — a <strong>start menu</strong> to launch or quit the game, and a <strong>pause overlay</strong> to freeze it mid-round.</p>
           <ul>
-            <li><strong>Dropped</strong> (initial), <strong>Caught</strong> (moves to the player's "hand" along an animation curve), <strong>Flying</strong> (neutral, gravity-free, constant motion) and <strong>Hit</strong> (brief, collisions disabled to avoid self-hits)</li>
-            <li>Events: OnBallCaught, OnHit, OnHitStateStart, CaughtStateEnd, OnNeutralBounce, OnBallFlight</li>
-            <li>Tunable variables: min/max propulsion speed &amp; height, linear damping/mass, player immunity time, ball owner and a speed floor that rises with each velocity increase</li>
+            <li><strong>Start menu</strong> — Play to jump into a match, Exit to quit, fully controller-navigable</li>
+            <li><strong>Pause</strong> — freezes the game (time scale) and displays the overlay, resuming exactly where it left off</li>
+            <li>Both wired to the Game State Machine so the game always knows whether it's in a menu, playing or paused</li>
           </ul>
         </div>
       </div>
 
-      <!-- ── PLAYER STATE MACHINE ── -->
+      <!-- ── GAME FEEL ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="7" r="3.5"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
+          <video src="assets/BBGif/GameFeel.mp4" muted loop playsinline autoplay></video>
         </div>
         <div class="task-body">
-          <p class="task-label">Player · State machine</p>
-          <h3>Player states</h3>
-          <p>The player is also a state machine, switching states from inputs.</p>
+          <p class="task-label">Game feel · Juice</p>
+          <h3>Effets de game feel</h3>
+          <p>The game feel improves with the player's mastery of the controls and the evolving tempo of the round, gradually drawing the player into a deep <strong>flow state</strong>. In this context, the feeling of "playing well" becomes a challenge and a goal in itself.</p>
           <ul>
-            <li><strong>Neutral</strong>: movement only, the gateway to every other state</li>
-            <li><strong>Sprinting</strong>: faster movement via a sprint boost, but the player can't hit or grab</li>
-            <li><strong>Hit</strong>: swings the bat while still moving freely</li>
-            <li><strong>Grab</strong>: pulls a nearby ball toward the player, with duration and range scaled by the grab charge</li>
+            <li><strong>Screenshake on bounce</strong> — the camera kicks on impact to sell the ball's speed and power</li>
+            <li><strong>Confetti on goal</strong> — a burst of particles celebrates each score and punctuates the win</li>
+            <li><strong>Ball trail</strong> — the ball trails the colour of whoever hit it last, showing at a glance who owns it and to whom it's dangerous</li>
           </ul>
         </div>
       </div>
 
-      <!-- ── LEVEL MANAGEMENT & GOALS ── -->
+      <!-- ── GAME STATE MACHINE ── -->
       <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
-        </div>
+        <a class="task-media media-slot" href="assets/BBGif/GameStateMachine.png" target="_blank" rel="noopener" title="Open the full Game State Machine diagram">
+          <img src="assets/BBGif/GameStateMachine.png" alt="Game State Machine: Menu, Option, Loading, Playing, Pause and End Game states, with the Level Manager driven during the Playing state" style="object-fit:contain" />
+          <span class="media-zoom">⤢ Click to enlarge</span>
+        </a>
         <div class="task-body">
-          <p class="task-label">Levels · Scene management</p>
-          <h3>Multi-scene loading &amp; goals</h3>
-          <p>A multi-scene setup lets a single <strong>Level Manager</strong> work across every level without reconfiguration.</p>
+          <p class="task-label">Architecture · State machine</p>
+          <h3>Game State Machine</h3>
+          <p>A single script that <strong>drives the whole game</strong>, always knowing exactly which state it is in — menus, loading, in-game, pause or end game.</p>
           <ul>
-            <li>A container scene holds the shared objects (Level Manager, UI, floor, lighting) and loads the level scenes on start</li>
-            <li>Levels are pre-loaded then deactivated; only the current level's objects are activated via its build index</li>
-            <li>Goals are assigned per level: a math function reads the goals list and current level to set each player's <strong>goalToDefend</strong> and <strong>goalToAttack</strong></li>
-            <li>Scoring only counts in a player's attack goal; each goal tracks its received points to follow match progress</li>
+            <li>Each state (<em>Menu, Loading, Playing, Pause, End Game</em>) has its own dedicated script</li>
+            <li>The state machine <strong>starts each one in the right order and at the right moment</strong></li>
+            <li>Acts as the backbone the rest of the game hangs off — including the Level Manager, launched during the Playing state</li>
           </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== LEVEL DESIGN ===================== -->
+  <!-- ===================== 02 · BUILDING THE ARENA (LEVEL DESIGN) ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">02</span>
-        <h2>Level Design</h2>
+        <h2>Building the arena</h2>
       </div>
 
-      <p>À compléter : décris la construction des arènes, l'agencement de l'espace de jeu et l'intention derrière chaque terrain.</p>
+      <p>À compléter : présente ta démarche de level design — comment la forme du terrain sert le gameplay de rebonds.</p>
 
-      <!-- ── BLOC 1 ── -->
+      <!-- ── CHOIX DES FORMES DE MAPS ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div class="media-empty">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
+            <span class="mono">gif / mp4 / png → assets/BBGif/…</span>
           </div>
         </div>
         <div class="task-body">
           <p class="task-label">Level Design · À définir</p>
-          <h3>Titre du bloc</h3>
+          <h3>Choix des formes de maps</h3>
           <p>À compléter.</p>
           <ul>
             <li>Point clé à détailler</li>
@@ -221,17 +261,17 @@
         </div>
       </div>
 
-      <!-- ── BLOC 2 ── -->
+      <!-- ── ARENA RESEARCH & THEORY ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 3v6l-5 9a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3"/><path d="M8 3h8M7.5 14h9"/></svg>
+            <span class="mono">gif / mp4 / png → assets/BBGif/…</span>
           </div>
         </div>
         <div class="task-body">
           <p class="task-label">Level Design · À définir</p>
-          <h3>Titre du bloc</h3>
+          <h3>Arena research &amp; theory</h3>
           <p>À compléter.</p>
           <ul>
             <li>Point clé à détailler</li>
@@ -242,96 +282,27 @@
     </div>
   </section>
 
-  <!-- ===================== UI PROGRAMMING ===================== -->
+  <!-- ===================== 03 · THE CHAMPION (GAME ART) ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">03</span>
-        <h2>UI Programming</h2>
+        <h2>The champion</h2>
       </div>
 
-      <p>À compléter : présente les interfaces que tu as programmées — HUD, menus, feedback visuel — et la manière dont elles sont câblées au gameplay.</p>
+      <p>À compléter : présente la création de ton personnage original — direction artistique, du concept à l'intégration.</p>
 
-      <!-- ── BLOC 1 ── -->
+      <!-- ── ORIGINAL CHARACTER ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 13h6M7 16h4"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="7" r="3.5"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/></svg>
+            <span class="mono">gif / mp4 / png → assets/BBGif/…</span>
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">UI Programming · À définir</p>
-          <h3>Titre du bloc</h3>
-          <p>À compléter.</p>
-          <ul>
-            <li>Point clé à détailler</li>
-            <li>Point clé à détailler</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- ── BLOC 2 ── -->
-      <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 13h6M7 16h4"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
-        </div>
-        <div class="task-body">
-          <p class="task-label">UI Programming · À définir</p>
-          <h3>Titre du bloc</h3>
-          <p>À compléter.</p>
-          <ul>
-            <li>Point clé à détailler</li>
-            <li>Point clé à détailler</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== GAME DESIGN ===================== -->
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="section-num">04</span>
-        <h2>Game Design</h2>
-      </div>
-
-      <p>À compléter : présente tes intentions de design, la boucle de gameplay et les mécaniques principales (rebonds, effets de balle, versus).</p>
-
-      <!-- ── BLOC 1 ── -->
-      <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
-        </div>
-        <div class="task-body">
-          <p class="task-label">Game Design · À définir</p>
-          <h3>Titre du bloc</h3>
-          <p>À compléter.</p>
-          <ul>
-            <li>Point clé à détailler</li>
-            <li>Point clé à détailler</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- ── BLOC 2 ── -->
-      <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
-        </div>
-        <div class="task-body">
-          <p class="task-label">Game Design · À définir</p>
-          <h3>Titre du bloc</h3>
+          <p class="task-label">Game Art · À définir</p>
+          <h3>Original character</h3>
           <p>À compléter.</p>
           <ul>
             <li>Point clé à détailler</li>
@@ -364,8 +335,34 @@
 
 </div><!-- /.page -->
 
+<!-- ===================== LIGHTBOX ===================== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <img src="" alt="" />
+</div>
+
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Lightbox : ouvre tout <a class="media-slot"> en pop-up sur la même page
+  (function () {
+    const box = document.getElementById("lightbox");
+    const img = box.querySelector("img");
+    const close = () => box.classList.remove("open");
+
+    document.querySelectorAll("a.media-slot").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        img.src = link.getAttribute("href");
+        img.alt = link.querySelector("img")?.alt || "";
+        box.classList.add("open");
+      });
+    });
+
+    box.addEventListener("click", close);
+    box.querySelector("img").addEventListener("click", e => e.stopPropagation());
+    document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  })();
 </script>
 </body>
 </html>

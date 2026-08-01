@@ -100,10 +100,41 @@
   background:var(--surface-2); border:1px solid var(--line); border-radius:12px;
 }
 .media-slot img, .media-slot video{ width:100%; height:100%; object-fit:cover; }
+a.media-slot{ display:block; text-decoration:none; cursor:zoom-in; }
+.media-zoom{
+  position:absolute; bottom:8px; right:8px;
+  font-family:'JetBrains Mono',monospace; font-size:11px;
+  background:rgba(0,0,0,.62); color:#fff; padding:4px 9px; border-radius:6px;
+  opacity:0; transition:opacity .15s ease;
+}
+a.media-slot:hover .media-zoom{ opacity:1; }
+
+/* Lightbox (pop-up plein écran sur la même page) */
+.lightbox{
+  position:fixed; inset:0; z-index:100;
+  display:none; align-items:center; justify-content:center;
+  padding:32px; background:rgba(8,10,14,.88); backdrop-filter:blur(4px);
+  cursor:zoom-out;
+}
+.lightbox.open{ display:flex; }
+.lightbox img{
+  max-width:95%; max-height:92%; object-fit:contain;
+  border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+.lightbox-close{
+  position:absolute; top:18px; right:22px;
+  font-size:30px; line-height:1; color:#fff; opacity:.8;
+  background:none; border:none; cursor:pointer;
+}
+.lightbox-close:hover{ opacity:1; }
 .media-empty{
   position:absolute; inset:0; display:flex; flex-direction:column;
   align-items:center; justify-content:center; gap:8px; color:var(--muted-2);
   background:repeating-linear-gradient(45deg, #181d25 0 12px, #161a21 12px 24px);
+}
+.player-hud{
+  display:block; width:100%; height:auto;
+  background:var(--surface-2); border:1px solid var(--line); border-radius:12px;
 }
 .media-empty .mono{ font-size:12px; }
 .media-empty svg{ opacity:.5; }
