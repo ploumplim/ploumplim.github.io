@@ -1,21 +1,25 @@
 /* ============================================================
-   BASE — fondation partagée par TOUTES les pages
-   Tokens, reset, typographie. À lier en PREMIER dans le <head>.
+   BASE — shared foundation for ALL pages
+   Tokens, reset, typography. Link FIRST in the <head>.
    ============================================================ */
 :root{
-  --bg:        #0E1116;   /* fond viewport, presque noir bleuté */
+  --bg:        #0E1116;   /* viewport background, almost bluish black */
   --bg-2:      #11151B;
-  --surface:   #161A21;   /* cartes */
+  --surface:   #161A21;   /* cards */
   --surface-2: #1B212A;
-  --line:      #252B36;   /* filets / bordures */
-  --text:      #E8EAED;
-  --muted:     #8A93A3;
-  --muted-2:   #5C6573;
-  --accent:    #2A52BE;   /* bleu foncé (accent principal) */
-  --accent-dim:#2A52BE22;
-  --cyan:      #57D7E6;   /* accent froid secondaire, très parcimonieux */
+  --line:      #252B36;   /* rules / borders */
+  --text:      #E8EAED;   /* headings, emphasis, key text */
+  --text-2:    #CDD3DC;   /* body copy / paragraphs */
+  --muted:     #99A2B2;   /* secondary text / tags */
+  --muted-2:   #6E7889;   /* small labels / metadata */
+  --accent:    #4C82F0;   /* bright blue (main accent) — readable on the dark bg */
+  --accent-dim:#4C82F022;
+  --cyan:      #57D7E6;   /* secondary cool accent, used very sparingly */
 
-  --maxw: 1120px;
+  /* Display / headings font — swap here to try another typeface */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+
+  --maxw: 1320px;
   --radius: 14px;
   --ease: cubic-bezier(.2,.7,.2,1);
 }
@@ -28,7 +32,7 @@ body{
   background:var(--bg);
   color:var(--text);
   font-family:'Inter', system-ui, sans-serif;
-  font-size:16px;
+  font-size:21.5px;
   line-height:1.65;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;

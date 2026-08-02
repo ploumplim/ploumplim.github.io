@@ -1,15 +1,15 @@
 /* ============================================================
-   PAGE PROJET — gabarit commun aux pages "case study"
+   PROJECT PAGE — shared template for the "case study" pages
    (blitz-ball, deep-dive-repair, over-the-garden)
-   À lier APRÈS base.css. Le CSS propre à une page reste inline.
+   Link AFTER base.css. Page-specific CSS stays inline.
    ============================================================ */
 
-/* grille de fond fixe, comme la home */
+/* fixed background grid, like the home page */
 .grid-bg{
   position:fixed; inset:-10% 0; z-index:0; pointer-events:none;
   background-image:
-    linear-gradient(to right,  rgba(42,82,190,.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(42,82,190,.06) 1px, transparent 1px);
+    linear-gradient(to right,  rgba(76,130,240,.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(76,130,240,.06) 1px, transparent 1px);
   background-size:48px 48px;
   mask-image:radial-gradient(120% 80% at 50% 0%, #000 18%, transparent 75%);
 }
@@ -26,12 +26,12 @@
 }
 .nav-inner{ display:flex; align-items:center; gap:16px; height:60px; }
 .brand{
-  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
-  font-size:16px; display:flex; align-items:center; gap:9px;
+  font-family:var(--font-display); font-weight:700; letter-spacing:-.02em;
+  font-size:21.5px; display:flex; align-items:center; gap:9px;
 }
 .brand .dot{ width:9px; height:9px; border-radius:2px; background:var(--accent); box-shadow:0 0 12px var(--accent); }
 .back{
-  margin-left:auto; font-size:13.5px; color:var(--muted); padding:7px 12px; border-radius:8px;
+  margin-left:auto; font-size:18px; color:var(--muted); padding:7px 12px; border-radius:8px;
   display:inline-flex; align-items:center; gap:7px;
   transition:color .2s var(--ease), background .2s var(--ease);
 }
@@ -42,31 +42,31 @@
    ============================================================ */
 .hero{ padding:84px 0 56px; }
 .eyebrow{
-  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent);
+  font-family:'JetBrains Mono',monospace; font-size:17.5px; color:var(--accent);
   letter-spacing:.04em; margin-bottom:18px;
 }
 .eyebrow::before{ content:'// '; color:var(--muted-2); }
 .hero h1{
-  font-family:'Sora',sans-serif; font-weight:800; letter-spacing:-.03em;
-  font-size:clamp(38px, 7vw, 68px); line-height:1.0; margin-bottom:18px;
+  font-family:var(--font-display); font-weight:700; letter-spacing:-.03em;
+  font-size:clamp(51px, 8vw, 92px); line-height:1.0; margin-bottom:18px;
 }
 .hero h1 .accent{ color:var(--accent); }
 .role-line{
-  font-family:'JetBrains Mono',monospace; font-size:clamp(15px,2vw,19px); font-weight:500;
+  font-family:'JetBrains Mono',monospace; font-size:clamp(20px,2.4vw,26px); font-weight:500;
   color:var(--cyan);
   text-transform:uppercase; letter-spacing:.06em; margin-bottom:28px;
 }
-.lead{ font-size:clamp(17px,2.2vw,20px); color:var(--text); max-width:760px; }
-.lead p{ margin-bottom:14px; color:var(--muted); font-weight:400; }
+.lead{ font-size:clamp(23px,2.6vw,27px); color:var(--text); max-width:none; }
+.lead p{ margin-bottom:14px; color:var(--text-2); font-weight:400; }
 .lead p strong{ color:var(--text); font-weight:700; }
 
-.tags{ display:flex; flex-wrap:wrap; gap:9px; margin-top:26px; }
+.tags{ display:flex; flex-wrap:wrap; gap:7px; margin-top:26px; }
 .tag{
-  font-family:'JetBrains Mono',monospace; font-size:16.5px; color:var(--muted);
-  padding:8px 16px; border:1px solid var(--line); border-radius:7px; background:var(--bg-2);
+  font-family:'JetBrains Mono',monospace; font-size:15.5px; color:var(--muted);
+  padding:4px 9px; border:1px solid var(--line); border-radius:6px; background:var(--bg-2);
 }
 
-/* bandeau média principal */
+/* main media banner */
 .cover{
   margin-top:40px; position:relative; aspect-ratio:16/9; overflow:hidden;
   background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius);
@@ -78,22 +78,22 @@
    ============================================================ */
 .section{ padding:72px 0; border-top:1px solid var(--line); }
 .section-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:18px; }
-.section-num{ font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent); }
+.section-num{ font-family:'JetBrains Mono',monospace; font-size:17.5px; color:var(--accent); }
 .section-head h2{
-  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
-  font-size:clamp(24px,4vw,34px);
+  font-family:var(--font-display); font-weight:700; letter-spacing:-.02em;
+  font-size:clamp(32px,4.8vw,46px);
 }
-.section > .wrap > p{ color:var(--muted); max-width:760px; margin-bottom:16px; font-weight:400; }
+.section > .wrap > p{ color:var(--text-2); max-width:none; margin-bottom:16px; font-weight:400; }
 .section > .wrap > p strong{ color:var(--text); font-weight:700; }
 .credit{
   display:inline-flex; align-items:center; gap:9px; margin-bottom:28px;
-  font-size:14px; color:var(--muted);
+  font-size:19px; color:var(--muted);
   padding:8px 14px; border:1px solid var(--line); border-radius:10px; background:var(--surface);
 }
 .credit b{ color:var(--text); font-weight:600; }
 
 /* ============================================================
-   EMPLACEMENT MÉDIA (GIF / mp4 / png à remplacer)
+   MEDIA SLOT (GIF / mp4 / png to replace)
    ============================================================ */
 .media-slot{
   position:relative; aspect-ratio:16/9; overflow:hidden;
@@ -103,13 +103,13 @@
 a.media-slot{ display:block; text-decoration:none; cursor:zoom-in; }
 .media-zoom{
   position:absolute; bottom:8px; right:8px;
-  font-family:'JetBrains Mono',monospace; font-size:11px;
+  font-family:'JetBrains Mono',monospace; font-size:15px;
   background:rgba(0,0,0,.62); color:#fff; padding:4px 9px; border-radius:6px;
   opacity:0; transition:opacity .15s ease;
 }
 a.media-slot:hover .media-zoom{ opacity:1; }
 
-/* Lightbox (pop-up plein écran sur la même page) */
+/* Lightbox (full-screen pop-up on the same page) */
 .lightbox{
   position:fixed; inset:0; z-index:100;
   display:none; align-items:center; justify-content:center;
@@ -122,11 +122,11 @@ a.media-slot:hover .media-zoom{ opacity:1; }
   border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,.6);
 }
 .lightbox video{ cursor:default; }
-/* tout média cliquable → curseur loupe */
+/* any clickable media → magnifier cursor */
 .zoomable{ cursor:zoom-in; }
 .lightbox-close{
   position:absolute; top:18px; right:22px;
-  font-size:30px; line-height:1; color:#fff; opacity:.8;
+  font-size:40px; line-height:1; color:#fff; opacity:.8;
   background:none; border:none; cursor:pointer;
 }
 .lightbox-close:hover{ opacity:1; }
@@ -139,28 +139,28 @@ a.media-slot:hover .media-zoom{ opacity:1; }
   display:block; width:100%; height:auto;
   background:var(--surface-2); border:1px solid var(--line); border-radius:12px;
 }
-.media-empty .mono{ font-size:12px; }
+.media-empty .mono{ font-size:16px; }
 .media-empty svg{ opacity:.5; }
 
 /* ============================================================
-   TÂCHES — média d'un côté, texte de l'autre (alterné)
+   TASKS — media on one side, text on the other (alternating)
    ============================================================ */
 .task{
   display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center;
   padding:28px 0;
 }
 .task + .task{ border-top:1px solid var(--line); }
-.task:nth-child(even) .task-media{ order:2; }      /* alterne le côté du média */
+.task:nth-child(even) .task-media{ order:2; }      /* alternates the media side */
 .task-label{
-  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--accent);
+  font-family:'JetBrains Mono',monospace; font-size:15.5px; color:var(--accent);
   text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;
 }
-.task h3{ font-family:'Sora',sans-serif; font-weight:700; font-size:22px; margin-bottom:12px; }
-.task p{ color:var(--muted); margin-bottom:16px; font-weight:400; }
+.task h3{ font-family:var(--font-display); font-weight:700; font-size:30px; margin-bottom:12px; }
+.task p{ color:var(--text-2); margin-bottom:16px; font-weight:400; }
 .task p strong, .task li strong{ color:var(--text); font-weight:700; }
 .task ul{ list-style:none; display:flex; flex-direction:column; gap:9px; }
-.task li{ font-size:14.5px; color:var(--text); position:relative; padding-left:20px; font-weight:400; }
-.task li::before{ content:'▸'; color:var(--accent); font-size:12px; position:absolute; left:0; top:0; }
+.task li{ font-size:20px; color:var(--text); position:relative; padding-left:20px; font-weight:400; }
+.task li::before{ content:'▸'; color:var(--accent); font-size:16px; position:absolute; left:0; top:0; }
 .task li.warn::before{ content:'!'; color:var(--cyan); font-weight:700; }
 
 @media (max-width:760px){
@@ -176,23 +176,23 @@ a.media-slot:hover .media-zoom{ opacity:1; }
   background:linear-gradient(180deg,var(--surface),var(--bg-2));
   border:1px solid var(--line); border-radius:var(--radius); padding:40px; text-align:center;
 }
-.cta h2{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(22px,4vw,30px); margin-bottom:10px; letter-spacing:-.02em; }
+.cta h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(30px,4.8vw,40px); margin-bottom:10px; letter-spacing:-.02em; }
 .cta p{ color:var(--muted); margin-bottom:24px; }
 .btn{
-  font-family:'Sora',sans-serif; font-weight:600; font-size:14.5px;
+  font-family:var(--font-display); font-weight:600; font-size:19.5px;
   padding:13px 22px; border-radius:11px; cursor:pointer; border:1px solid transparent;
   transition:transform .15s var(--ease), background .2s var(--ease), border-color .2s var(--ease);
   display:inline-flex; align-items:center; gap:9px;
 }
 .btn:hover{ transform:translateY(-2px); }
 .btn-primary{ background:var(--accent); color:#0B0D11; }
-.btn-primary:hover{ background:#3a68da; }
+.btn-primary:hover{ background:#6E9BF5; }
 .btn-ghost{ background:transparent; color:var(--text); border-color:var(--line); }
 .btn-ghost:hover{ border-color:var(--accent); }
 
 .footer{
   border-top:1px solid var(--line); padding:32px 0; margin-top:8px;
   display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
-  color:var(--muted-2); font-size:13px;
+  color:var(--muted-2); font-size:17.5px;
 }
-.footer .mono{ font-size:12px; }
+.footer .mono{ font-size:16px; }

@@ -6,9 +6,19 @@
 <title>Deep Dive Repair — Case Study · Moreau Baptiste</title>
 <meta name="description" content="Case study: designing the task system and zone-based spawning of Deep Dive Repair, a Unity / C# co-op game." />
 
+<!-- Favicon (inline accent square, no file needed) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234C82F0'/%3E%3C/svg%3E" />
+
+<!-- Social preview (Open Graph / Twitter). TODO: replace the relative paths with your absolute deployed URL for reliable previews. -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Deep Dive Repair — Case Study · Moreau Baptiste" />
+<meta property="og:description" content="Unity / C# co-op game: character controller, task system and zone-based spawning." />
+<meta property="og:image" content="assets/DeepDiveRepairMain.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="assets/css/base.css" />
 <link rel="stylesheet" href="assets/css/project.css" />
@@ -37,12 +47,12 @@
     <div class="wrap">
       <p class="eyebrow">unity · c# · co-op</p>
       <h1>Deep&nbsp;Dive&nbsp;<span class="accent">Repair</span></h1>
-      <p class="role-line">Gameplay Programmer · Game Designer</p>
+      <p class="role-line">Gameplay Programmer · Game Designer  · UI Designer</p>
 
       <div class="lead">
         <p>Play co-op as two little robots tasked with rescuing submarines in distress.</p>
         <p>Complete a series of small tasks to repair the submarine's various problems, all while keeping its engine running so it can reach a safe harbour.</p>
-        <p>Use the objects at your disposal… and even your partner&nbsp;! Throw each other around to move through the submarine more easily and overcome obstacles.</p>
+        <p>Use the objects at your disposal… and even your partner! Throw each other around to move through the submarine more easily and overcome obstacles.</p>
       </div>
 
       <div class="tags">
@@ -52,20 +62,20 @@
         <span class="tag">Game feel</span>
       </div>
 
-      <!-- MÉDIA PRINCIPAL : remplace le bloc .media-empty par :
+      <!-- MAIN MEDIA: replace the .media-empty block with:
            <video src="assets/deepdive.mp4" poster="assets/deepdive.jpg" muted loop playsinline autoplay></video>
-           ou  <img src="assets/deepdive.jpg" alt="Deep Dive Repair" /> -->
+           or  <img src="assets/deepdive.jpg" alt="Deep Dive Repair" /> -->
       <div class="cover">
         <video class="video" src="assets/Trailer Deep Dive Repair ICAN 2024.mp4" muted loop playsinline autoplay controls></video>
       </div>
     </div>
   </header>
-    <!-- ===================== MON TRAVAIL ===================== -->
+    <!-- ===================== MY WORK ===================== -->
     <section class="section">
         <div class="wrap">
             <div class="section-head">
                 <span class="section-num">01</span>
-                <h2>My work: Character controller</h2>
+                <h2>Character controller</h2>
             </div>
 
             <p>Local co-op was a deliberate design choice: sharing the same screen turns coordination into something <strong>physical and immediate</strong>. Even movement is cooperative — players can <strong>throw one another</strong> across the submarine, so each robot is both a teammate and a tool.</p>
@@ -77,7 +87,7 @@
               <div class="task-media media-slot">
                 <div class="media-empty">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
-                    <img src="assets/DDRGif/Controller.png" alt="Tâche Pressoir" />
+                    <img src="assets/DDRGif/Controller.png" alt="Press task" />
                 </div>
               </div>
               <div class="task-body">
@@ -119,8 +129,8 @@
                 <h3>Coyote time &amp; jump buffering</h3>
                 <p>To keep the jump forgiving and responsive, two small timing windows smooth over the gap between what the player intends and what the physics allows.</p>
                 <ul>
-                  <li><strong>Coyote time</strong> : a short grace window after leaving a ledge during which the jump still registers, so a slightly late press never feels punishing</li>
-                  <li><strong>Jump buffering</strong> : a press made just before landing is remembered and fires the instant the robot touches the ground</li>
+                  <li><strong>Coyote time:</strong> a short grace window after leaving a ledge during which the jump still registers, so a slightly late press never feels punishing</li>
+                  <li><strong>Jump buffering:</strong> a press made just before landing is remembered and fires the instant the robot touches the ground</li>
                   <li>Both windows tuned to stay invisible — they forgive the player without making the controller feel loose</li>
                 </ul>
               </div>
@@ -150,8 +160,8 @@
               </div>
               <div class="task-body">
                 <p class="task-label">Physics · Throw</p>
-                <h3>Throw and avoid unrealistic direction</h3>
-                <p>Ensuring that throws follow realistic physics and don't allow for impossible trajectories like go through little wall or glitch in.</p>
+                <h3>Preventing unrealistic throws</h3>
+                <p>Making sure throws follow believable physics and can't take impossible trajectories — no clipping through thin walls or glitching into geometry.</p>
                 <ul>
                     <li>Verify the throw angle with a raycast (DrawLine) and a dot product to compute the range, preventing the thrown item from glitching into nearby geometry or being thrown out of bounds</li>
                 </ul>
@@ -178,12 +188,12 @@
     </section>
     
     
-  <!-- ===================== MON TRAVAIL ===================== -->
+  <!-- ===================== MY WORK ===================== -->
   <section class="section" style="padding-bottom:0">
     <div class="wrap">
       <div class="section-head">
-        <span class="section-num">01</span>
-        <h2>My work: The Task system</h2>
+        <span class="section-num">02</span>
+        <h2>The Task system</h2>
       </div>
 
       <p>The tasks are the core of the gameplay and therefore held a central place in the game's production. They are the player's only means of action, serving both as a progression mechanic and as a survival system.</p>
@@ -192,12 +202,12 @@
     </div>
   </section>
 
-  <!-- ===================== LES TÂCHES ===================== -->
+  <!-- ===================== THE TASKS ===================== -->
   <section class="section" style="border-top:none; padding-top:0">
     <div class="wrap">
-      <!-- ── TÂCHE SPAWN PAR ZONES ── -->
+      <!-- ── ZONE-BASED SPAWN TASK ── -->
       <div class="task">
-        <!-- remplace par <img src="assets/spawn-zones.gif"/> ou un mp4 montrant le découpage en zones -->
+        <!-- replace with <img src="assets/spawn-zones.gif"/> or an mp4 showing the zone split -->
         <div class="task-media media-slot">
           <img src="assets/DDRGif/DelimitationLevel.png" alt="LevelZone" />
         </div>
@@ -214,11 +224,11 @@
         </div>
       </div>
 
-      <!-- ── TÂCHE PRESSOIR ── -->
+      <!-- ── PRESS TASK ── -->
       <div class="task">
-        <!-- remplace .media-empty par <img src="assets/task-pressoir.gif" alt="Tâche Pressoir"/> -->
+        <!-- replace .media-empty with <img src="assets/task-pressoir.gif" alt="Press task"/> -->
         <div class="task-media media-slot">
-          <img src="assets/DDRGif/Press.gif" alt="Tâche Pressoir" />
+          <img src="assets/DDRGif/Press.gif" alt="Press task" />
         </div>
         <div class="task-body">
           <p class="task-label">Task · Press</p>
@@ -231,7 +241,7 @@
         </div>
       </div>
 
-      <!-- ── TÂCHE DUO ── -->
+      <!-- ── DUO TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
             <img src="assets/DDRGif/Duo.gif" alt="Duo task" />
@@ -248,7 +258,7 @@
         </div>
       </div>
 
-      <!-- ── TÂCHE TOURNEVIS ── -->
+      <!-- ── SCREWDRIVER TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
             <img src="assets/DDRGif/Vis.gif" alt="Screwdriver task" />
@@ -264,7 +274,7 @@
         </div>
       </div>
 
-      <!-- ── TÂCHE TIMING ── -->
+      <!-- ── TIMING TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
             <img src="assets/DDRGif/Timing.gif" alt="Timing task" />
@@ -280,7 +290,7 @@
         </div>
       </div>
 
-      <!-- ── TÂCHE BATTERIE ── -->
+      <!-- ── BATTERY TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
             <img src="assets/DDRGif/Battery.gif" alt="Battery task" />
@@ -297,7 +307,7 @@
         </div>
       </div>
 
-      <!-- ── TÂCHE 6 (à compléter) ── -->
+      <!-- ── TASK 6 (to be completed) ── -->
       <div class="task">
         <div class="task-media media-slot">
             <img src="assets/DDRGif/Tuyeau.gif" alt="Pipe task" />
@@ -313,22 +323,22 @@
         </div>
       </div>
 
-      <!-- ── TÂCHE MACHINE À LAVER ── -->
+      <!-- ── WASHING MACHINE TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
           <img src="assets/DDRGif/WashingMachine.gif" alt="Washing machine task" />
         </div>
         <div class="task-body">
           <p class="task-label">Task · Washing machine</p>
-          <h3>À compléter</h3>
-          <p>À compléter.</p>
+          <h3>To be completed</h3>
+          <p>To be completed.</p>
           <ul>
-            <li>À compléter.</li>
+            <li>To be completed.</li>
           </ul>
         </div>
       </div>
 
-      <!-- ── TÂCHE ORDINATEUR ── -->
+      <!-- ── COMPUTER TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div style="position:absolute; inset:0; display:grid; grid-template-columns:1fr 1fr; gap:4px">
@@ -351,7 +361,7 @@
     </div>
   </section>
 
-  <!-- ===================== AUTOUR DU JEU (SECTION GLOBALE) ===================== -->
+  <!-- ===================== AROUND THE GAME (GLOBAL SECTION) ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
@@ -362,7 +372,7 @@
       <p>Beyond the core gameplay loop, a game is also everything that <strong>wraps around</strong> it: how a run is introduced, how it ends, and what makes players want to start another one. I handled this <strong>layer around the run</strong> — the narrative framing, the win/loss flow, and the replayability.</p>
       <p>Together, these systems give every session a <strong>clear beginning</strong>, a <strong>clear outcome</strong>, and a reason to come back for one more attempt.</p>
 
-      <!-- ── DIALOGUES D'INTRO ── -->
+      <!-- ── INTRO DIALOGUES ── -->
       <div class="task">
         <div class="task-media media-slot">
           <img src="assets/DDRGif/Dialogue.gif" alt="Level intro dialogues" />
@@ -379,7 +389,7 @@
         </div>
       </div>
 
-      <!-- ── VICTOIRE / DÉFAITE / RELANCE ── -->
+      <!-- ── WIN / LOSS / RESTART ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div style="position:absolute; inset:0; display:grid; grid-template-columns:1fr 1fr; gap:4px">
@@ -399,7 +409,7 @@
         </div>
       </div>
 
-      <!-- ── MEILLEUR TEMPS (SAUVEGARDE LOCALE) ── -->
+      <!-- ── BEST TIME (LOCAL SAVE) ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div class="media-empty">
@@ -425,7 +435,7 @@
   <section class="section" style="border-bottom:1px solid var(--line)">
     <div class="wrap">
       <div class="cta">
-        <h2>Want to play it&nbsp;?</h2>
+        <h2>Want to play it?</h2>
         <p>Playable build, itch.io page or source code — add your links here.</p>
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
           <a href="#" class="btn btn-primary">Play / itch.io</a>

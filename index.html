@@ -4,24 +4,36 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Moreau Baptiste — Game Developer</title>
-<meta name="description" content="Portfolio de Moreau Baptiste, Game Developer (Unity / Unreal), étudiant en Master. Projets, stack technique et contact." />
+<meta name="description" content="Portfolio of Moreau Baptiste, Game Developer (Unity / Unreal), Master's student. Projects, tech stack and contact." />
+
+<!-- Favicon (inline accent square, no file needed) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234C82F0'/%3E%3C/svg%3E" />
+
+<!-- Social preview (Open Graph / Twitter). TODO: replace the relative paths with your absolute deployed URL for reliable previews. -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Moreau Baptiste — Game Developer" />
+<meta property="og:description" content="Gameplay Programmer (Unity / C#) — responsive mechanics, AI behaviors and game feel." />
+<meta property="og:image" content="assets/DeepDiveRepairMain.png" />
+<meta name="twitter:card" content="summary_large_image" />
 
 <!-- ============================================================
-     POLICES (chargées en ligne par le navigateur)
-     - Sora        : titres / display
-     - Inter       : corps de texte
-     - JetBrains Mono : libellés "debug", clin d'oeil JetBrains/Rider
+     FONTS (loaded inline by the browser)
+     - Space Grotesk : headings / display (via --font-display)
+     - Inter          : body text
+     - JetBrains Mono : "debug" labels, a nod to JetBrains/Rider
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="assets/css/base.css" />
 
 <style>
+/* home page runs ~10% smaller than the shared base (project pages keep the base scale) */
+body{ font-size:19.5px; }
 
 /* ============================================================
-   3. FOND ANIMÉ (canvas plein écran, fixe)
+   3. ANIMATED BACKGROUND (full-screen canvas, fixed)
    ============================================================ */
 #field{
   position:fixed;
@@ -31,25 +43,25 @@
   height:100%;
   display:block;
 }
-/* grille en perspective douce, dérive en parallaxe au scroll */
+/* soft perspective grid, parallax drift on scroll */
 .grid-bg{
   position:fixed; inset:-10% 0; z-index:1; pointer-events:none;
   background-image:
-    linear-gradient(to right,  rgba(42,82,190,.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(42,82,190,.07) 1px, transparent 1px);
+    linear-gradient(to right,  rgba(76,130,240,.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(76,130,240,.07) 1px, transparent 1px);
   background-size:48px 48px;
   background-position:0 0;
   mask-image:radial-gradient(120% 85% at 50% 28%, #000 22%, transparent 78%);
   will-change:background-position;
 }
-/* voile pour garder le texte lisible par-dessus la simulation */
+/* veil to keep the text readable over the simulation */
 .field-veil{
   position:fixed; inset:0; z-index:2; pointer-events:none;
   background:
     radial-gradient(120% 90% at 50% 0%, transparent 40%, var(--bg) 100%),
     linear-gradient(180deg, rgba(14,17,22,.30) 0%, rgba(14,17,22,.55) 60%, var(--bg) 100%);
 }
-/* tout le contenu passe au-dessus du fond */
+/* all content sits above the background */
 .page{ position:relative; z-index:3; }
 
 @media (prefers-reduced-motion: reduce){
@@ -57,7 +69,7 @@
 }
 
 /* ============================================================
-   4. BARRE DE NAV ("debug bar")
+   4. NAV BAR ("debug bar")
    ============================================================ */
 .nav{
   position:sticky; top:0; z-index:50;
@@ -67,15 +79,15 @@
 }
 .nav-inner{ display:flex; align-items:center; gap:24px; height:60px; }
 .brand{
-  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
-  font-size:16px; display:flex; align-items:center; gap:9px;
+  font-family:var(--font-display); font-weight:700; letter-spacing:-.02em;
+  font-size:19.5px; display:flex; align-items:center; gap:9px;
 }
 .brand .dot{ width:9px; height:9px; border-radius:2px; background:var(--accent);
   box-shadow:0 0 12px var(--accent); }
 
 .nav-links{ display:flex; gap:4px; margin-left:auto; }
 .nav-links a{
-  font-size:13.5px; color:var(--muted); padding:7px 12px; border-radius:8px;
+  font-size:16px; color:var(--muted); padding:7px 12px; border-radius:8px;
   transition:color .2s var(--ease), background .2s var(--ease);
 }
 .nav-links a:hover{ color:var(--text); background:var(--surface); }
@@ -85,12 +97,14 @@
   background:var(--accent);
 }
 
-/* HUD : libellé build + fps + entités */
+/* HUD: build label + fps + entities */
 .hud{
-  margin-left:18px; font-size:11.5px; color:var(--muted-2);
+  margin-left:18px; font-size:14px; color:var(--muted-2);
   display:flex; gap:14px; align-items:center; white-space:nowrap;
 }
 .hud b{ color:var(--accent); font-weight:500; }
+/* hide the HUD before it crowds the nav on narrower screens */
+@media (max-width:1366px){ .hud{ display:none; } }
 
 .burger{
   display:none; margin-left:auto; width:40px; height:40px; border:1px solid var(--line);
@@ -116,50 +130,50 @@
    ============================================================ */
 .hero{ padding:120px 0 96px; }
 .eyebrow{
-  font-family:'JetBrains Mono',monospace; font-size:15px; color:var(--accent);
+  font-family:'JetBrains Mono',monospace; font-size:18px; color:var(--accent);
   letter-spacing:.04em; margin-bottom:22px;
 }
 .eyebrow::before{ content:'// '; color:var(--muted-2); }
 
 .hero h1{
-  font-family:'Sora',sans-serif; font-weight:800; letter-spacing:-.03em;
-  font-size:clamp(42px, 8vw, 84px); line-height:.98; margin-bottom:20px;
+  font-family:var(--font-display); font-weight:700; letter-spacing:-.03em;
+  font-size:clamp(40px, 6.3vw, 78px); line-height:.98; margin-bottom:20px;
 }
 .hero h1 .accent{ color:var(--accent); }
 
 .hero .lead{
-  font-size:clamp(17px,2.4vw,21px); color:var(--muted); max-width:620px;
+  font-size:clamp(21px,2.5vw,25px); color:var(--text-2); max-width:none;
   margin-bottom:36px;
 }
 
 .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
 .btn{
-  font-family:'Sora',sans-serif; font-weight:600; font-size:14.5px;
+  font-family:var(--font-display); font-weight:600; font-size:17.5px;
   padding:13px 22px; border-radius:11px; cursor:pointer; border:1px solid transparent;
   transition:transform .15s var(--ease), background .2s var(--ease), border-color .2s var(--ease);
   display:inline-flex; align-items:center; gap:9px;
 }
 .btn:hover{ transform:translateY(-2px); }
 .btn-primary{ background:var(--accent); color:#0B0D11; }
-.btn-primary:hover{ background:#3a68da; }
+.btn-primary:hover{ background:#6E9BF5; }
 .btn-ghost{ background:transparent; color:var(--text); border-color:var(--line); }
 .btn-ghost:hover{ border-color:var(--accent); }
 
 /* ============================================================
-   6. SECTIONS génériques
+   6. GENERIC SECTIONS
    ============================================================ */
 .section{ padding:96px 0; border-top:1px solid var(--line); }
 .section-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:48px; }
 .section-num{
-  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent);
+  font-family:'JetBrains Mono',monospace; font-size:15.5px; color:var(--accent);
 }
 .section-head h2{
-  font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-.02em;
-  font-size:clamp(26px,4vw,38px);
+  font-family:var(--font-display); font-weight:700; letter-spacing:-.02em;
+  font-size:clamp(27px,4vw,40px);
 }
 
 /* ============================================================
-   7. PROJETS
+   7. PROJECTS
    ============================================================ */
 .projects{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
 .project.featured{ grid-column:1 / -1; }
@@ -186,51 +200,51 @@
 }
 .media img, .media video{ width:100%; height:100%; object-fit:cover; }
 
-/* média & titre cliquables vers la page projet */
+/* media & title clickable to the project page */
 .media-link{ display:block; width:100%; height:100%; }
 .media-link img, .media-link video{ transition:transform .4s var(--ease); }
 .project:hover .media-link img, .project:hover .media-link video{ transform:scale(1.04); }
 .title-link{ transition:color .2s var(--ease); }
 .title-link:hover{ color:var(--cyan); }
 
-/* emplacement média vide (à remplacer par ton gif/mp4/png) */
+/* empty media slot (replace with your gif/mp4/png) */
 .media-empty{
   position:absolute; inset:0; display:flex; flex-direction:column;
   align-items:center; justify-content:center; gap:8px; color:var(--muted-2);
   background:
     repeating-linear-gradient(45deg, #181d25 0 12px, #161a21 12px 24px);
 }
-.media-empty .mono{ font-size:12px; }
+.media-empty .mono{ font-size:14.5px; }
 .media-empty svg{ opacity:.5; }
 
 .body{ padding:24px; display:flex; flex-direction:column; gap:14px; flex:1; }
 .project.featured .body{ flex:1 1 44%; justify-content:center; gap:16px; }
 
 .role{
-  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted);
+  font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--muted);
   letter-spacing:.03em; text-transform:uppercase;
 }
-/* partie surlignée du rôle (ex. "Gameplay Programmer") */
+/* highlighted part of the role (e.g. "Gameplay Programmer") */
 .role .hl{
   color:var(--text); background:var(--accent-dim);
   border:1px solid var(--accent); border-radius:5px; padding:1px 6px;
 }
-.project h3{ font-family:'Sora',sans-serif; font-weight:700; font-size:21px; letter-spacing:-.01em; }
-.project .note{ color:var(--muted); font-size:14.5px; }
+.project h3{ font-family:var(--font-display); font-weight:700; font-size:25px; letter-spacing:-.01em; }
+.project .note{ color:var(--text-2); font-size:17.5px; }
 
 .tags{ display:flex; flex-wrap:wrap; gap:7px; margin-top:2px; }
 .tag{
-  font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted);
+  font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--muted);
   padding:4px 9px; border:1px solid var(--line); border-radius:6px; background:var(--bg-2);
 }
-/* tag mis en avant : ajoute hot:true dans les données du projet */
+/* highlighted tag: add hot:true in the project data */
 .tag.hot{
   color:var(--text); border-color:var(--accent); background:var(--accent-dim);
 }
 
 .links{ display:flex; gap:18px; margin-top:auto; padding-top:6px; }
 .links a{
-  font-size:13.5px; font-weight:600; color:var(--text); display:inline-flex; align-items:center; gap:6px;
+  font-size:16px; font-weight:600; color:var(--text); display:inline-flex; align-items:center; gap:6px;
   border-bottom:1px solid transparent; transition:color .2s var(--ease), border-color .2s var(--ease);
 }
 .links a:hover{ color:var(--accent); border-color:var(--accent); }
@@ -238,19 +252,19 @@
 .links a.muted:hover{ color:var(--accent); }
 
 /* ============================================================
-   8. SKILLS (lecture type "debug readout")
+   8. SKILLS ("debug readout" style)
    ============================================================ */
 .skills{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
 .skill-col{
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px;
 }
 .skill-col h4{
-  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent);
+  font-family:'JetBrains Mono',monospace; font-size:14.5px; color:var(--accent);
   text-transform:uppercase; letter-spacing:.05em; margin-bottom:16px;
 }
 .skill-col ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
-.skill-col li{ font-size:15px; display:flex; align-items:center; gap:10px; }
-.skill-col li::before{ content:'▸'; color:var(--muted-2); font-size:12px; }
+.skill-col li{ font-size:18px; display:flex; align-items:center; gap:10px; }
+.skill-col li::before{ content:'▸'; color:var(--muted-2); font-size:14.5px; }
 
 /* ============================================================
    9. ABOUT
@@ -262,7 +276,7 @@
   color:var(--muted-2);
 }
 .avatar img{ width:100%; height:100%; object-fit:cover; }
-.about-text p{ color:var(--muted); margin-bottom:16px; max-width:62ch; }
+.about-text p{ color:var(--text-2); margin-bottom:16px; max-width:none; }
 .about-text p strong{ color:var(--text); font-weight:600; }
 @media (max-width:680px){ .about{ grid-template-columns:1fr; } .avatar{ max-width:160px; } }
 
@@ -274,8 +288,8 @@
   border:1px solid var(--line); border-radius:var(--radius); padding:48px;
   text-align:center;
 }
-.contact-card h2{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(24px,4vw,34px); margin-bottom:12px; letter-spacing:-.02em; }
-.contact-card p{ color:var(--muted); margin-bottom:28px; }
+.contact-card h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(25px,4vw,36px); margin-bottom:12px; letter-spacing:-.02em; }
+.contact-card p{ color:var(--text-2); margin-bottom:28px; }
 .socials{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 
 /* ============================================================
@@ -284,12 +298,12 @@
 .footer{
   border-top:1px solid var(--line); padding:32px 0;
   display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
-  color:var(--muted-2); font-size:13px;
+  color:var(--muted-2); font-size:15.5px;
 }
-.footer .mono{ font-size:12px; }
+.footer .mono{ font-size:14.5px; }
 
 /* ============================================================
-   12. ANIMATIONS d'apparition au scroll
+   12. SCROLL REVEAL ANIMATIONS
    ============================================================ */
 .reveal{ opacity:0; transform:translateY(20px); transition:opacity .6s var(--ease), transform .6s var(--ease); }
 .reveal.in{ opacity:1; transform:none; }
@@ -297,7 +311,7 @@
   .reveal{ opacity:1; transform:none; transition:none; }
 }
 
-/* responsive grilles */
+/* responsive grids */
 @media (max-width:760px){
   .projects{ grid-template-columns:1fr; }
   .skills{ grid-template-columns:1fr; }
@@ -310,7 +324,7 @@
 
 <body>
 
-<!-- FOND : simulation de particules -->
+<!-- BACKGROUND: particle simulation -->
 <canvas id="field"></canvas>
 <div class="grid-bg" id="gridBg"></div>
 <div class="field-veil"></div>
@@ -330,7 +344,7 @@
       </div>
 
       <div class="hud mono">
-        <span>BUILD&nbsp;<b id="ver">0.1.0</b></span>
+        <span>BUILD&nbsp;<b id="ver">1.0.0</b></span>
         <span>◷&nbsp;<b id="fps">60</b>&nbsp;fps</span>
         <span>◆&nbsp;<b id="ent">0</b>&nbsp;entities</span>
       </div>
@@ -344,19 +358,18 @@
   <!-- ===================== HERO ===================== -->
   <header id="top" class="hero">
     <div class="wrap">
-        <p class="eyebrow" style="font-size:25px">Gameplay Programmer · Unity</p>
+        <p class="eyebrow">Gameplay &amp; Systems Programmer</p>
       <h1>Building games that<br><span class="accent">feel</span> right to play.</h1>
       <p class="lead">
-        Moreau Baptiste — Game Developer, étudiant en 4<sup>e</sup> année de Master.
-        Je conçois des mécaniques de jeu sous Unity (et bientôt Unreal), du prototype
-        au gameplay jouable. Mes projets sont accessibles ci-dessous.
+        Moreau Baptiste — Game Developer, 4<sup>th</sup>-year Master's student.
+          Gameplay Programmer passionate about responsive mechanics, AI behaviors and game feel. I build prototypes and gameplay systems in Unity using clean, maintainable C# architecture.
       </p>
       <div class="cta-row">
         <a href="#work" class="btn btn-primary">
           View work
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <!-- Place ton PDF à côté de index.html et nomme-le CV_Moreau_Baptiste.pdf -->
+        <!-- Place your PDF next to index.html and name it CV_Moreau_Baptiste.pdf -->
         <a href="CV_Moreau_Baptiste.pdf" download class="btn btn-ghost">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
           Download CV
@@ -372,7 +385,7 @@
         <span class="section-num">01</span>
         <h2>My work</h2>
       </div>
-      <!-- les cartes sont générées par JS depuis le tableau PROJECTS plus bas -->
+      <!-- the cards are generated by JS from the PROJECTS array below -->
       <div class="projects" id="projects"></div>
     </div>
   </section>
@@ -388,15 +401,15 @@
         <div class="skill-col reveal">
           <h4>Engines</h4>
           <ul>
-            <li>Unity &nbsp;<span class="mono" style="color:var(--muted-2);font-size:12px">// main</span></li>
-            <li>Unreal Engine 5 &nbsp;<span class="mono" style="color:var(--muted-2);font-size:12px">// en cours</span></li>
+            <li>Unity &nbsp;<span class="mono" style="color:var(--muted-2);font-size:14.5px">// main</span></li>
+            <li>Learning Unreal Engine 5</li>
             <li>URP / shaders</li>
           </ul>
         </div>
         <div class="skill-col reveal">
           <h4>Languages</h4>
           <ul>
-            <li>C# &nbsp;<span class="mono" style="color:var(--muted-2);font-size:12px">// main</span></li>
+            <li>C# &nbsp;<span class="mono" style="color:var(--muted-2);font-size:14.5px">// main</span></li>
             <li>C++ (Unreal)</li>
             <li>HLSL / shaders</li>
           </ul>
@@ -404,9 +417,9 @@
         <div class="skill-col reveal">
           <h4>Focus</h4>
           <ul>
-            <li>Gameplay &amp; mécaniques</li>
+            <li>Gameplay &amp; mechanics</li>
             <li>Game feel</li>
-            <li>Prototypage</li>
+            <li>Prototyping</li>
             <li>Git · versioning</li>
           </ul>
         </div>
@@ -424,12 +437,12 @@
       <div class="about reveal">
         <div class="avatar">
           <!-- TODO: <img src="assets/me.jpg" alt="Your Name" /> -->
-          <span class="mono" style="font-size:12px">photo</span>
+          <span class="mono" style="font-size:14.5px">photo</span>
         </div>
         <div class="about-text">
-          <p><strong>[Placeholder — à remplir plus tard.]</strong> Une ou deux phrases sur qui tu es et ce qui te motive en game dev.</p>
-          <p>[Placeholder] Le type de jeux que tu veux faire, la partie du code que tu préfères (gameplay, outils, IA…), et ton parcours Unity → Unreal.</p>
-          <p><strong>Proximité de Paris</strong> · étudiant en 4<sup>e</sup> année de Master · ouvert aux opportunités.</p>
+          <p><strong>[Placeholder — to fill in later.]</strong> </p>
+          <p></p>
+          <p><strong>Near Paris</strong> · 4<sup>th</sup>-year Master's student · open to opportunities.</p>
         </div>
       </div>
     </div>
@@ -460,22 +473,22 @@
 
 <script>
 /* ============================================================
-   A. DONNÉES PROJETS  ←←← C'EST ICI QUE TU AJOUTES TES PROJETS
+   A. PROJECT DATA  ←←← THIS IS WHERE YOU ADD YOUR PROJECTS
    --------------------------------------------------------
-   Pour ajouter un projet : copie un bloc { ... } et remplis-le.
+   To add a project: copy a { ... } block and fill it in.
    media.type :
      'video'  → src = "assets/demo.mp4", poster = "assets/cover.jpg"
-     'image'  → src = "assets/cover.gif" (gif animé ou png)
-     'empty'  → emplacement vide (par défaut)
+     'image'  → src = "assets/cover.gif" (animated gif or png)
+     'empty'  → empty slot (default)
    ============================================================ */
 const PROJECTS = [
   {
     featured: true,
     title: "Deep Dive Repair",
     page: "deep-dive-repair.html",
-    role: "Gameplay Programmer · Game Designer · Ui Programmer",
-    note: "Dive in the ocean's deepest place to help and save crewmates in danger ! Repair their submarines and survive the abyss's threats in a co-op game.",
-    tags: ["Unity", "C#", "Co-op", "Gameplay", "Game systems"], 
+    role: "Gameplay Programmer · Game Designer · UI Designer",
+    note: "Dive into the ocean's deepest place to help and rescue crewmates in danger! Repair their submarines and survive the threats of the abyss in this co-op game.",
+    tags: ["Unity", "C#", "Co-op"], 
       media: {type : "image", src: "assets/DeepDiveRepairMain.png"},
       //media: { type: "youtube", id: "cM09wvRl7jY" },
     links: [
@@ -484,12 +497,12 @@ const PROJECTS = [
     ]
   },
   {
-    featured: true,
+    featured: false,
     title: "Blitz Ball",
     page: "blitz-ball.html",
-    role: "Gameplay Programmer · Level Designer · Ui Programmer · Game Designer",
-    note: "Versus Arcade Game · Try to goal with bounces while and ball effects !",
-    tags: ["Unity", "C#", "Versus", "Fighting"],
+    role: "Gameplay & System Programmer · Game Designer · UI Programmer · Level Designer",
+    note: "Versus arcade game · Score with wall bounces and ball effects!",
+    tags: ["Unity", "C#", "Versus"],
       media: {type : "image", src: "assets/BlitzBallMain.png"},
     links: [
       { label: "Devlog", href: "#" },
@@ -497,12 +510,11 @@ const PROJECTS = [
     ]
   },
   {
-    featured: true,
+    featured: false,
     title: "Over the Garden",
-    page: "over-the-garden.html",
-    role: "Gameplay Programmer  · Game Artist  · Game Designer",
-    note: "affrontez des légumes impitoyables sur un champ de bataille. Plantez-les pour \n" +
-        "obtenir une récolte abondante et remporter la partie.",
+    role: "Gameplay Programmer · Game Artist · Game Designer",
+    note: "Take on ruthless vegetables on a battlefield. Plant them to reap \n" +
+        "a bountiful harvest and win the game.",
     tags: ["Construct3D", "Blueprint", "Beat'em Up"],
       media: {type : "image", src: "assets/OverTheGardenMain.png"},
     links: [
@@ -512,7 +524,7 @@ const PROJECTS = [
   }
 ];
 
-/* ---- rendu des cartes ---- */
+/* ---- card rendering ---- */
 const iconPlay = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
 function mediaHTML(m){
   if(m.type === "youtube"){
@@ -558,7 +570,7 @@ function projectHTML(p){
 document.getElementById("projects").innerHTML = PROJECTS.map(projectHTML).join("");
 
 /* ============================================================
-   B. INTERACTIONS (nav, reveal, année)
+   B. INTERACTIONS (nav, reveal, year)
    ============================================================ */
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -572,13 +584,13 @@ burger.addEventListener("click", () => {
 navLinks.querySelectorAll("a").forEach(a =>
   a.addEventListener("click", () => navLinks.classList.remove("open")));
 
-// reveal au scroll
+// reveal on scroll
 const revealObs = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add("in"); revealObs.unobserve(e.target); } });
 }, { threshold:.12 });
 document.querySelectorAll(".reveal").forEach(el => revealObs.observe(el));
 
-// lien de nav actif selon la section visible
+// active nav link based on the visible section
 const sections = [...document.querySelectorAll("section[id], header[id]")];
 const linkFor = id => document.querySelector(`.nav-links a[href="#${id}"]`);
 const navObs = new IntersectionObserver((entries) => {
@@ -593,11 +605,11 @@ const navObs = new IntersectionObserver((entries) => {
 sections.forEach(s => navObs.observe(s));
 
 /* ============================================================
-   C. FOND : CHAMP DE VECTEURS (simulation de particules)
+   C. BACKGROUND: VECTOR FIELD (particle simulation)
    --------------------------------------------------------
-   Des particules suivent un champ d'angles calculé à partir
-   de sinusoïdes superposées → mouvement organique type "fluide".
-   Traînées via un léger fondu du canvas à chaque frame.
+   Particles follow an angle field computed from
+   superimposed sine waves → organic "fluid"-like motion.
+   Trails via a slight canvas fade on each frame.
    ============================================================ */
 (function flowField(){
   const canvas = document.getElementById("field");
@@ -608,24 +620,24 @@ sections.forEach(s => navObs.observe(s));
   const isMobile = window.matchMedia("(max-width:760px)").matches;
 
   function resize(){
-    DPR = Math.min(window.devicePixelRatio || 1, 1.4); // plafonné : le fond plein écran est rempli à chaque frame
+    DPR = Math.min(window.devicePixelRatio || 1, 1.4); // capped: the full-screen background is filled every frame
     W = canvas.clientWidth; H = canvas.clientHeight;
     canvas.width  = Math.floor(W * DPR);
     canvas.height = Math.floor(H * DPR);
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    // densité de particules adaptée à la surface
+    // particle density scaled to the surface area
     const target = Math.min(Math.round((W*H)/(isMobile?16000:9000)), isMobile?140:340);
     particles = Array.from({length: target}, (_, i) => ({
-      i,                                     // index pour la grille spatiale (connexions)
+      i,                                     // index for the spatial grid (connections)
       x: Math.random()*W, y: Math.random()*H,
-      hot: Math.random() < 0.12              // quelques particules "chaudes" plus visibles
+      hot: Math.random() < 0.12              // a few "hot", more visible particles
     }));
     document.getElementById("ent").textContent = particles.length;
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#0E1116";
     ctx.fillRect(0,0,W,H);
   }
 
-  // champ d'angle : superposition de sinus → pseudo bruit fluide
+  // angle field: superimposed sines → pseudo fluid noise
   function angle(x, y, t){
     const s = 0.0016;
     const a = Math.sin(x*s + t*0.00020) + Math.cos(y*s - t*0.00015);
@@ -634,15 +646,15 @@ sections.forEach(s => navObs.observe(s));
   }
 
   const SPEED = 0.85;
-  // connexions : on relie les particules proches (effet "réseau").
-  // désactivé sur mobile pour préserver les perfs.
+  // connections: we link nearby particles ("network" effect).
+  // disabled on mobile to preserve performance.
   const LINK = !isMobile;
-  const LINK_DIST = 108;                 // portée max d'une connexion (px)
-  const CELL = LINK_DIST;                // taille de cellule de la grille spatiale
-  const grid = new Map();                // clé "cx,cy" → tableau de particules
+  const LINK_DIST = 108;                 // max range of a connection (px)
+  const CELL = LINK_DIST;                // spatial grid cell size
+  const grid = new Map();                // key "cx,cy" → array of particles
   let last = performance.now(), fpsAcc = 0, fpsCount = 0;
 
-  // dessine les liens entre particules voisines via un binning spatial → ~O(n)
+  // draws the links between neighbouring particles via spatial binning → ~O(n)
   function drawLinks(){
     grid.clear();
     for(const p of particles){
@@ -655,20 +667,20 @@ sections.forEach(s => navObs.observe(s));
     const max2 = LINK_DIST * LINK_DIST;
     for(const p of particles){
       const cx = (p.x / CELL) | 0, cy = (p.y / CELL) | 0;
-      // seules les cellules "en avant" → chaque paire est traitée une fois
+      // only the "forward" cells → each pair is processed once
       for(let ox = 0; ox <= 1; ox++){
         for(let oy = (ox === 0 ? 0 : -1); oy <= 1; oy++){
           const bucket = grid.get((cx + ox) + "," + (cy + oy));
           if(!bucket) continue;
           for(const q of bucket){
-            if(q.i <= p.i) continue;          // évite les doublons / l'auto-lien
+            if(q.i <= p.i) continue;          // avoids duplicates / self-linking
             const dx = p.x - q.x, dy = p.y - q.y;
             const d2 = dx*dx + dy*dy;
             if(d2 > max2) continue;
             const a = (1 - Math.sqrt(d2) / LINK_DIST) * 0.11;
             ctx.strokeStyle = (p.hot || q.hot)
-              ? "rgba(87,215,230," + (a * 1.4) + ")"   // cyan si une particule est "chaude"
-              : "rgba(120,150,210," + a + ")";          // bleu froid discret
+              ? "rgba(87,215,230," + (a * 1.4) + ")"   // cyan if one particle is "hot"
+              : "rgba(120,150,210," + a + ")";          // subtle cool blue
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(q.x, q.y);
@@ -681,7 +693,7 @@ sections.forEach(s => navObs.observe(s));
 
   function frame(now){
     const t = now;
-    // fondu (laisse une traînée) — couleur de fond translucide
+    // fade (leaves a trail) — translucent background colour
     ctx.fillStyle = "rgba(14,17,22,0.12)";
     ctx.fillRect(0,0,W,H);
 
@@ -689,24 +701,24 @@ sections.forEach(s => navObs.observe(s));
       const ang = angle(p.x, p.y, t);
       p.x += Math.cos(ang) * SPEED;
       p.y += Math.sin(ang) * SPEED;
-      // wrap autour des bords
+      // wrap around the edges
       if(p.x < 0) p.x = W; else if(p.x > W) p.x = 0;
       if(p.y < 0) p.y = H; else if(p.y > H) p.y = 0;
     }
 
-    if(LINK) drawLinks();                  // liens d'abord, points par-dessus
+    if(LINK) drawLinks();                  // links first, points on top
 
     for(const p of particles){
       if(p.hot){
-        ctx.fillStyle = "rgba(42,82,190,0.65)";   // accent bleu foncé
+        ctx.fillStyle = "rgba(76,130,240,0.65)";   // dark blue accent
         ctx.fillRect(p.x, p.y, 1.6, 1.6);
       } else {
-        ctx.fillStyle = "rgba(150,170,200,0.28)";  // froid discret
+        ctx.fillStyle = "rgba(150,170,200,0.28)";  // subtle cool tone
         ctx.fillRect(p.x, p.y, 1.2, 1.2);
       }
     }
 
-    // compteur FPS (lissé)
+    // FPS counter (smoothed)
     const dt = now - last; last = now;
     fpsAcc += 1000/dt; fpsCount++;
     if(fpsCount >= 20){
@@ -716,7 +728,7 @@ sections.forEach(s => navObs.observe(s));
     requestAnimationFrame(frame);
   }
 
-  // rendu statique unique si l'utilisateur préfère moins de mouvement
+  // single static render if the user prefers reduced motion
   function staticFrame(){
     for(const p of particles){
       const ang = angle(p.x, p.y, 0);
@@ -725,7 +737,7 @@ sections.forEach(s => navObs.observe(s));
         p.y += Math.sin(angle(p.x,p.y,0))*1.4;
         if(p.x<0)p.x=W; else if(p.x>W)p.x=0;
         if(p.y<0)p.y=H; else if(p.y>H)p.y=0;
-        ctx.fillStyle = p.hot ? "rgba(42,82,190,0.45)" : "rgba(150,170,200,0.18)";
+        ctx.fillStyle = p.hot ? "rgba(76,130,240,0.45)" : "rgba(150,170,200,0.18)";
         ctx.fillRect(p.x,p.y,1.2,1.2);
       }
     }
@@ -735,7 +747,7 @@ sections.forEach(s => navObs.observe(s));
   resize();
   window.addEventListener("resize", resize);
 
-  // parallaxe : la grille dérive doucement quand on scrolle (modulo = boucle sans couture)
+  // parallax: the grid drifts gently on scroll (modulo = seamless loop)
   const gridBg = document.getElementById("gridBg");
   if(gridBg && !reduce){
     let ticking = false;

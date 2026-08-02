@@ -6,9 +6,19 @@
 <title>Blitz Ball — Case Study · Moreau Baptiste</title>
 <meta name="description" content="Case study: Blitz Ball, a Unity / C# versus arcade game about scoring with bounces and ball effects." />
 
+<!-- Favicon (inline accent square, no file needed) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234C82F0'/%3E%3C/svg%3E" />
+
+<!-- Social preview (Open Graph / Twitter). TODO: replace the relative paths with your absolute deployed URL for reliable previews. -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Blitz Ball — Case Study · Moreau Baptiste" />
+<meta property="og:description" content="Unity / C# versus arcade game: score with bounces and ball effects." />
+<meta property="og:image" content="assets/BlitzBallMain.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="assets/css/base.css" />
 <link rel="stylesheet" href="assets/css/project.css" />
@@ -50,7 +60,7 @@
         <span class="tag">Fighting</span>
       </div>
 
-      <!-- MÉDIA PRINCIPAL -->
+      <!-- MAIN MEDIA -->
       <div class="cover">
         <video class="video" src="assets/BlitzBall.mp4" poster="assets/BlitzBallMain.png" muted loop playsinline autoplay controls></video>
       </div>
@@ -85,7 +95,7 @@
         </div>
       </div>
 
-      <!-- ── GESTION DES DONNÉES JOUEUR ── -->
+      <!-- ── PLAYER DATA MANAGEMENT ── -->
       <div class="task">
         <div class="task-media">
           <svg class="player-hud" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Player data annotated on the character: ID, linked gamepad, goal and state">
@@ -96,8 +106,8 @@
               </filter>
             </defs>
 
-            <!-- scan-plate + personnage -->
-            <rect x="244" y="32" width="411" height="496" rx="16" fill="#ffffff" stroke="#2A52BE" stroke-opacity="0.28"/>
+            <!-- scan-plate + character -->
+            <rect x="244" y="32" width="411" height="496" rx="16" fill="#ffffff" stroke="#4C82F0" stroke-opacity="0.28"/>
             <image href="assets/BBGif/Character.png" x="262" y="40" width="375" height="480" preserveAspectRatio="xMidYMid meet"/>
 
             <!-- leaders -->
@@ -109,7 +119,7 @@
               <polyline points="445,500 162,452"/>
             </g>
 
-            <!-- points d'ancrage -->
+            <!-- anchor points -->
             <g fill="#7AA2FF">
               <circle cx="442" cy="88" r="4.5"/>
               <circle cx="307" cy="261" r="4.5"/>
@@ -123,7 +133,7 @@
               <circle cx="162" cy="452" r="3"/>
             </g>
 
-            <!-- étiquettes (à l'extérieur, connexion à côté du texte → pas de croisement) -->
+            <!-- labels (on the outside, connection next to the text → no crossing) -->
             <g>
               <text text-anchor="end" x="150" y="84"  fill="#7AA2FF" font-family="'JetBrains Mono', monospace" font-size="19" font-weight="700" letter-spacing="1">COLOR</text>
               <text text-anchor="end" x="150" y="104" fill="#9AA4B2" font-family="Inter, sans-serif" font-size="13">Random · cap &amp; trail</text>
@@ -144,7 +154,7 @@
         </div>
         <div class="task-body">
           <p class="task-label">System · Player data</p>
-          <h3>Gestion des données propre au joueur</h3>
+          <h3>Player-specific data management</h3>
           <p>Every player is a self-contained <strong>data entity</strong> the whole game reads from — the character on the field is just the visible tip of it.</p>
           <ul>
             <li><strong>ID</strong> — uniquely identifies each player and drives paired logic (odd/even goal assignment, spawning…)</li>
@@ -156,14 +166,14 @@
         </div>
       </div>
 
-      <!-- ── MULTIJOUEUR LOCAL ── -->
+      <!-- ── LOCAL MULTIPLAYER ── -->
       <div class="task">
         <div class="task-media media-slot">
           <img src="assets/BBGif/MultiplayerHandler.png" alt="Multiplayer connection flow: pending gamepad joins, spawns player, links values, visuals and control" style="object-fit:contain; padding:16px; background:#fff" />
         </div>
         <div class="task-body">
           <p class="task-label">Input · Local multiplayer</p>
-          <h3>Multijoueur local &amp; multiplayer handling</h3>
+          <h3>Local multiplayer &amp; multiplayer handling</h3>
           <p>Controller pairing runs in <strong>three steps</strong> to reliably bind each gamepad to its player.</p>
           <ul>
             <li>On connection, a new gamepad is registered as a <strong>pendingController</strong></li>
@@ -201,7 +211,7 @@
         </div>
         <div class="task-body">
           <p class="task-label">Game feel · Juice</p>
-          <h3>Effets de game feel</h3>
+          <h3>Game feel effects</h3>
           <p>The game feel improves with the player's mastery of the controls and the evolving tempo of the round, gradually drawing the player into a deep <strong>flow state</strong>. In this context, the feeling of "playing well" becomes a challenge and a goal in itself.</p>
           <ul>
             <li><strong>Screenshake on bounce</strong> — the camera kicks on impact to sell the ball's speed and power</li>
@@ -306,7 +316,7 @@
   <section class="section" style="border-bottom:1px solid var(--line)">
     <div class="wrap">
       <div class="cta">
-        <h2>Want to play it&nbsp;?</h2>
+        <h2>Want to play it?</h2>
         <p>Playable build, itch.io page or source code — add your links here.</p>
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
           <a href="#" class="btn btn-primary">Play / itch.io</a>
