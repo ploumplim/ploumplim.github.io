@@ -76,46 +76,151 @@
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">01</span>
-        <h2 data-fr="Titre de section">Section title</h2>
+        <h2 data-fr="Le concept">The concept</h2>
       </div>
 
-      <p data-fr="Paragraphe d'introduction de cette section — à compléter.">Intro paragraph for this section — to be completed.</p>
+      <p data-fr="<strong>Game Jam Godot</strong>. Un objectif : créer la maquette d'un <strong>WarioWare</strong>."><strong>Godot game jam</strong>. One goal: build a mockup of a <strong>WarioWare</strong>.</p>
+      <p data-fr="Nous avons décidé de nous lancer sur des <strong>épreuves de la vie de tous les jours</strong>, mais dont l'<strong>impact social est énorme</strong> — pour exagérer le fait qu'on puisse être <strong>déshérité</strong> à la suite d'un échec à ces épreuves.">We chose to build the game around <strong>ordinary, everyday-life trials</strong> — but ones with a <strong>huge social impact</strong> — to exaggerate the idea that failing them could get you <strong>disinherited</strong>.</p>
 
-      <!-- ── FEATURE ── -->
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:24px">
+        <img src="assets/FamillyGambit/heritage1.png" alt="Héritage" style="width:100%; border:1px solid var(--line); border-radius:12px; background:var(--surface-2)" />
+        <img src="assets/FamillyGambit/heritage_1_raye.png" alt="Héritage rayé" style="width:100%; border:1px solid var(--line); border-radius:12px; background:var(--surface-2)" />
+        <img src="assets/FamillyGambit/heritage3_rayes.png" alt="Héritage rayé" style="width:100%; border:1px solid var(--line); border-radius:12px; background:var(--surface-2)" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 02 · MINI-GAMES ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2 data-fr="Les mini-jeux">The mini-games</h2>
+      </div>
+
+      <p data-fr="Trois épreuves rapides façon WarioWare — chacune sa micro-mécanique.">Three quick trials, WarioWare-style — each with its own micro-mechanic.</p>
+
+      <!-- ── MINI-GAME 1 ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
+          <img src="assets/FamillyGambit/Boutoneuse zoomé.png" alt="La boutonneuse" />
         </div>
         <div class="task-body">
-          <p class="task-label" data-fr="Catégorie · Fonctionnalité">Category · Feature</p>
-          <h3 data-fr="Titre de la fonctionnalité">Feature title</h3>
-          <p data-fr="Décris ce que tu as construit et pourquoi — à compléter.">Describe what you built and why — to be completed.</p>
+          <p class="task-label" data-fr="Mini-jeu · 01">Mini-game · 01</p>
+          <h3 data-fr="La boutonneuse">Pimple Popper</h3>
+          <p data-fr="Le joueur doit appuyer rapidement sur les <strong>boutons</strong> de la jeune fille pour les faire <strong>exploser à temps</strong> — histoire d'être prête pour la <strong>photo de classe</strong> !">The player has to tap the girl's <strong>pimples</strong> fast to <strong>pop them in time</strong> — so she's ready for the <strong>class photo</strong>!</p>
           <ul>
-            <li data-fr="Point clé numéro un">Key point one</li>
-            <li data-fr="Point clé numéro deux">Key point two</li>
-            <li data-fr="Point clé numéro trois">Key point three</li>
+            <li data-fr="Mécanique de tapotement rapide, contre la montre">Fast tapping mechanic, against the clock</li>
+            <li class="warn" data-fr="Échec punitif : toute la classe se moque d'elle et sa famille la déshérite">Punishing failure: the whole class laughs at her and her family disinherits her</li>
           </ul>
         </div>
       </div>
 
-      <!-- ── FEATURE ── -->
+      <!-- ── MINI-GAME 2 ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <img src="assets/FamillyGambit/Mariage.png" alt="Le mariage" />
+        </div>
+        <div class="task-body">
+          <p class="task-label" data-fr="Mini-jeu · 02">Mini-game · 02</p>
+          <h3 data-fr="Le mariage">The Wedding</h3>
+          <p data-fr="Le joueur doit <strong>attraper la main du marié</strong> et la guider jusqu'à celle de la <strong>mariée</strong> pour lui <strong>passer la bague au doigt</strong>.">The player has to <strong>grab the groom's hand</strong> and guide it over to the <strong>bride's</strong> so he can <strong>slip the ring onto her finger</strong>.</p>
+          <ul>
+            <li data-fr="Mécanique de préhension et de déplacement (drag) tout en précision">Grab-and-drag mechanic built on precision</li>
+            <li class="warn" data-fr="Échec : la mariée refuse le mariage et la famille le déshérite">Failure: the bride calls off the wedding and the family disinherits him</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── MINI-GAME 3 ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <img src="assets/FamillyGambit/Quizz.png" alt="Contrôle de français" />
+        </div>
+        <div class="task-body">
+          <p class="task-label" data-fr="Mini-jeu · 03">Mini-game · 03</p>
+          <h3 data-fr="Contrôle de français">French Test</h3>
+          <p data-fr="Le joueur doit répondre au questionnaire en <strong>associant la bonne réponse à la suite de la question</strong>.">The player has to complete the quiz by <strong>matching the right answer to the sentence to finish</strong>.</p>
+          <ul>
+            <li data-fr="Mécanique d'association : relier la question à la bonne réponse">Matching mechanic: connect each prompt to the right answer</li>
+            <li class="warn" data-fr="Échec : mauvais résultat au contrôle et la famille le déshérite">Failure: a bad grade on the test and the family disinherits him</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 03 · UNDER THE HOOD ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2 data-fr="Sous le capot">Under the hood</h2>
+      </div>
+
+      <!-- ── SCENE CHANGE ── -->
       <div class="task">
         <div class="task-media media-slot">
           <div class="media-empty">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
+            <span class="mono">gif / mp4 / png → assets/FamillyGambit/…</span>
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label" data-fr="Catégorie · Fonctionnalité">Category · Feature</p>
-          <h3 data-fr="Titre de la fonctionnalité">Feature title</h3>
-          <p data-fr="Décris ce que tu as construit et pourquoi — à compléter.">Describe what you built and why — to be completed.</p>
+          <p class="task-label" data-fr="Système · Changement de scène">System · Scene change</p>
+          <h3 data-fr="Changement de scène">Scene switching</h3>
+          <p data-fr="À compléter : comment on passe d'un mini-jeu au suivant, l'enchaînement des scènes et les transitions.">To be completed: how the game moves from one mini-game to the next — scene flow and transitions.</p>
           <ul>
-            <li data-fr="Point clé numéro un">Key point one</li>
-            <li data-fr="Point clé numéro deux">Key point two</li>
+            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="Point clé à détailler">Key point to detail</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── GENERAL OVERVIEW ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13 4l-2 16"/></svg>
+            <span class="mono">gif / mp4 / png → assets/FamillyGambit/…</span>
+          </div>
+        </div>
+        <div class="task-body">
+          <p class="task-label" data-fr="Système · Fonctionnement général">System · Overview</p>
+          <h3 data-fr="Fonctionnement général">General overview</h3>
+          <p data-fr="À compléter : la boucle de jeu globale, l'architecture et la façon dont les systèmes s'articulent.">To be completed: the overall game loop, the architecture and how the systems fit together.</p>
+          <ul>
+            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="Point clé à détailler">Key point to detail</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 04 · GAME DESIGN ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2 data-fr="Game Design">Game Design</h2>
+      </div>
+
+      <!-- ── GAME DESIGN ── -->
+      <div class="task">
+        <div class="task-media media-slot">
+          <div class="media-empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span class="mono">gif / mp4 / png → assets/FamillyGambit/…</span>
+          </div>
+        </div>
+        <div class="task-body">
+          <p class="task-label" data-fr="Game Design">Game Design</p>
+          <h3 data-fr="Intentions de game design">Game design intentions</h3>
+          <p data-fr="À compléter : tes choix de design, le ton exagéré, le rythme des épreuves et la tension autour de l'héritage.">To be completed: your design choices, the exaggerated tone, the pacing of the trials and the tension around the inheritance.</p>
+          <ul>
+            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="Point clé à détailler">Key point to detail</li>
           </ul>
         </div>
       </div>
