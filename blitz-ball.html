@@ -34,10 +34,15 @@
   <nav class="nav">
     <div class="wrap nav-inner">
       <a href="index.html#top" class="brand"><span class="dot"></span>MOREAU&nbsp;BAPTISTE</a>
-      <a href="index.html#work" class="back">
+      <a href="index.html#work" class="back" data-fr="Retour aux projets">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
         Back to projects
       </a>
+      <button class="lang-toggle" id="langToggle" role="switch" aria-label="Switch language / Changer de langue" aria-checked="false">
+        <span class="lang-thumb" aria-hidden="true"></span>
+        <span class="lang-opt active" data-lang="en">EN</span>
+        <span class="lang-opt" data-lang="fr">FR</span>
+      </button>
     </div>
   </nav>
 
@@ -46,18 +51,18 @@
     <div class="wrap">
       <p class="eyebrow">unity · c# · versus</p>
       <h1>Blitz&nbsp;<span class="accent">Ball</span></h1>
-      <p class="role-line">Gameplay Programmer · Level Designer · UI Programmer · Game Designer</p>
+      <p class="role-line" data-fr="Programmeur Gameplay · Level Designer · Programmeur UI · Game Designer">Gameplay Programmer · Level Designer · UI Programmer · Game Designer</p>
 
       <div class="lead">
-        <p>Take on your friends in a <strong>1-vs-1 soccer arena</strong>! Get tricky: bend your shots off the walls, or <strong>stun your opponent</strong> by slamming the ball right into them to open up an easy goal.</p>
-        <p>Hit, dash, pull and defend your net in a fast, competitive <strong>best-of-3</strong>, each round played to <strong>5 points</strong> — seize the advantage and show them who's the best <strong>Blitzer</strong> of the two of you!</p>
+        <p data-fr="Affronte tes amis dans une <strong>arène de foot en 1 contre 1</strong> ! Ruse : fais courber tes tirs sur les murs, ou <strong>étourdis ton adversaire</strong> en lui claquant la balle dessus pour t'ouvrir un but facile.">Take on your friends in a <strong>1-vs-1 soccer arena</strong>! Get tricky: bend your shots off the walls, or <strong>stun your opponent</strong> by slamming the ball right into them to open up an easy goal.</p>
+        <p data-fr="Frappe, dash, attire et défends ta cage dans un <strong>best-of-3</strong> rapide et compétitif, chaque manche se jouant en <strong>5 points</strong> — prends l'avantage et montre qui est le meilleur <strong>Blitzer</strong> des deux !">Hit, dash, pull and defend your net in a fast, competitive <strong>best-of-3</strong>, each round played to <strong>5 points</strong> — seize the advantage and show them who's the best <strong>Blitzer</strong> of the two of you!</p>
       </div>
 
       <div class="tags">
         <span class="tag">Unity</span>
         <span class="tag">C#</span>
         <span class="tag">Versus</span>
-        <span class="tag">Fighting</span>
+        <span class="tag" data-fr="Combat">Fighting</span>
       </div>
 
       <!-- MAIN MEDIA -->
@@ -72,10 +77,10 @@
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">01</span>
-        <h2>Under the hood</h2>
+        <h2 data-fr="Sous le capot">Under the hood</h2>
       </div>
 
-      <p>A <strong>versus arcade game</strong> where two players fight to score by making the ball bounce across the arena. Master the <strong>bounces and ball effects</strong> to curve your shots, fool your opponent and land the perfect goal.</p>
+      <p data-fr="Un <strong>jeu d'arcade en versus</strong> où deux joueurs s'affrontent pour marquer en faisant rebondir la balle à travers l'arène. Maîtrise les <strong>rebonds et les effets de balle</strong> pour courber tes tirs, tromper ton adversaire et marquer le but parfait.">A <strong>versus arcade game</strong> where two players fight to score by making the ball bounce across the arena. Master the <strong>bounces and ball effects</strong> to curve your shots, fool your opponent and land the perfect goal.</p>
 
       <!-- ── LEVEL MANAGER ── -->
       <div class="task">
@@ -83,14 +88,14 @@
           <img src="assets/BBGif/LevelManager.png" alt="Level Manager architecture: Level State Manager states (Out Of Level, Setup, Round, Buffer, Exit) driving the Manage Entities/Timers/Rounds/Missions/Points modules and scoring" style="object-fit:contain" />
         </div>
         <div class="task-body">
-          <p class="task-label">System · Scene management</p>
+          <p class="task-label" data-fr="Système · Gestion de scènes">System · Scene management</p>
           <h3>Level Manager</h3>
-          <p>To keep level transitions clean, a single <strong>Level Manager</strong> drives every level from one shared setup — no per-scene reconfiguration.</p>
+          <p data-fr="Pour garder des transitions de niveau propres, un unique <strong>Level Manager</strong> pilote chaque niveau depuis une configuration partagée — sans reconfiguration scène par scène.">To keep level transitions clean, a single <strong>Level Manager</strong> drives every level from one shared setup — no per-scene reconfiguration.</p>
           <ul>
-            <li>A <strong>container scene</strong> holds the shared objects (Level Manager, UI, floor, lighting) and auto-loads every level scene from the Start menu</li>
-            <li>All levels are loaded then <strong>deactivated</strong>; only the current level's GameObjects are turned on, addressed by their <strong>Build Index</strong></li>
-            <li>Per-level goals are assigned through a <strong>math function</strong>: it sets each player's <em>goalToDefend</em> and <em>goalToAttack</em>, reversing the increments for odd player IDs so both always get one to attack and one to defend</li>
-            <li>Each goal tracks the points it receives, giving a live read on match progress</li>
+            <li data-fr="Une <strong>scène conteneur</strong> héberge les objets partagés (Level Manager, UI, sol, éclairage) et charge automatiquement chaque scène de niveau depuis le menu Start">A <strong>container scene</strong> holds the shared objects (Level Manager, UI, floor, lighting) and auto-loads every level scene from the Start menu</li>
+            <li data-fr="Tous les niveaux sont chargés puis <strong>désactivés</strong> ; seuls les GameObjects du niveau courant sont activés, adressés par leur <strong>Build Index</strong>">All levels are loaded then <strong>deactivated</strong>; only the current level's GameObjects are turned on, addressed by their <strong>Build Index</strong></li>
+            <li data-fr="Les buts de chaque niveau sont attribués via une <strong>fonction mathématique</strong> : elle définit le <em>goalToDefend</em> et le <em>goalToAttack</em> de chaque joueur, en inversant les incréments pour les IDs de joueur impairs afin que chacun ait toujours un but à attaquer et un à défendre">Per-level goals are assigned through a <strong>math function</strong>: it sets each player's <em>goalToDefend</em> and <em>goalToAttack</em>, reversing the increments for odd player IDs so both always get one to attack and one to defend</li>
+            <li data-fr="Chaque but comptabilise les points qu'il encaisse, donnant une lecture en direct de l'avancée du match">Each goal tracks the points it receives, giving a live read on match progress</li>
           </ul>
         </div>
       </div>
@@ -153,15 +158,15 @@
           </svg>
         </div>
         <div class="task-body">
-          <p class="task-label">System · Player data</p>
-          <h3>Player-specific data management</h3>
-          <p>Every player is a self-contained <strong>data entity</strong> the whole game reads from — the character on the field is just the visible tip of it.</p>
+          <p class="task-label" data-fr="Système · Données joueur">System · Player data</p>
+          <h3 data-fr="Gestion des données propres au joueur">Player-specific data management</h3>
+          <p data-fr="Chaque joueur est une <strong>entité de données</strong> autonome dans laquelle tout le jeu vient piocher — le personnage sur le terrain n'en est que la partie visible.">Every player is a self-contained <strong>data entity</strong> the whole game reads from — the character on the field is just the visible tip of it.</p>
           <ul>
-            <li><strong>ID</strong> — uniquely identifies each player and drives paired logic (odd/even goal assignment, spawning…)</li>
-            <li><strong>Random colour</strong> — a colour assigned per player, carried across their cap and ball trail so ownership is instantly readable</li>
-            <li><strong>Linked gamepad</strong> — the controller bound to this player, kept across disconnects</li>
-            <li><strong>Goal</strong> — the goal to attack and the goal to defend for the current level</li>
-            <li><strong>State</strong> — the player's current action: stun, dashing, grabbing, hitting…</li>
+            <li data-fr="<strong>ID</strong> — identifie chaque joueur de façon unique et pilote la logique appariée (attribution des buts pair/impair, spawn…)"><strong>ID</strong> — uniquely identifies each player and drives paired logic (odd/even goal assignment, spawning…)</li>
+            <li data-fr="<strong>Couleur aléatoire</strong> — une couleur attribuée à chaque joueur, reprise sur sa casquette et la traînée de la balle pour que l'appartenance se lise instantanément"><strong>Random colour</strong> — a colour assigned per player, carried across their cap and ball trail so ownership is instantly readable</li>
+            <li data-fr="<strong>Manette liée</strong> — la manette associée à ce joueur, conservée à travers les déconnexions"><strong>Linked gamepad</strong> — the controller bound to this player, kept across disconnects</li>
+            <li data-fr="<strong>But</strong> — le but à attaquer et le but à défendre pour le niveau courant"><strong>Goal</strong> — the goal to attack and the goal to defend for the current level</li>
+            <li data-fr="<strong>État</strong> — l'action en cours du joueur : étourdi, dash, saisie, frappe…"><strong>State</strong> — the player's current action: stun, dashing, grabbing, hitting…</li>
           </ul>
         </div>
       </div>
@@ -172,14 +177,14 @@
           <img src="assets/BBGif/MultiplayerHandler.png" alt="Multiplayer connection flow: pending gamepad joins, spawns player, links values, visuals and control" style="object-fit:contain; padding:16px; background:#fff" />
         </div>
         <div class="task-body">
-          <p class="task-label">Input · Local multiplayer</p>
-          <h3>Local multiplayer &amp; multiplayer handling</h3>
-          <p>Controller pairing runs in <strong>three steps</strong> to reliably bind each gamepad to its player.</p>
+          <p class="task-label" data-fr="Input · Multijoueur local">Input · Local multiplayer</p>
+          <h3 data-fr="Multijoueur local &amp; gestion des manettes">Local multiplayer &amp; multiplayer handling</h3>
+          <p data-fr="L'appariement des manettes se fait en <strong>trois étapes</strong> pour lier de façon fiable chaque manette à son joueur.">Controller pairing runs in <strong>three steps</strong> to reliably bind each gamepad to its player.</p>
           <ul>
-            <li>On connection, a new gamepad is registered as a <strong>pendingController</strong></li>
-            <li>It is identified through Unity's <strong>GamePad HashSet</strong> to know which player it belongs to</li>
-            <li>It is then linked to all its dependent objects — <em>SpawnPlayer</em>, values, visuals and control</li>
-            <li>Because each controller is recorded in the HashSet, a <strong>reconnecting pad</strong> is recognised and re-assigned to the same player</li>
+            <li data-fr="À la connexion, une nouvelle manette est enregistrée comme <strong>pendingController</strong>">On connection, a new gamepad is registered as a <strong>pendingController</strong></li>
+            <li data-fr="Elle est identifiée via le <strong>HashSet GamePad</strong> d'Unity pour savoir à quel joueur elle appartient">It is identified through Unity's <strong>GamePad HashSet</strong> to know which player it belongs to</li>
+            <li data-fr="Elle est ensuite reliée à tous ses objets dépendants — <em>SpawnPlayer</em>, valeurs, visuels et contrôle">It is then linked to all its dependent objects — <em>SpawnPlayer</em>, values, visuals and control</li>
+            <li data-fr="Comme chaque manette est enregistrée dans le HashSet, une <strong>manette qui se reconnecte</strong> est reconnue et ré-attribuée au même joueur">Because each controller is recorded in the HashSet, a <strong>reconnecting pad</strong> is recognised and re-assigned to the same player</li>
           </ul>
         </div>
       </div>
@@ -195,11 +200,11 @@
         <div class="task-body">
           <p class="task-label">UI · Menus</p>
           <h3>Menu Start / Pause</h3>
-          <p>The everyday flow around a match — a <strong>start menu</strong> to launch or quit the game, and a <strong>pause overlay</strong> to freeze it mid-round.</p>
+          <p data-fr="Le flux habituel autour d'un match — un <strong>menu de démarrage</strong> pour lancer ou quitter le jeu, et une <strong>surcouche de pause</strong> pour le figer en pleine manche.">The everyday flow around a match — a <strong>start menu</strong> to launch or quit the game, and a <strong>pause overlay</strong> to freeze it mid-round.</p>
           <ul>
-            <li><strong>Start menu</strong> — Play to jump into a match, Exit to quit, fully controller-navigable</li>
-            <li><strong>Pause</strong> — freezes the game (time scale) and displays the overlay, resuming exactly where it left off</li>
-            <li>Both wired to the Game State Machine so the game always knows whether it's in a menu, playing or paused</li>
+            <li data-fr="<strong>Menu Start</strong> — Play pour entrer dans un match, Exit pour quitter, entièrement navigable à la manette"><strong>Start menu</strong> — Play to jump into a match, Exit to quit, fully controller-navigable</li>
+            <li data-fr="<strong>Pause</strong> — fige le jeu (time scale) et affiche la surcouche, puis reprend exactement là où on s'était arrêté"><strong>Pause</strong> — freezes the game (time scale) and displays the overlay, resuming exactly where it left off</li>
+            <li data-fr="Les deux sont câblés à la Game State Machine pour que le jeu sache toujours s'il est dans un menu, en jeu ou en pause">Both wired to the Game State Machine so the game always knows whether it's in a menu, playing or paused</li>
           </ul>
         </div>
       </div>
@@ -211,12 +216,12 @@
         </div>
         <div class="task-body">
           <p class="task-label">Game feel · Juice</p>
-          <h3>Game feel effects</h3>
-          <p>The game feel improves with the player's mastery of the controls and the evolving tempo of the round, gradually drawing the player into a deep <strong>flow state</strong>. In this context, the feeling of "playing well" becomes a challenge and a goal in itself.</p>
+          <h3 data-fr="Effets de game feel">Game feel effects</h3>
+          <p data-fr="Le game feel s'améliore à mesure que le joueur maîtrise les contrôles et que le tempo de la manche évolue, l'entraînant peu à peu dans un profond <strong>état de flow</strong>. Dans ce contexte, la sensation de &quot;bien jouer&quot; devient un défi et un objectif en soi.">The game feel improves with the player's mastery of the controls and the evolving tempo of the round, gradually drawing the player into a deep <strong>flow state</strong>. In this context, the feeling of "playing well" becomes a challenge and a goal in itself.</p>
           <ul>
-            <li><strong>Screenshake on bounce</strong> — the camera kicks on impact to sell the ball's speed and power</li>
-            <li><strong>Confetti on goal</strong> — a burst of particles celebrates each score and punctuates the win</li>
-            <li><strong>Ball trail</strong> — the ball trails the colour of whoever hit it last, showing at a glance who owns it and to whom it's dangerous</li>
+            <li data-fr="<strong>Screenshake au rebond</strong> — la caméra tressaute à l'impact pour vendre la vitesse et la puissance de la balle"><strong>Screenshake on bounce</strong> — the camera kicks on impact to sell the ball's speed and power</li>
+            <li data-fr="<strong>Confettis au but</strong> — une gerbe de particules célèbre chaque point et ponctue la victoire"><strong>Confetti on goal</strong> — a burst of particles celebrates each score and punctuates the win</li>
+            <li data-fr="<strong>Traînée de balle</strong> — la balle laisse une traînée de la couleur du dernier à l'avoir touchée, montrant d'un coup d'œil à qui elle appartient et pour qui elle est dangereuse"><strong>Ball trail</strong> — the ball trails the colour of whoever hit it last, showing at a glance who owns it and to whom it's dangerous</li>
           </ul>
         </div>
       </div>
@@ -227,13 +232,13 @@
           <img src="assets/BBGif/GameStateMachine.png" alt="Game State Machine: Menu, Option, Loading, Playing, Pause and End Game states, with the Level Manager driven during the Playing state" style="object-fit:contain" />
         </div>
         <div class="task-body">
-          <p class="task-label">Architecture · State machine</p>
+          <p class="task-label" data-fr="Architecture · Machine à états">Architecture · State machine</p>
           <h3>Game State Machine</h3>
-          <p>A single script that <strong>drives the whole game</strong>, always knowing exactly which state it is in — menus, loading, in-game, pause or end game.</p>
+          <p data-fr="Un unique script qui <strong>pilote tout le jeu</strong>, sachant toujours exactement dans quel état il se trouve — menus, chargement, en jeu, pause ou fin de partie.">A single script that <strong>drives the whole game</strong>, always knowing exactly which state it is in — menus, loading, in-game, pause or end game.</p>
           <ul>
-            <li>Each state (<em>Menu, Loading, Playing, Pause, End Game</em>) has its own dedicated script</li>
-            <li>The state machine <strong>starts each one in the right order and at the right moment</strong></li>
-            <li>Acts as the backbone the rest of the game hangs off — including the Level Manager, launched during the Playing state</li>
+            <li data-fr="Chaque état (<em>Menu, Loading, Playing, Pause, End Game</em>) a son propre script dédié">Each state (<em>Menu, Loading, Playing, Pause, End Game</em>) has its own dedicated script</li>
+            <li data-fr="La machine à états <strong>démarre chacun dans le bon ordre et au bon moment</strong>">The state machine <strong>starts each one in the right order and at the right moment</strong></li>
+            <li data-fr="Sert de colonne vertébrale à laquelle s'accroche le reste du jeu — dont le Level Manager, lancé pendant l'état Playing">Acts as the backbone the rest of the game hangs off — including the Level Manager, launched during the Playing state</li>
           </ul>
         </div>
       </div>
@@ -245,10 +250,10 @@
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">02</span>
-        <h2>Building the arena</h2>
+        <h2 data-fr="Construire l'arène">Building the arena</h2>
       </div>
 
-      <p>The arenas are the heart of the level design. I built each one as a <strong>blueprint first</strong> — walls, angles and goal placement — then <strong>integrated it in-engine</strong>. Placed schema next to final, the three levels show how the playfield <strong>grows from a clean symmetric shape to increasingly tricky geometry</strong>, giving the bounces more and more room to get vicious.</p>
+      <p data-fr="Les arènes sont le cœur du level design. J'ai conçu chacune d'abord <strong>en blueprint</strong> — murs, angles et placement des buts — avant de l'<strong>intégrer dans le moteur</strong>. Schéma et version finale côte à côte, les trois niveaux montrent comment le terrain <strong>passe d'une forme symétrique épurée à une géométrie de plus en plus retorse</strong>, laissant aux rebonds toujours plus de marge pour devenir vicieux.">The arenas are the heart of the level design. I built each one as a <strong>blueprint first</strong> — walls, angles and goal placement — then <strong>integrated it in-engine</strong>. Placed schema next to final, the three levels show how the playfield <strong>grows from a clean symmetric shape to increasingly tricky geometry</strong>, giving the bounces more and more room to get vicious.</p>
 
       <!-- ── LEVEL 1 · CLASSIC OCTAGON ── -->
       <div class="task">
@@ -259,13 +264,13 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Level Design · Level 1</p>
+          <p class="task-label" data-fr="Level Design · Niveau 1">Level Design · Level 1</p>
           <h3>Classic Octagon</h3>
-          <p>The starting arena — a clean, fully <strong>symmetric octagon</strong> with no obstacles, so players learn the bounces on a fair, readable field.</p>
+          <p data-fr="L'arène de départ — un <strong>octogone parfaitement symétrique</strong> et épuré, sans obstacle, pour que les joueurs apprennent les rebonds sur un terrain équitable et lisible.">The starting arena — a clean, fully <strong>symmetric octagon</strong> with no obstacles, so players learn the bounces on a fair, readable field.</p>
           <ul>
-            <li>Perfect symmetry: identical for both players, goals centred on each side</li>
-            <li>No hazards — focus entirely on movement, hitting and reading rebounds</li>
-            <li>Open shape with gentle wall angles keeps the ball predictable</li>
+            <li data-fr="Symétrie parfaite : identique pour les deux joueurs, buts centrés de chaque côté">Perfect symmetry: identical for both players, goals centred on each side</li>
+            <li data-fr="Aucun danger — focus total sur le déplacement, la frappe et la lecture des rebonds">No hazards — focus entirely on movement, hitting and reading rebounds</li>
+            <li data-fr="Une forme ouverte aux angles de murs doux garde la balle prévisible">Open shape with gentle wall angles keeps the ball predictable</li>
           </ul>
         </div>
       </div>
@@ -279,13 +284,13 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Level Design · Level 2</p>
+          <p class="task-label" data-fr="Level Design · Niveau 2">Level Design · Level 2</p>
           <h3>Ray of Fright</h3>
-          <p>Raises the stakes with a <strong>central hazard</strong> and <strong>angled deflectors</strong> that break the straight lines of the octagon.</p>
+          <p data-fr="Monte d'un cran avec un <strong>danger central</strong> et des <strong>déflecteurs inclinés</strong> qui brisent les lignes droites de l'octogone.">Raises the stakes with a <strong>central hazard</strong> and <strong>angled deflectors</strong> that break the straight lines of the octagon.</p>
           <ul>
-            <li>A central zone splits the field and forces players to play around it</li>
-            <li>Four angled wall segments open up new bounce paths for trickier shots</li>
-            <li>Still symmetric, but reading the ball now takes real anticipation</li>
+            <li data-fr="Une zone centrale scinde le terrain et force les joueurs à composer avec">A central zone splits the field and forces players to play around it</li>
+            <li data-fr="Quatre segments de mur inclinés ouvrent de nouvelles trajectoires de rebond pour des tirs plus retors">Four angled wall segments open up new bounce paths for trickier shots</li>
+            <li data-fr="Toujours symétrique, mais lire la balle demande désormais une vraie anticipation">Still symmetric, but reading the ball now takes real anticipation</li>
           </ul>
         </div>
       </div>
@@ -299,13 +304,13 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Level Design · Level 3</p>
+          <p class="task-label" data-fr="Level Design · Niveau 3">Level Design · Level 3</p>
           <h3>Radiant</h3>
-          <p>The most technical arena — a wider, <strong>angular playfield</strong> lined with deflectors and cover, built for the <strong>sneakiest bounces</strong>.</p>
+          <p data-fr="L'arène la plus technique — un <strong>terrain anguleux</strong> plus large, bordé de déflecteurs et de couverts, pensé pour les <strong>rebonds les plus sournois</strong>.">The most technical arena — a wider, <strong>angular playfield</strong> lined with deflectors and cover, built for the <strong>sneakiest bounces</strong>.</p>
           <ul>
-            <li>Saw-tooth walls and corner deflectors multiply the possible angles</li>
-            <li>Central block and cover objects to bank shots around</li>
-            <li>Rewards mastery: the richest space to land those "vicious" goals</li>
+            <li data-fr="Des murs en dents de scie et des déflecteurs d'angle multiplient les angles possibles">Saw-tooth walls and corner deflectors multiply the possible angles</li>
+            <li data-fr="Un bloc central et des couverts pour faire ricocher les tirs autour">Central block and cover objects to bank shots around</li>
+            <li data-fr="Récompense la maîtrise : l'espace le plus riche pour marquer ces buts &quot;vicieux&quot;">Rewards mastery: the richest space to land those "vicious" goals</li>
           </ul>
         </div>
       </div>
@@ -316,11 +321,11 @@
   <section class="section" style="border-bottom:1px solid var(--line)">
     <div class="wrap">
       <div class="cta">
-        <h2>Want to play it?</h2>
-        <p>Playable build, itch.io page or source code — add your links here.</p>
+        <h2 data-fr="Envie d'y jouer ?">Want to play it?</h2>
+        <p data-fr="Build jouable, page itch.io ou code source — ajoute tes liens ici.">Playable build, itch.io page or source code — add your links here.</p>
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
-          <a href="#" class="btn btn-primary">Play / itch.io</a>
-          <a href="index.html#work" class="btn btn-ghost">Other projects</a>
+          <a href="#" class="btn btn-primary" data-fr="Jouer / itch.io">Play / itch.io</a>
+          <a href="index.html#work" class="btn btn-ghost" data-fr="Autres projets">Other projects</a>
         </div>
       </div>
     </div>
@@ -337,6 +342,7 @@
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/lightbox.js"></script>
 </body>
 </html>

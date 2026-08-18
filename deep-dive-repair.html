@@ -35,10 +35,15 @@
   <nav class="nav">
     <div class="wrap nav-inner">
       <a href="index.html#top" class="brand"><span class="dot"></span>MOREAU&nbsp;BAPTISTE</a>
-      <a href="index.html#work" class="back">
+      <a href="index.html#work" class="back" data-fr="Retour aux projets">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
         Back to projects
       </a>
+      <button class="lang-toggle" id="langToggle" role="switch" aria-label="Switch language / Changer de langue" aria-checked="false">
+        <span class="lang-thumb" aria-hidden="true"></span>
+        <span class="lang-opt active" data-lang="en">EN</span>
+        <span class="lang-opt" data-lang="fr">FR</span>
+      </button>
     </div>
   </nav>
 
@@ -47,18 +52,18 @@
     <div class="wrap">
       <p class="eyebrow">unity · c# · co-op</p>
       <h1>Deep&nbsp;Dive&nbsp;<span class="accent">Repair</span></h1>
-      <p class="role-line">Gameplay Programmer · Game Designer  · UI Designer</p>
+      <p class="role-line" data-fr="Programmeur Gameplay · Game Designer · UI Designer">Gameplay Programmer · Game Designer  · UI Designer</p>
 
       <div class="lead">
-        <p>Play co-op as two little robots tasked with rescuing submarines in distress.</p>
-        <p>Complete a series of small tasks to repair the submarine's various problems, all while keeping its engine running so it can reach a safe harbour.</p>
-        <p>Use the objects at your disposal… and even your partner! Throw each other around to move through the submarine more easily and overcome obstacles.</p>
+        <p data-fr="Jouez en coopération dans la peau de deux petits robots chargés de secourir des sous-marins en détresse.">Play co-op as two little robots tasked with rescuing submarines in distress.</p>
+        <p data-fr="Enchaînez une série de petites tâches pour réparer les avaries du sous-marin, tout en maintenant son moteur en marche afin qu'il rejoigne un port sûr.">Complete a series of small tasks to repair the submarine's various problems, all while keeping its engine running so it can reach a safe harbour.</p>
+        <p data-fr="Utilisez les objets à votre disposition… et même votre partenaire ! Lancez-vous l'un l'autre pour vous déplacer plus facilement dans le sous-marin et franchir les obstacles.">Use the objects at your disposal… and even your partner! Throw each other around to move through the submarine more easily and overcome obstacles.</p>
       </div>
 
       <div class="tags">
         <span class="tag">Unity</span>
         <span class="tag">C#</span>
-        <span class="tag">Local co-op</span>
+        <span class="tag" data-fr="Coop locale">Local co-op</span>
         <span class="tag">Game feel</span>
       </div>
 
@@ -75,12 +80,12 @@
         <div class="wrap">
             <div class="section-head">
                 <span class="section-num">01</span>
-                <h2>Character controller</h2>
+                <h2 data-fr="Contrôleur du personnage">Character controller</h2>
             </div>
 
-            <p>Local co-op was a deliberate design choice: sharing the same screen turns coordination into something <strong>physical and immediate</strong>. Even movement is cooperative — players can <strong>throw one another</strong> across the submarine, so each robot is both a teammate and a tool.</p>
+            <p data-fr="La coopération locale était un choix de game design assumé : partager le même écran rend la coordination <strong>physique et immédiate</strong>. Même le déplacement est coopératif — les joueurs peuvent <strong>se lancer l'un l'autre</strong> à travers le sous-marin, si bien que chaque robot est à la fois un coéquipier et un outil.">Local co-op was a deliberate design choice: sharing the same screen turns coordination into something <strong>physical and immediate</strong>. Even movement is cooperative — players can <strong>throw one another</strong> across the submarine, so each robot is both a teammate and a tool.</p>
 
-            <p>On the programming side, I built the <strong>character controller</strong>: the input layer driving two local players, and the custom physics behind everything the robots do — moving, jumping, and throwing. The goal was a controller that felt <strong>responsive and predictable</strong>, while staying robust enough for a couch session where controllers get unplugged and plugged back in.</p>
+            <p data-fr="Côté programmation, j'ai développé le <strong>contrôleur du personnage</strong> : la couche d'input qui pilote deux joueurs en local, et la physique custom derrière tout ce que font les robots — se déplacer, sauter et lancer. L'objectif : un contrôleur <strong>réactif et prévisible</strong>, tout en restant assez robuste pour une session canapé où l'on débranche et rebranche les manettes.">On the programming side, I built the <strong>character controller</strong>: the input layer driving two local players, and the custom physics behind everything the robots do — moving, jumping, and throwing. The goal was a controller that felt <strong>responsive and predictable</strong>, while staying robust enough for a couch session where controllers get unplugged and plugged back in.</p>
 
             <!-- ── INPUT SYSTEM ── -->
             <div class="task">
@@ -92,12 +97,12 @@
               </div>
               <div class="task-body">
                 <p class="task-label">Input · New Input System</p>
-                <h3>Two players, hot-pluggable controllers</h3>
-                <p>The controller is built on Unity's <strong>New Input System</strong>, with a dedicated action map per player so both robots can be driven independently on the same machine.</p>
+                <h3 data-fr="Deux joueurs, manettes branchables à chaud">Two players, hot-pluggable controllers</h3>
+                <p data-fr="Le contrôleur repose sur le <strong>New Input System</strong> d'Unity, avec une action map dédiée par joueur pour que les deux robots soient pilotés indépendamment sur la même machine.">The controller is built on Unity's <strong>New Input System</strong>, with a dedicated action map per player so both robots can be driven independently on the same machine.</p>
                 <ul>
-                  <li>Clean separation between input and gameplay logic through action maps and callbacks</li>
-                  <li>Each player is paired to a specific device, avoiding any input mix-up between the two robots</li>
-                  <li class="warn">Controller reconnection: a pad unplugged mid-game is detected and <strong>re-paired to the same player</strong>, so a disconnection never breaks the run</li>
+                  <li data-fr="Séparation nette entre l'input et la logique de gameplay grâce aux action maps et aux callbacks">Clean separation between input and gameplay logic through action maps and callbacks</li>
+                  <li data-fr="Chaque joueur est associé à un périphérique précis, évitant toute confusion d'input entre les deux robots">Each player is paired to a specific device, avoiding any input mix-up between the two robots</li>
+                  <li class="warn" data-fr="Reconnexion des manettes : une manette débranchée en cours de partie est détectée et <strong>ré-associée au même joueur</strong>, pour qu'une déconnexion ne casse jamais la partie">Controller reconnection: a pad unplugged mid-game is detected and <strong>re-paired to the same player</strong>, so a disconnection never breaks the run</li>
                 </ul>
               </div>
             </div>
@@ -108,13 +113,13 @@
                 <img src="assets/DDRGif/Jumping.gif" alt="A jump that feels right" />
               </div>
               <div class="task-body">
-                <p class="task-label">Physics · Jump</p>
-                <h3>A jump that feels right</h3>
-                <p>Rather than relying on Unity's default rigidbody behaviour, the jump is driven by hand-tuned physics to get a precise, satisfying arc.</p>
+                <p class="task-label" data-fr="Physique · Saut">Physics · Jump</p>
+                <h3 data-fr="Un saut qui sonne juste">A jump that feels right</h3>
+                <p data-fr="Plutôt que de compter sur le comportement par défaut du rigidbody d'Unity, le saut repose sur une physique réglée à la main pour obtenir une courbe précise et satisfaisante.">Rather than relying on Unity's default rigidbody behaviour, the jump is driven by hand-tuned physics to get a precise, satisfying arc.</p>
                 <ul>
-                  <li>Controlled rise and fall, tuned by hand for good game feel</li>
-                  <li>Apex and landing weighted so the jump reads clearly and stays easy to aim</li>
-                  <li>Consistent height regardless of frame rate thanks to fixed-step physics</li>
+                  <li data-fr="Montée et descente contrôlées, réglées à la main pour un bon game feel">Controlled rise and fall, tuned by hand for good game feel</li>
+                  <li data-fr="Sommet et atterrissage pondérés pour que le saut se lise clairement et reste facile à viser">Apex and landing weighted so the jump reads clearly and stays easy to aim</li>
+                  <li data-fr="Hauteur constante quel que soit le frame rate grâce à une physique à pas fixe">Consistent height regardless of frame rate thanks to fixed-step physics</li>
                 </ul>
               </div>
             </div>
@@ -125,13 +130,13 @@
                 <img src="assets/DDRGif/Coyote.gif" alt="Coyote time & jump buffering" />
               </div>
               <div class="task-body">
-                <p class="task-label">Physics · Jump forgiveness</p>
+                <p class="task-label" data-fr="Physique · Tolérance de saut">Physics · Jump forgiveness</p>
                 <h3>Coyote time &amp; jump buffering</h3>
-                <p>To keep the jump forgiving and responsive, two small timing windows smooth over the gap between what the player intends and what the physics allows.</p>
+                <p data-fr="Pour garder un saut tolérant et réactif, deux petites fenêtres temporelles lissent l'écart entre l'intention du joueur et ce que la physique autorise.">To keep the jump forgiving and responsive, two small timing windows smooth over the gap between what the player intends and what the physics allows.</p>
                 <ul>
-                  <li><strong>Coyote time:</strong> a short grace window after leaving a ledge during which the jump still registers, so a slightly late press never feels punishing</li>
-                  <li><strong>Jump buffering:</strong> a press made just before landing is remembered and fires the instant the robot touches the ground</li>
-                  <li>Both windows tuned to stay invisible — they forgive the player without making the controller feel loose</li>
+                  <li data-fr="<strong>Coyote time :</strong> une courte fenêtre de grâce après avoir quitté un rebord, pendant laquelle le saut est encore pris en compte, pour qu'un appui légèrement tardif ne soit jamais punitif"><strong>Coyote time:</strong> a short grace window after leaving a ledge during which the jump still registers, so a slightly late press never feels punishing</li>
+                  <li data-fr="<strong>Jump buffering :</strong> un appui effectué juste avant l'atterrissage est mémorisé et se déclenche à l'instant où le robot touche le sol"><strong>Jump buffering:</strong> a press made just before landing is remembered and fires the instant the robot touches the ground</li>
+                  <li data-fr="Les deux fenêtres sont réglées pour rester invisibles — elles pardonnent au joueur sans rendre le contrôleur mou">Both windows tuned to stay invisible — they forgive the player without making the controller feel loose</li>
                 </ul>
               </div>
             </div>
@@ -142,13 +147,13 @@
                 <img src="assets/DDRGif/ThrowPartner.gif" alt="Throwing your partner" />
               </div>
               <div class="task-body">
-                <p class="task-label">Physics · Throw</p>
-                <h3>Throwing your partner</h3>
-                <p>A key co-op mechanic: a player can grab and <strong>throw the other robot</strong> (or objects) across the submarine. The throw is fully physics-driven so the trajectory stays readable and repeatable.</p>
+                <p class="task-label" data-fr="Physique · Lancer">Physics · Throw</p>
+                <h3 data-fr="Lancer son partenaire">Throwing your partner</h3>
+                <p data-fr="Une mécanique coop clé : un joueur peut attraper et <strong>lancer l'autre robot</strong> (ou des objets) à travers le sous-marin. Le lancer est entièrement piloté par la physique pour une trajectoire lisible et reproductible.">A key co-op mechanic: a player can grab and <strong>throw the other robot</strong> (or objects) across the submarine. The throw is fully physics-driven so the trajectory stays readable and repeatable.</p>
                 <ul>
-                  <li>Launch direction and force derived from aim and charge for predictable arcs</li>
-                  <li>Thrown body handed back to the physics simulation cleanly, with the right velocity</li>
-                  <li>Tuned to be useful for traversal without feeling floaty or random</li>
+                  <li data-fr="Direction et force de lancer dérivées de la visée et de la charge pour des courbes prévisibles">Launch direction and force derived from aim and charge for predictable arcs</li>
+                  <li data-fr="Le corps lancé est rendu proprement à la simulation physique, avec la bonne vélocité">Thrown body handed back to the physics simulation cleanly, with the right velocity</li>
+                  <li data-fr="Réglé pour être utile au déplacement sans paraître flottant ou aléatoire">Tuned to be useful for traversal without feeling floaty or random</li>
                 </ul>
               </div>
             </div>
@@ -159,11 +164,11 @@
                 <img src="assets/DDRGif/CorrectThrow.gif" alt="Throw and avoid unrealistic direction" />
               </div>
               <div class="task-body">
-                <p class="task-label">Physics · Throw</p>
-                <h3>Preventing unrealistic throws</h3>
-                <p>Making sure throws follow believable physics and can't take impossible trajectories — no clipping through thin walls or glitching into geometry.</p>
+                <p class="task-label" data-fr="Physique · Lancer">Physics · Throw</p>
+                <h3 data-fr="Empêcher les lancers irréalistes">Preventing unrealistic throws</h3>
+                <p data-fr="S'assurer que les lancers suivent une physique crédible et ne prennent pas de trajectoires impossibles — pas de passage à travers les murs fins ni de glitch dans la géométrie.">Making sure throws follow believable physics and can't take impossible trajectories — no clipping through thin walls or glitching into geometry.</p>
                 <ul>
-                    <li>Verify the throw angle with a raycast (DrawLine) and a dot product to compute the range, preventing the thrown item from glitching into nearby geometry or being thrown out of bounds</li>
+                    <li data-fr="Vérification de l'angle de lancer avec un raycast (DrawLine) et un produit scalaire pour calculer la portée, empêchant l'objet lancé de glitcher dans la géométrie proche ou d'être projeté hors des limites">Verify the throw angle with a raycast (DrawLine) and a dot product to compute the range, preventing the thrown item from glitching into nearby geometry or being thrown out of bounds</li>
                 </ul>
               </div>
             </div>
@@ -174,31 +179,31 @@
                 <img src="assets/DDRGif/Gravity.gif" alt="Custom gravity" />
               </div>
               <div class="task-body">
-                <p class="task-label">Physics · Gravity</p>
-                <h3>Custom gravity</h3>
-                <p>Each character runs on a <strong>custom gravity model</strong> instead of Unity's global gravity, giving full control over how the robots fall and how weighty they feel.</p>
+                <p class="task-label" data-fr="Physique · Gravité">Physics · Gravity</p>
+                <h3 data-fr="Gravité custom">Custom gravity</h3>
+                <p data-fr="Chaque personnage tourne sur un <strong>modèle de gravité custom</strong> plutôt que sur la gravité globale d'Unity, offrant un contrôle total sur la façon dont les robots tombent et sur leur sensation de poids.">Each character runs on a <strong>custom gravity model</strong> instead of Unity's global gravity, giving full control over how the robots fall and how weighty they feel.</p>
                 <ul>
-                  <li>Per-character gravity tuned independently from the rest of the physics world</li>
-                  <li>Stronger fall gravity for a snappier, less floaty descent</li>
-                  <li>Single shared knob to balance jump, throw, and fall together as one coherent feel</li>
+                  <li data-fr="Gravité par personnage réglée indépendamment du reste du monde physique">Per-character gravity tuned independently from the rest of the physics world</li>
+                  <li data-fr="Gravité de chute plus forte pour une descente plus nerveuse et moins flottante">Stronger fall gravity for a snappier, less floaty descent</li>
+                  <li data-fr="Un seul réglage partagé pour équilibrer saut, lancer et chute en une sensation cohérente">Single shared knob to balance jump, throw, and fall together as one coherent feel</li>
                 </ul>
               </div>
             </div>
         </div>
     </section>
-    
-    
+
+
   <!-- ===================== MY WORK ===================== -->
   <section class="section" style="padding-bottom:0">
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">02</span>
-        <h2>The Task system</h2>
+        <h2 data-fr="Le système de tâches">The Task system</h2>
       </div>
 
-      <p>The tasks are the core of the gameplay and therefore held a central place in the game's production. They are the player's only means of action, serving both as a progression mechanic and as a survival system.</p>
-      <p>Their design had to meet several requirements: be <strong>quick to understand</strong>, play out <strong>smoothly</strong>, and allow a <strong>natural flow</strong> in order to maintain a good gameplay pace. Designing each task required particular attention, as it directly shapes player engagement and the overall balance of the experience.</p>
-      <p>We wanted a repetitive activity that never became boring. Each task therefore had to <strong>take the player a little time</strong> — never an instant completion — in order to play against the overall match timer that slowly ticks away. We ended up with <strong>7 different tasks</strong> and 1 secondary task.</p>
+      <p data-fr="Les tâches sont le cœur du gameplay et ont donc occupé une place centrale dans la production du jeu. Elles sont le seul moyen d'action du joueur, servant à la fois de mécanique de progression et de système de survie.">The tasks are the core of the gameplay and therefore held a central place in the game's production. They are the player's only means of action, serving both as a progression mechanic and as a survival system.</p>
+      <p data-fr="Leur design devait répondre à plusieurs exigences : être <strong>rapide à comprendre</strong>, se dérouler <strong>en douceur</strong> et permettre un <strong>flow naturel</strong> afin de maintenir un bon rythme de jeu. Concevoir chaque tâche a demandé une attention particulière, car elle façonne directement l'engagement du joueur et l'équilibre global de l'expérience.">Their design had to meet several requirements: be <strong>quick to understand</strong>, play out <strong>smoothly</strong>, and allow a <strong>natural flow</strong> in order to maintain a good gameplay pace. Designing each task required particular attention, as it directly shapes player engagement and the overall balance of the experience.</p>
+      <p data-fr="Nous voulions une activité répétitive qui ne devienne jamais ennuyeuse. Chaque tâche devait donc <strong>prendre un peu de temps au joueur</strong> — jamais une complétion instantanée — afin de jouer contre le chrono global de la partie qui s'égrène lentement. Nous avons abouti à <strong>7 tâches différentes</strong> et 1 tâche secondaire.">We wanted a repetitive activity that never became boring. Each task therefore had to <strong>take the player a little time</strong> — never an instant completion — in order to play against the overall match timer that slowly ticks away. We ended up with <strong>7 different tasks</strong> and 1 secondary task.</p>
     </div>
   </section>
 
@@ -212,14 +217,14 @@
           <img src="assets/DDRGif/DelimitationLevel.png" alt="LevelZone" />
         </div>
         <div class="task-body">
-          <p class="task-label">System · Task spawning</p>
-          <h3>Managing task spawning</h3>
-          <p>Tasks <strong>disappear once completed</strong> — the real challenge lay in their <strong>respawn</strong>. To keep players moving, we <strong>limited the number of tasks on screen</strong> and spawned them based on the players' positions, splitting the level into <strong>zones</strong>.</p>
+          <p class="task-label" data-fr="Système · Apparition des tâches">System · Task spawning</p>
+          <h3 data-fr="Gérer l'apparition des tâches">Managing task spawning</h3>
+          <p data-fr="Les tâches <strong>disparaissent une fois terminées</strong> — le vrai défi résidait dans leur <strong>réapparition</strong>. Pour garder les joueurs en mouvement, nous avons <strong>limité le nombre de tâches à l'écran</strong> et les avons fait apparaître selon la position des joueurs, en découpant le niveau en <strong>zones</strong>.">Tasks <strong>disappear once completed</strong> — the real challenge lay in their <strong>respawn</strong>. To keep players moving, we <strong>limited the number of tasks on screen</strong> and spawned them based on the players' positions, splitting the level into <strong>zones</strong>.</p>
           <ul>
-            <li><strong>Zone boundaries:</strong> each task is assigned a zone from its on-screen position</li>
-            <li><strong>Player detection:</strong> the system tracks which zone the players are <em>not</em> in</li>
-            <li><strong>Targeted spawn:</strong> a new task appears in a free spot, forcing the players to move to reach it</li>
-            <li><strong>Twofold pressure:</strong> constant movement, plus the submarine's health gauge creeping toward zero</li>
+            <li data-fr="<strong>Délimitation des zones :</strong> chaque tâche se voit attribuer une zone d'après sa position à l'écran"><strong>Zone boundaries:</strong> each task is assigned a zone from its on-screen position</li>
+            <li data-fr="<strong>Détection des joueurs :</strong> le système repère la zone où les joueurs ne se trouvent <em>pas</em>"><strong>Player detection:</strong> the system tracks which zone the players are <em>not</em> in</li>
+            <li data-fr="<strong>Apparition ciblée :</strong> une nouvelle tâche surgit dans un endroit libre, forçant les joueurs à se déplacer pour l'atteindre"><strong>Targeted spawn:</strong> a new task appears in a free spot, forcing the players to move to reach it</li>
+            <li data-fr="<strong>Double pression :</strong> le mouvement constant, plus la jauge de vie du sous-marin qui glisse vers zéro"><strong>Twofold pressure:</strong> constant movement, plus the submarine's health gauge creeping toward zero</li>
           </ul>
         </div>
       </div>
@@ -231,12 +236,12 @@
           <img src="assets/DDRGif/Press.gif" alt="Press task" />
         </div>
         <div class="task-body">
-          <p class="task-label">Task · Press</p>
-          <h3>Hammer the button</h3>
-          <p>On reaching the task, the player must repeatedly press the X button to complete it.</p>
+          <p class="task-label" data-fr="Tâche · Presser">Task · Press</p>
+          <h3 data-fr="Marteler le bouton">Hammer the button</h3>
+          <p data-fr="En arrivant sur la tâche, le joueur doit appuyer de façon répétée sur le bouton X pour la terminer.">On reaching the task, the player must repeatedly press the X button to complete it.</p>
           <ul>
-            <li>Mechanic that's easy to reproduce</li>
-            <li>Introduces a rhythm-and-speed challenge tied to the number of presses required</li>
+            <li data-fr="Mécanique facile à reproduire">Mechanic that's easy to reproduce</li>
+            <li data-fr="Introduit un défi de rythme et de vitesse lié au nombre d'appuis requis">Introduces a rhythm-and-speed challenge tied to the number of presses required</li>
           </ul>
         </div>
       </div>
@@ -247,13 +252,13 @@
             <img src="assets/DDRGif/Duo.gif" alt="Duo task" />
         </div>
         <div class="task-body">
-          <p class="task-label">Task · Duo</p>
-          <h3>Two-player sync</h3>
-          <p>This task requires both players to be present at the same time. To complete it, they must press the indicated button simultaneously.</p>
+          <p class="task-label" data-fr="Tâche · Duo">Task · Duo</p>
+          <h3 data-fr="Synchronisation à deux">Two-player sync</h3>
+          <p data-fr="Cette tâche exige la présence des deux joueurs en même temps. Pour la terminer, ils doivent appuyer simultanément sur le bouton indiqué.">This task requires both players to be present at the same time. To complete it, they must press the indicated button simultaneously.</p>
           <ul>
-            <li>The most complex task mechanic to pull off</li>
-            <li>Relies on coordination and communication between players</li>
-            <li>Offers a significant reward on success</li>
+            <li data-fr="La mécanique de tâche la plus complexe à réussir">The most complex task mechanic to pull off</li>
+            <li data-fr="Repose sur la coordination et la communication entre les joueurs">Relies on coordination and communication between players</li>
+            <li data-fr="Offre une récompense importante en cas de réussite">Offers a significant reward on success</li>
           </ul>
         </div>
       </div>
@@ -264,12 +269,12 @@
             <img src="assets/DDRGif/Vis.gif" alt="Screwdriver task" />
         </div>
         <div class="task-body">
-          <p class="task-label">Task · Screwdriver</p>
-          <h3>Screw with the joystick</h3>
-          <p>The player must perform a rotating motion with the joystick to simulate the act of screwing.</p>
+          <p class="task-label" data-fr="Tâche · Tournevis">Task · Screwdriver</p>
+          <h3 data-fr="Visser au joystick">Screw with the joystick</h3>
+          <p data-fr="Le joueur doit effectuer un mouvement de rotation avec le joystick pour simuler l'action de visser.">The player must perform a rotating motion with the joystick to simulate the act of screwing.</p>
           <ul>
-            <li>Intuitive mechanic that's easy to pick up</li>
-            <li>Introduces a speed challenge based on how fast the motion is performed</li>
+            <li data-fr="Mécanique intuitive et facile à prendre en main">Intuitive mechanic that's easy to pick up</li>
+            <li data-fr="Introduit un défi de vitesse basé sur la rapidité du mouvement">Introduces a speed challenge based on how fast the motion is performed</li>
           </ul>
         </div>
       </div>
@@ -280,12 +285,12 @@
             <img src="assets/DDRGif/Timing.gif" alt="Timing task" />
         </div>
         <div class="task-body">
-          <p class="task-label">Task · Timing</p>
-          <h3>Hit at the right moment</h3>
-          <p>The player must press the button at the exact moment a visual or audio cue indicates, in order to complete the task.</p>
+          <p class="task-label" data-fr="Tâche · Timing">Task · Timing</p>
+          <h3 data-fr="Frapper au bon moment">Hit at the right moment</h3>
+          <p data-fr="Le joueur doit appuyer sur le bouton au moment exact indiqué par un repère visuel ou sonore pour terminer la tâche.">The player must press the button at the exact moment a visual or audio cue indicates, in order to complete the task.</p>
           <ul>
-            <li>Simple mechanic that's easy to reproduce</li>
-            <li>Introduces a skill dimension based on timing precision</li>
+            <li data-fr="Mécanique simple et facile à reproduire">Simple mechanic that's easy to reproduce</li>
+            <li data-fr="Introduit une dimension de skill basée sur la précision du timing">Introduces a skill dimension based on timing precision</li>
           </ul>
         </div>
       </div>
@@ -296,13 +301,13 @@
             <img src="assets/DDRGif/Battery.gif" alt="Battery task" />
         </div>
         <div class="task-body">
-          <p class="task-label">Task · Battery</p>
-          <h3>Aim and recharge</h3>
-          <p>The player must throw a battery and aim correctly to recharge the submarine's power system.</p>
+          <p class="task-label" data-fr="Tâche · Batterie">Task · Battery</p>
+          <h3 data-fr="Viser et recharger">Aim and recharge</h3>
+          <p data-fr="Le joueur doit lancer une batterie et viser correctement pour recharger le système d'alimentation du sous-marin.">The player must throw a battery and aim correctly to recharge the submarine's power system.</p>
           <ul>
-            <li>Mechanic that's easy to reproduce</li>
-            <li>Introduces a precision challenge through aiming</li>
-            <li class="warn">Punishing failure: a significant loss if the throw misses</li>
+            <li data-fr="Mécanique facile à reproduire">Mechanic that's easy to reproduce</li>
+            <li data-fr="Introduit un défi de précision par la visée">Introduces a precision challenge through aiming</li>
+            <li class="warn" data-fr="Échec punitif : une perte importante si le lancer échoue">Punishing failure: a significant loss if the throw misses</li>
           </ul>
         </div>
       </div>
@@ -314,11 +319,11 @@
         </div>
         <div class="task-body">
           <p class="task-label">Task · 6</p>
-          <h3>Take aim</h3>
-          <p>The player must throw a nearby object and aim correctly at the pipe to free the submarine crew in danger.</p>
+          <h3 data-fr="Bien viser">Take aim</h3>
+          <p data-fr="Le joueur doit lancer un objet proche et viser correctement le tuyau pour libérer l'équipage du sous-marin en danger.">The player must throw a nearby object and aim correctly at the pipe to free the submarine crew in danger.</p>
           <ul>
-            <li>Mechanic that's easy to reproduce</li>
-            <li>Introduces a sense of urgency to the tasks</li>
+            <li data-fr="Mécanique facile à reproduire">Mechanic that's easy to reproduce</li>
+            <li data-fr="Apporte un sentiment d'urgence aux tâches">Introduces a sense of urgency to the tasks</li>
           </ul>
         </div>
       </div>
@@ -329,11 +334,11 @@
           <img src="assets/DDRGif/WashingMachine.gif" alt="Washing machine task" />
         </div>
         <div class="task-body">
-          <p class="task-label">Task · Washing machine</p>
-          <h3>To be completed</h3>
-          <p>To be completed.</p>
+          <p class="task-label" data-fr="Tâche · Machine à laver">Task · Washing machine</p>
+          <h3 data-fr="À compléter">To be completed</h3>
+          <p data-fr="À compléter.">To be completed.</p>
           <ul>
-            <li>To be completed.</li>
+            <li data-fr="À compléter.">To be completed.</li>
           </ul>
         </div>
       </div>
@@ -347,13 +352,13 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Secondary Task · Menu · Game state</p>
-          <h3>The computer: launching a level</h3>
-          <p>The in-world computer is the player's <strong>gateway into a level</strong>: they walk up to it, browse the available missions, and select the one they want to play. Beyond the fiction, this was a piece of <strong>UI and menu-navigation work</strong> tied to a real <strong>game-state change</strong>.</p>
+          <p class="task-label" data-fr="Tâche secondaire · Menu · État de jeu">Secondary Task · Menu · Game state</p>
+          <h3 data-fr="L'ordinateur : lancer un niveau">The computer: launching a level</h3>
+          <p data-fr="L'ordinateur présent dans le monde est la <strong>porte d'entrée vers un niveau</strong> : le joueur s'en approche, parcourt les missions disponibles et sélectionne celle qu'il veut jouer. Au-delà de la fiction, c'était un travail d'<strong>UI et de navigation de menu</strong> lié à un véritable <strong>changement d'état de jeu</strong>.">The in-world computer is the player's <strong>gateway into a level</strong>: they walk up to it, browse the available missions, and select the one they want to play. Beyond the fiction, this was a piece of <strong>UI and menu-navigation work</strong> tied to a real <strong>game-state change</strong>.</p>
           <ul>
-            <li>Fully <strong>controller-driven menu</strong>: navigate the level list and confirm a choice entirely with the gamepad, no mouse required</li>
-            <li>Selecting a mission <strong>switches the game state</strong> — from free-roam exploration to an active level — loading the right scene and setup</li>
-            <li>UI feedback (highlight, selection, confirmation) kept <strong>clear and readable</strong> so both players always know what's about to launch</li>
+            <li data-fr="Menu <strong>entièrement pilotable à la manette</strong> : parcourir la liste des niveaux et confirmer un choix uniquement au gamepad, sans souris">Fully <strong>controller-driven menu</strong>: navigate the level list and confirm a choice entirely with the gamepad, no mouse required</li>
+            <li data-fr="Sélectionner une mission <strong>change l'état de jeu</strong> — de l'exploration libre à un niveau actif — en chargeant la bonne scène et la bonne configuration">Selecting a mission <strong>switches the game state</strong> — from free-roam exploration to an active level — loading the right scene and setup</li>
+            <li data-fr="Un feedback UI (surbrillance, sélection, confirmation) gardé <strong>clair et lisible</strong> pour que les deux joueurs sachent toujours ce qui va se lancer">UI feedback (highlight, selection, confirmation) kept <strong>clear and readable</strong> so both players always know what's about to launch</li>
           </ul>
         </div>
       </div>
@@ -366,11 +371,11 @@
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">03</span>
-        <h2>Around the game</h2>
+        <h2 data-fr="Autour du jeu">Around the game</h2>
       </div>
 
-      <p>Beyond the core gameplay loop, a game is also everything that <strong>wraps around</strong> it: how a run is introduced, how it ends, and what makes players want to start another one. I handled this <strong>layer around the run</strong> — the narrative framing, the win/loss flow, and the replayability.</p>
-      <p>Together, these systems give every session a <strong>clear beginning</strong>, a <strong>clear outcome</strong>, and a reason to come back for one more attempt.</p>
+      <p data-fr="Au-delà de la boucle de gameplay principale, un jeu c'est aussi tout ce qui l'<strong>entoure</strong> : comment une partie est introduite, comment elle se termine et ce qui donne envie d'en relancer une. J'ai pris en charge cette <strong>couche autour de la partie</strong> — le cadre narratif, le flux victoire/défaite et la rejouabilité.">Beyond the core gameplay loop, a game is also everything that <strong>wraps around</strong> it: how a run is introduced, how it ends, and what makes players want to start another one. I handled this <strong>layer around the run</strong> — the narrative framing, the win/loss flow, and the replayability.</p>
+      <p data-fr="Ensemble, ces systèmes donnent à chaque session un <strong>début clair</strong>, une <strong>issue claire</strong> et une raison de revenir pour une tentative de plus.">Together, these systems give every session a <strong>clear beginning</strong>, a <strong>clear outcome</strong>, and a reason to come back for one more attempt.</p>
 
       <!-- ── INTRO DIALOGUES ── -->
       <div class="task">
@@ -378,13 +383,13 @@
           <img src="assets/DDRGif/Dialogue.gif" alt="Level intro dialogues" />
         </div>
         <div class="task-body">
-          <p class="task-label">Narrative · Level intro</p>
-          <h3>Level intro dialogues</h3>
-          <p>At the start of every stage, a short <strong>dialogue scene</strong> — inspired by classic <strong>JRPG</strong> dialogue boxes — sets the tone before the players take control.</p>
+          <p class="task-label" data-fr="Narration · Intro de niveau">Narrative · Level intro</p>
+          <h3 data-fr="Dialogues d'intro de niveau">Level intro dialogues</h3>
+          <p data-fr="Au début de chaque niveau, une courte <strong>scène de dialogue</strong> — inspirée des boîtes de dialogue de <strong>JRPG</strong> classiques — installe l'ambiance avant que les joueurs ne prennent la main.">At the start of every stage, a short <strong>dialogue scene</strong> — inspired by classic <strong>JRPG</strong> dialogue boxes — sets the tone before the players take control.</p>
           <ul>
-            <li>Traditional <strong>dialogue box</strong> with text printed letter by letter</li>
-            <li>Characters speaking in turn, advanced at the players' own pace</li>
-            <li>Adds context and personality without slowing the co-op action</li>
+            <li data-fr="<strong>Boîte de dialogue</strong> classique avec un texte affiché lettre par lettre">Traditional <strong>dialogue box</strong> with text printed letter by letter</li>
+            <li data-fr="Personnages qui parlent chacun leur tour, au rythme des joueurs">Characters speaking in turn, advanced at the players' own pace</li>
+            <li data-fr="Ajoute du contexte et de la personnalité sans ralentir l'action coop">Adds context and personality without slowing the co-op action</li>
           </ul>
         </div>
       </div>
@@ -398,13 +403,13 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Game state · Win / loss</p>
-          <h3>Win, loss &amp; instant restart</h3>
-          <p>Each run ends in one of two <strong>game states</strong>, both resolving into a clear end screen so players immediately understand the outcome.</p>
+          <p class="task-label" data-fr="État de jeu · Victoire / défaite">Game state · Win / loss</p>
+          <h3 data-fr="Victoire, défaite &amp; relance instantanée">Win, loss &amp; instant restart</h3>
+          <p data-fr="Chaque partie se termine sur l'un des deux <strong>états de jeu</strong>, chacun débouchant sur un écran de fin clair pour que les joueurs comprennent immédiatement l'issue.">Each run ends in one of two <strong>game states</strong>, both resolving into a clear end screen so players immediately understand the outcome.</p>
           <ul>
-            <li><strong>Win:</strong> reaching the safe harbour triggers the victory state</li>
-            <li><strong>Loss:</strong> the submarine's health gauge reaching zero triggers defeat</li>
-            <li><strong>Instant restart:</strong> a single input relaunches the game, straight back into the tutorial</li>
+            <li data-fr="<strong>Victoire :</strong> atteindre le port sûr déclenche l'état de victoire"><strong>Win:</strong> reaching the safe harbour triggers the victory state</li>
+            <li data-fr="<strong>Défaite :</strong> la jauge de vie du sous-marin qui atteint zéro déclenche la défaite"><strong>Loss:</strong> the submarine's health gauge reaching zero triggers defeat</li>
+            <li data-fr="<strong>Relance instantanée :</strong> une seule touche relance le jeu, directement dans le tutoriel"><strong>Instant restart:</strong> a single input relaunches the game, straight back into the tutorial</li>
           </ul>
         </div>
       </div>
@@ -418,13 +423,13 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label">Persistence · Best time</p>
-          <h3>Local best-time saving</h3>
-          <p>Each victory is <strong>timed</strong>, and the players' <strong>best time</strong> is stored <strong>locally</strong> so it persists between sessions.</p>
+          <p class="task-label" data-fr="Persistance · Meilleur temps">Persistence · Best time</p>
+          <h3 data-fr="Sauvegarde locale du meilleur temps">Local best-time saving</h3>
+          <p data-fr="Chaque victoire est <strong>chronométrée</strong>, et le <strong>meilleur temps</strong> des joueurs est stocké <strong>en local</strong> pour persister entre les sessions.">Each victory is <strong>timed</strong>, and the players' <strong>best time</strong> is stored <strong>locally</strong> so it persists between sessions.</p>
           <ul>
-            <li>On victory, the run's time is compared against the saved record</li>
-            <li>A faster time is <strong>written to disk</strong> and survives relaunching the game</li>
-            <li>The best time is shown to players as a target to beat</li>
+            <li data-fr="À la victoire, le temps de la partie est comparé au record sauvegardé">On victory, the run's time is compared against the saved record</li>
+            <li data-fr="Un meilleur temps est <strong>écrit sur le disque</strong> et survit au redémarrage du jeu">A faster time is <strong>written to disk</strong> and survives relaunching the game</li>
+            <li data-fr="Le meilleur temps est affiché aux joueurs comme objectif à battre">The best time is shown to players as a target to beat</li>
           </ul>
         </div>
       </div>
@@ -435,11 +440,11 @@
   <section class="section" style="border-bottom:1px solid var(--line)">
     <div class="wrap">
       <div class="cta">
-        <h2>Want to play it?</h2>
-        <p>Playable build, itch.io page or source code — add your links here.</p>
+        <h2 data-fr="Envie d'y jouer ?">Want to play it?</h2>
+        <p data-fr="Build jouable, page itch.io ou code source — ajoute tes liens ici.">Playable build, itch.io page or source code — add your links here.</p>
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
-          <a href="#" class="btn btn-primary">Play / itch.io</a>
-          <a href="index.html#work" class="btn btn-ghost">Other projects</a>
+          <a href="#" class="btn btn-primary" data-fr="Jouer / itch.io">Play / itch.io</a>
+          <a href="index.html#work" class="btn btn-ghost" data-fr="Autres projets">Other projects</a>
         </div>
       </div>
     </div>
@@ -456,6 +461,7 @@
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/lightbox.js"></script>
 </body>
 </html>
