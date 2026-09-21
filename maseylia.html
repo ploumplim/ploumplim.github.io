@@ -29,6 +29,11 @@
   font-family:'JetBrains Mono',monospace; font-size:15px; color:var(--muted);
   letter-spacing:.02em; margin:-8px 0 14px;
 }
+/* highlighted roles in the role line */
+.role-line .hl{
+  color:var(--text); background:var(--accent-dim);
+  border:1px solid var(--accent); border-radius:6px; padding:0 8px;
+}
 
 /* ---- Maseylia: programming systems grid ---- */
 .systems{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:24px; }
@@ -132,7 +137,7 @@
       <p class="eyebrow" data-fr="unity · metroidvania 3d · dlc">unity · 3d metroidvania · dlc</p>
       <h1>Ma<span class="accent">seylia</span></h1>
       <p class="subtitle" data-fr="Echoes of the Past — Contenu additionnel">Echoes of the Past — Additional content</p>
-      <p class="role-line" data-fr="Programmeur Gameplay · Prototype &amp; Direction du DLC">Gameplay Programmer · DLC Prototype &amp; Direction</p>
+      <p class="role-line" data-fr="<span class=&quot;hl&quot;>Programmeur Gameplay</span> · <span class=&quot;hl&quot;>Level Designer</span> · Game Designer · QA Tester"><span class="hl">Gameplay Programmer</span> · <span class="hl">Level Designer</span> · Game Designer · QA Tester</p>
 
       <div class="lead">
         <p data-fr="Un <strong>DLC</strong> pour <em>Maseylia: Echoes of the Past</em>, un <strong>Metroidvania en 3D</strong> à la direction artistique sci-fi inspirée de <strong>Mœbius</strong>, où le joueur débloque de nouvelles capacités qui <strong>rouvrent le level design</strong> : chaque pouvoir change la façon de traverser le monde.">A <strong>DLC</strong> for <em>Maseylia: Echoes of the Past</em>, a <strong>true-3D Metroidvania</strong> with a <strong>Mœbius-inspired</strong> sci-fi art direction, where the player unlocks new abilities that <strong>reopen the level design</strong>: every power changes how you traverse the world.</p>
@@ -182,7 +187,7 @@
 
       <div class="task" style="grid-template-columns:1fr">
         <div class="task-body">
-          <p class="task-label" data-fr="Programmeur Gameplay · Level Design">Gameplay Programmer · Level Design</p>
+          <p class="task-label" data-fr="Programmeur Gameplay · Level Designer · Game Designer · QA Tester">Gameplay Programmer · Level Designer · Game Designer · QA Tester</p>
           <h3 data-fr="Prototype global &amp; direction">Overall prototype &amp; direction</h3>
           <p data-fr="J'ai <strong>conçu le prototype global du DLC</strong> et lui ai <strong>donné sa direction</strong>. Côté programmation, j'ai conceptualisés et développé de <strong>nouvelles mécaniques</strong> — les orbes, plateformes, pièges et outils détaillés plus bas — qui n'existaient pas dans le jeu de base ; les mécaniques déjà présentes (déplacements et capacités du personnage), je les ai <strong>réutilisées</strong> telles quelles. J'ai ensuite structuré la courbe d'apprentissage des six segments — quelle capacité introduire et quand — pour que le pouvoir débloqué et les obstacles se répondent.">I <strong>designed the DLC's overall prototype</strong> and gave it its <strong>direction</strong>. On the programming side, I developed <strong>new mechanics</strong> — the orbs, platforms, traps and tools detailed below — that didn't exist in the base game; the mechanics already present (the character's movement and abilities) I <strong>reused</strong> as-is. I then structured the six-segment learning curve — which ability to introduce and when — so the unlocked power and the obstacles answer each other.</p>
           <ul>

@@ -210,6 +210,9 @@ body{ font-size:19.5px; }
 /* second tag row: project status (released / unreleased) */
 .tags-status{ margin-top:6px; }
 
+/* highlighted word inside a project title (e.g. "DLC") */
+.project h3 .accent{ color:var(--accent); }
+
 /* Maseylia key art only: image entière, sans recadrage (fond assorti au visuel) */
 .project.keyart .media{ background:#efe1d2; }
 .project.keyart .media-link img{ object-fit:contain; }
@@ -353,8 +356,6 @@ body{ font-size:19.5px; }
 
       <div class="hud mono">
         <span>BUILD&nbsp;<b id="ver">1.0.0</b></span>
-        <span>◷&nbsp;<b id="fps">60</b>&nbsp;fps</span>
-        <span>◆&nbsp;<b id="ent">0</b>&nbsp;entities</span>
       </div>
 
       <button class="lang-toggle" id="langToggle" role="switch" aria-label="Switch language / Changer de langue" aria-checked="false">
@@ -514,8 +515,8 @@ const PROJECTS = [
     cls: "keyart",
     title: "Maseylia: Echoes of the Past : DLC",
     page: "maseylia.html",
-    role: "Gameplay Programmer · Level Design",
-    role_fr: "Programmeur Gameplay · Level Design",
+    role: "Gameplay Programmer · Level Designer · Game Designer · QA Tester",
+    role_fr: "Programmeur Gameplay · Level Designer · Game Designer · QA Tester",
     note: "An unreleased DLC I'm working on for this Unity 3D Metroidvania — the base game is already out on Steam. I designed its overall prototype and gave it its direction: six segments where each unlocked ability — grapple, teleport, dash, double jump — reopens the level design. I built the new mechanics, traps and traversal tools.",
     note_fr: "Un DLC encore non sorti sur lequel je travaille pour ce Metroidvania 3D sous Unity — le jeu de base est déjà disponible sur Steam. J'en ai conçu le prototype global et donné la direction : six segments où chaque capacité débloquée — grappin, téléportation, dash, double saut — rouvre le level design. J'ai programmé les nouvelles mécaniques, pièges et outils de traversée.",
     tags: ["Unity", "C#", "Metroidvania"],
@@ -643,12 +644,14 @@ function projectHTML(p, lang){
   const media = p.page
     ? `<a class="media-link" href="${p.page}" aria-label="Open ${p.title} case study">${mediaHTML(p.media)}</a>`
     : mediaHTML(p.media);
+  const titleHTML = p.title.replaceAll("DLC", '<span class="accent">DLC</span>');
   const heading = p.page
-    ? `<a class="title-link" href="${p.page}">${p.title}</a>`
-    : p.title;
+    ? `<a class="title-link" href="${p.page}">${titleHTML}</a>`
+    : titleHTML;
   const roleHTML = role
     .replaceAll("Gameplay Programmer", '<span class="hl">Gameplay Programmer</span>')
-    .replaceAll("Programmeur Gameplay", '<span class="hl">Programmeur Gameplay</span>');
+    .replaceAll("Programmeur Gameplay", '<span class="hl">Programmeur Gameplay</span>')
+    .replaceAll("Level Designer", '<span class="hl">Level Designer</span>');
   return `<article class="project reveal ${p.featured?'featured':''} ${p.cls||''}">
       <div class="media">${media}</div>
       <div class="body">
@@ -743,7 +746,6 @@ sections.forEach(s => navObs.observe(s));
       x: Math.random()*W, y: Math.random()*H,
       hot: Math.random() < 0.12              // a few "hot", more visible particles
     }));
-    document.getElementById("ent").textContent = particles.length;
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#0E1116";
     ctx.fillRect(0,0,W,H);
   }
@@ -763,7 +765,6 @@ sections.forEach(s => navObs.observe(s));
   const LINK_DIST = 108;                 // max range of a connection (px)
   const CELL = LINK_DIST;                // spatial grid cell size
   const grid = new Map();                // key "cx,cy" → array of particles
-  let last = performance.now(), fpsAcc = 0, fpsCount = 0;
 
   // draws the links between neighbouring particles via spatial binning → ~O(n)
   function drawLinks(){
@@ -829,13 +830,6 @@ sections.forEach(s => navObs.observe(s));
       }
     }
 
-    // FPS counter (smoothed)
-    const dt = now - last; last = now;
-    fpsAcc += 1000/dt; fpsCount++;
-    if(fpsCount >= 20){
-      document.getElementById("fps").textContent = Math.round(fpsAcc/fpsCount);
-      fpsAcc = 0; fpsCount = 0;
-    }
     requestAnimationFrame(frame);
   }
 
@@ -852,7 +846,6 @@ sections.forEach(s => navObs.observe(s));
         ctx.fillRect(p.x,p.y,1.2,1.2);
       }
     }
-    document.getElementById("fps").textContent = "0";
   }
 
   resize();
