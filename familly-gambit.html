@@ -66,12 +66,12 @@
 
       <!-- MAIN MEDIA -->
       <div class="cover">
-        <img src="assets/FamillyGambit/WinDiploma.png" alt="Familly Gambit" />
+        <video src="assets/FamillyGambit/familly-gambit-demo.mp4" muted loop playsinline autoplay></video>
       </div>
     </div>
   </header>
 
-  <!-- ===================== SECTION 01 ===================== -->
+  <!-- ===================== SECTION 01 · CONCEPT ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
@@ -80,7 +80,7 @@
       </div>
 
       <p data-fr="<strong>Game Jam Godot</strong>. Un objectif : créer la maquette d'un <strong>WarioWare</strong>."><strong>Godot game jam</strong>. One goal: build a mockup of a <strong>WarioWare</strong>.</p>
-      <p data-fr="Nous avons décidé de nous lancer sur des <strong>épreuves de la vie de tous les jours</strong>, mais dont l'<strong>impact social est énorme</strong> — pour exagérer le fait qu'on puisse être <strong>déshérité</strong> à la suite d'un échec à ces épreuves.">We chose to build the game around <strong>ordinary, everyday-life trials</strong> — but ones with a <strong>huge social impact</strong> — to exaggerate the idea that failing them could get you <strong>disinherited</strong>.</p>
+      <p data-fr="Nous avons choisi des <strong>épreuves du quotidien</strong>, banales en apparence mais au <strong>risque social démesuré</strong> : le joueur y met en jeu sa <strong>réputation</strong>… sous peine de perdre son <strong>héritage</strong> !">We chose <strong>everyday trials</strong>, mundane on the surface but with a <strong>staggering social risk</strong>: the player puts their <strong>reputation</strong> on the line… on pain of losing their <strong>inheritance</strong>!</p>
 
       <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:24px">
         <img src="assets/FamillyGambit/heritage1.png" alt="Héritage" style="width:100%; border:1px solid var(--line); border-radius:12px; background:var(--surface-2)" />
@@ -90,11 +90,36 @@
     </div>
   </section>
 
-  <!-- ===================== SECTION 02 · MINI-GAMES ===================== -->
+  <!-- ===================== SECTION 02 · HOW IT WORKS ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">02</span>
+        <h2 data-fr="Fonctionnement général">How it works</h2>
+      </div>
+
+      <!-- ── GAME LOOP ── -->
+      <div class="task" style="grid-template-columns:1fr">
+        <div class="task-body">
+          <p class="task-label" data-fr="Système · Boucle de jeu">System · Game loop</p>
+          <h3 data-fr="La boucle de jeu">The game loop</h3>
+          <p data-fr="Inspiré des <strong>WarioWare</strong>, le jeu enchaîne <strong>trois mini-jeux tirés au hasard</strong>. Le joueur dispose de <strong>cinq secondes</strong> pour réussir chaque épreuve : s'il y parvient, il passe à la suivante ; s'il échoue, il <strong>perd une vie</strong> — symbolisée par un parent qui le <strong>déshérite</strong>. Au fil de la partie, le <strong>chronomètre s'accélère</strong> et les secondes défilent de plus en plus vite.">Inspired by <strong>WarioWare</strong>, the game strings together <strong>three randomly drawn mini-games</strong>. The player has <strong>five seconds</strong> to clear each trial: succeed and you move on to the next; fail and you <strong>lose a life</strong> — symbolised by a parent who <strong>disinherits</strong> you. As the run goes on, the <strong>timer speeds up</strong> and the seconds tick by faster and faster.</p>
+          <ul>
+            <li data-fr="Trois mini-jeux tirés <strong>aléatoirement</strong> et enchaînés à la suite">Three mini-games drawn <strong>at random</strong> and chained one after another</li>
+            <li data-fr="<strong>5 secondes</strong> par épreuve — réussite : on passe au mini-jeu suivant ; échec : le joueur perd une vie"><strong>5 seconds</strong> per trial — success: on to the next mini-game; failure: the player loses a life</li>
+            <li class="warn" data-fr="Chaque vie perdue est <strong>symbolisée par un parent qui déshérite</strong> le joueur">Each lost life is <strong>symbolised by a parent disinheriting</strong> the player</li>
+            <li data-fr="Le <strong>chronomètre s'accélère</strong> au fil de la partie : les secondes défilent de plus en plus vite">The <strong>timer accelerates</strong> as the run goes on: the seconds tick by faster and faster</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 03 · MINI-GAMES ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">03</span>
         <h2 data-fr="Les mini-jeux">The mini-games</h2>
       </div>
 
@@ -150,77 +175,49 @@
     </div>
   </section>
 
-  <!-- ===================== SECTION 03 · UNDER THE HOOD ===================== -->
+  <!-- ===================== SECTION 04 · UNDER THE HOOD ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <span class="section-num">03</span>
-        <h2 data-fr="Sous le capot">Under the hood</h2>
+        <span class="section-num">04</span>
+        <h2 data-fr="Changement de scène">Scene switching</h2>
       </div>
 
       <!-- ── SCENE CHANGE ── -->
-      <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span class="mono">gif / mp4 / png → assets/FamillyGambit/…</span>
-          </div>
-        </div>
+      <div class="task" style="grid-template-columns:1fr">
         <div class="task-body">
-          <p class="task-label" data-fr="Système · Changement de scène">System · Scene change</p>
-          <h3 data-fr="Changement de scène">Scene switching</h3>
-          <p data-fr="À compléter : comment on passe d'un mini-jeu au suivant, l'enchaînement des scènes et les transitions.">To be completed: how the game moves from one mini-game to the next — scene flow and transitions.</p>
+          <p data-fr="Une <strong>scène de fond</strong> reste chargée en permanence : elle porte toutes les <strong>données de la partie</strong> — vies restantes, mini-jeu en cours, rounds gagnés et vitesse de jeu. Chaque mini-jeu est en réalité une <strong>scène chargée par-dessus</strong>, qui lit ces données à son lancement et renvoie son résultat à la fin.">A <strong>background scene</strong> stays loaded at all times: it carries all the <strong>game data</strong> — remaining lives, current mini-game, rounds won and game speed. Each mini-game is actually a <strong>scene loaded on top</strong> that reads this data when it starts and returns its result when it ends.</p>
           <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- ── GENERAL OVERVIEW ── -->
-      <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13 4l-2 16"/></svg>
-            <span class="mono">gif / mp4 / png → assets/FamillyGambit/…</span>
-          </div>
-        </div>
-        <div class="task-body">
-          <p class="task-label" data-fr="Système · Fonctionnement général">System · Overview</p>
-          <h3 data-fr="Fonctionnement général">General overview</h3>
-          <p data-fr="À compléter : la boucle de jeu globale, l'architecture et la façon dont les systèmes s'articulent.">To be completed: the overall game loop, the architecture and how the systems fit together.</p>
-          <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="<strong>Scène de fond persistante</strong> : centralise les données globales (vies, mini-jeu en cours, rounds gagnés, vitesse de jeu)"><strong>Persistent background scene</strong>: holds the global data (lives, current mini-game, rounds won, game speed)</li>
+            <li data-fr="Chaque mini-jeu est une <strong>scène superposée</strong>, chargée puis déchargée par-dessus la scène de fond">Each mini-game is an <strong>overlaid scene</strong>, loaded then unloaded on top of the background scene</li>
+            <li data-fr="Les deux scènes <strong>communiquent</strong> à l'entrée (lecture des données) et à la sortie (résultat renvoyé) du mini-jeu">The two scenes <strong>communicate</strong> on entry (reading the data) and on exit (returning the result) of the mini-game</li>
           </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== SECTION 04 · GAME DESIGN ===================== -->
+  <!-- ===================== SECTION 05 · GAME DESIGN ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <span class="section-num">04</span>
+        <span class="section-num">05</span>
         <h2 data-fr="Game Design">Game Design</h2>
       </div>
 
       <!-- ── GAME DESIGN ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span class="mono">gif / mp4 / png → assets/FamillyGambit/…</span>
-          </div>
+          <img src="assets/FamillyGambit/WinDiploma.png" alt="Écran de victoire : le diplôme" />
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Game Design">Game Design</p>
           <h3 data-fr="Intentions de game design">Game design intentions</h3>
-          <p data-fr="À compléter : tes choix de design, le ton exagéré, le rythme des épreuves et la tension autour de l'héritage.">To be completed: your design choices, the exaggerated tone, the pacing of the trials and the tension around the inheritance.</p>
+          <p data-fr="Nous voulions vraiment assumer le principe du <strong>WarioWare-like</strong> : des mini-jeux <strong>très simples</strong>, expédiés en quelques secondes et volontairement <strong>ridicules</strong>. Pour renforcer le stress propre au genre, nous les avons bâtis sur les <strong>petites actions du quotidien</strong> les plus <strong>anxiogènes</strong> pour le commun des mortels.">We really wanted to lean into the <strong>WarioWare-like</strong> principle: <strong>dead-simple</strong> mini-games, cleared in a few seconds and deliberately <strong>absurd</strong>. To amplify the stress the genre is built on, we based them on the most <strong>nerve-racking little everyday actions</strong> anyone can relate to.</p>
           <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="Assumer le format <strong>WarioWare</strong> : des mini-jeux ultra-simples, compris et bouclés en un instant">Leaning into the <strong>WarioWare</strong> format: ultra-simple mini-games, understood and cleared in an instant</li>
+            <li data-fr="Un ton volontairement <strong>ridicule et exagéré</strong>">A deliberately <strong>ridiculous, over-the-top</strong> tone</li>
+            <li data-fr="Des <strong>situations du quotidien</strong> parmi les plus stressantes, pour épouser la tension du genre">The most stressful <strong>everyday situations</strong>, to match the tension of the genre</li>
           </ul>
         </div>
       </div>
