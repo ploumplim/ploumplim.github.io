@@ -549,6 +549,7 @@ const PROJECTS = [
     page: "blitz-ball.html",
     role: "Gameplay & System Programmer · Game Designer · UI Programmer · Level Designer",
     role_fr: "Programmeur Gameplay & Systèmes · Game Designer · Programmeur UI · Level Designer",
+    hl: ["Gameplay & System Programmer", "Programmeur Gameplay & Systèmes"],
     note: "Versus arcade game · Score with wall bounces and ball effects!",
     note_fr: "Jeu d'arcade en versus · Marque grâce aux rebonds sur les murs et aux effets de balle !",
     tags: ["Unity", "C#", "Versus"],
@@ -649,10 +650,12 @@ function projectHTML(p, lang){
   const heading = p.page
     ? `<a class="title-link" href="${p.page}">${titleHTML}</a>`
     : titleHTML;
-  const roleHTML = role
-    .replaceAll("Gameplay Programmer", '<span class="hl">Gameplay Programmer</span>')
-    .replaceAll("Programmeur Gameplay", '<span class="hl">Programmeur Gameplay</span>')
-    .replaceAll("Level Designer", '<span class="hl">Level Designer</span>');
+  // roles to highlight; a project can override with its own `hl` list (EN + FR terms)
+  const hlTerms = p.hl || ["Gameplay Programmer", "Programmeur Gameplay", "Level Designer"];
+  let roleHTML = role;
+  hlTerms.forEach(term => {
+    roleHTML = roleHTML.replaceAll(term, `<span class="hl">${term}</span>`);
+  });
   return `<article class="project reveal ${p.featured?'featured':''} ${p.cls||''}">
       <div class="media">${media}</div>
       <div class="body">
