@@ -63,6 +63,19 @@
   margin-top:12px; padding-top:12px; border-top:1px solid var(--line);
   font-size:14px; color:var(--muted); font-style:italic;
 }
+.sys-more[hidden]{ display:none; }
+/* "see more" toggle (injected by JS) */
+.sys-toggle{
+  margin-top:12px; background:none; border:0; padding:0; cursor:pointer;
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent);
+  display:inline-flex; align-items:center; gap:6px;
+}
+.sys-toggle:hover{ text-decoration:underline; }
+.sys-toggle::after{ content:"\25BE"; font-size:10px; transition:transform .2s ease; }
+.sys-toggle[aria-expanded="true"]::after{ transform:rotate(180deg); }
+.sys-toggle .less-label{ display:none; }
+.sys-toggle[aria-expanded="true"] .more-label{ display:none; }
+.sys-toggle[aria-expanded="true"] .less-label{ display:inline; }
 
 /* ---- Maseylia: level-design progression ---- */
 .segments{ display:flex; flex-direction:column; gap:16px; margin-top:24px; }
@@ -97,7 +110,8 @@
 }
 /* per-segment screenshot gallery */
 .seg-shots{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
-@media (max-width:600px){ .seg-shots{ grid-template-columns:repeat(2,1fr); } }
+.seg-shots.cols-2{ grid-template-columns:repeat(2,1fr); }
+@media (max-width:600px){ .seg-shots, .seg-shots.cols-2{ grid-template-columns:repeat(2,1fr); } }
 .seg-shots .shot{
   aspect-ratio:16/9; border-radius:8px; overflow:hidden;
   background:var(--surface-2); border:1px dashed var(--line);
@@ -105,6 +119,8 @@
 }
 .seg-shots .shot img{ width:100%; height:100%; object-fit:cover; display:block; }
 .seg-shots .shot .mono{ font-size:11px; }
+.seg-shots figure{ margin:0; }
+.seg-shots figcaption{ margin-top:6px; font-size:12px; color:var(--muted-2); text-align:center; }
 </style>
 
 </head>
@@ -169,11 +185,6 @@
       <p data-fr="<strong>Maseylia: Echoes of the Past</strong> est un <strong>Metroidvania en 3D</strong> développé sous Unity, à la direction artistique sci-fi inspirée de <strong>Mœbius</strong>, où nature et technologie ancienne fusionnent en paysages surréalistes. Ce <strong>DLC</strong> prolonge le jeu avec un nouvel arc de niveaux, pensé autour d'une <strong>montée en puissance progressive</strong> du joueur."><strong>Maseylia: Echoes of the Past</strong> is a <strong>true-3D Metroidvania</strong> built in Unity, with a <strong>Mœbius-inspired</strong> sci-fi art direction where nature and ancient technology merge into surreal landscapes. This <strong>DLC</strong> extends the game with a fresh arc of levels, designed around a <strong>steady ramp-up</strong> of the player's toolkit.</p>
       <p data-fr="Le fil conducteur est classique du genre mais exigeant à équilibrer : chaque nouvelle capacité (grappin, téléportation, dash, double saut…) devient la <strong>mécanique centrale d'un segment</strong>, puis se combine aux précédentes pour ouvrir des traversées de plus en plus techniques.">The through-line is classic to the genre but demanding to balance: each new ability (grapple, teleport, dash, double jump…) becomes the <strong>central mechanic of a segment</strong>, then combines with earlier ones to open increasingly technical traversals.</p>
 
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:24px">
-        <div class="media-slot" style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; color:var(--muted-2)"><span class="mono">img</span></div>
-        <div class="media-slot" style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; color:var(--muted-2)"><span class="mono">img</span></div>
-        <div class="media-slot" style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; color:var(--muted-2)"><span class="mono">img</span></div>
-      </div>
     </div>
   </section>
 
@@ -224,48 +235,43 @@
         </div>
 
         <div class="system">
-          <!-- gif/video: replace the placeholder with <img src="assets/Maseylia/flip-platform.gif" alt=""> or a <video> -->
-          <div class="sys-media"><span class="mono" data-fr="gif / mp4">gif / mp4</span></div>
+          <div class="sys-media"><img src="assets/Maseylia/flip-platform.gif" alt="Plateformes rotatives / Flip platforms" loading="lazy"></div>
           <span class="sys-tag" data-fr="Plateforme">Platform</span>
           <h4 data-fr="Plateforme qui se retourne">Flip platform</h4>
           <p data-fr="Bascule au saut du joueur, forçant à anticiper l'appui et la retombée.">Flips when the player jumps, forcing you to anticipate the input and the landing.</p>
-          <p class="sys-more" data-fr="[Explication technique — à compléter.]">[Technical explanation — to complete.]</p>
+          <p class="sys-more" data-fr="Objet de plateforming qui réagit au saut du joueur : en basculant, il l'oblige à garder ses sauts restants en réserve pour corriger sa trajectoire. Un même appui demande donc d'anticiper la retombée, ce qui ouvre de nouvelles possibilités et ajoute de la profondeur aux phases de saut. Note : l'animation et le visuel définitifs de la plateforme ne sont pas encore implémentés.">A platforming object that reacts to the player's jump: by flipping, it forces them to keep their remaining jumps in reserve to correct their trajectory. A single input now requires anticipating the landing, opening up new possibilities and adding depth to the jumping sequences. Note: the final animation and visuals for the platform are not implemented yet.</p>
         </div>
 
         <div class="system">
-          <!-- gif/video: replace the placeholder with <img src="assets/Maseylia/paraglider.gif" alt=""> or a <video> -->
-          <div class="sys-media"><span class="mono" data-fr="gif / mp4">gif / mp4</span></div>
+          <div class="sys-media"><img src="assets/Maseylia/paraglider.gif" alt="Paravoile / Paraglider" loading="lazy"></div>
           <span class="sys-tag" data-fr="Capacité">Ability</span>
           <h4 data-fr="Paravoile">Paraglider</h4>
           <p data-fr="Plané contrôlé qui allonge et infléchit la trajectoire de chute.">A controlled glide that stretches and steers the fall trajectory.</p>
-          <p class="sys-more" data-fr="[Explication technique — à compléter.]">[Technical explanation — to complete.]</p>
+          <p class="sys-more" data-fr="Capacité de plané qui, une fois en l'air, réduit la vitesse de chute et laisse le joueur infléchir sa trajectoire horizontale pour franchir de plus grandes distances et ajuster son point d'atterrissage. Elle transforme un simple saut en véritable phase de traversée aérienne, à combiner avec les autres capacités.">A gliding ability that, once airborne, reduces fall speed and lets the player steer their horizontal trajectory to clear larger gaps and fine-tune their landing point. It turns a simple jump into a genuine aerial traversal phase, meant to be combined with the other abilities.</p>
         </div>
 
         <div class="system">
-          <!-- gif/video: replace the placeholder with <img src="assets/Maseylia/rails.gif" alt=""> or a <video> -->
-          <div class="sys-media"><span class="mono" data-fr="gif / mp4">gif / mp4</span></div>
+          <div class="sys-media"><img src="assets/Maseylia/rails.gif" alt="Rails" loading="lazy"></div>
           <span class="sys-tag" data-fr="Traversée">Traversal</span>
           <h4>Rails</h4>
           <p data-fr="Système de rails guidant le joueur le long d'un tracé défini.">A rail system that guides the player along a defined path.</p>
-          <p class="sys-more" data-fr="[Explication technique — à compléter.]">[Technical explanation — to complete.]</p>
+          <p class="sys-more" data-fr="Une fois accroché, le joueur suit automatiquement un tracé défini à l'avance par le level designer, à vitesse contrôlée, et peut s'en détacher à tout moment pour enchaîner sur un saut ou une autre capacité. Le rail sert autant à franchir des zones infranchissables à pied qu'à cadrer des moments plus spectaculaires ou à rythmer la traversée d'un segment.">Once latched on, the player automatically follows a path laid out in advance by the level designer, at a controlled speed, and can detach at any time to chain into a jump or another ability. The rail is used both to cross areas that can't be traversed on foot and to frame more spectacular moments or set the pacing of a segment.</p>
         </div>
 
         <div class="system">
-          <!-- gif/video: replace the placeholder with <img src="assets/Maseylia/slow-mo-orb.gif" alt=""> or a <video> -->
-          <div class="sys-media"><span class="mono" data-fr="gif / mp4">gif / mp4</span></div>
+          <div class="sys-media"><img src="assets/Maseylia/slow-mo-orb.gif" alt="Slow-mo orb" loading="lazy"></div>
           <span class="sys-tag">Orb</span>
           <h4 data-fr="Orbe de ralenti">Slow-Mo Orb</h4>
           <p data-fr="Ralentit le temps à l'activation pour négocier les passages les plus nerveux.">Slows down time on activation to thread the most nerve-racking passages.</p>
-          <p class="sys-more" data-fr="[Explication technique — à compléter.]">[Technical explanation — to complete.]</p>
+          <p class="sys-more" data-fr="À l'activation, l'orbe réduit l'écoulement du temps du jeu sur une courte durée, tandis que les contrôles du joueur restent réactifs : il gagne ainsi une fenêtre pour lire et ajuster ses déplacements dans les passages les plus exigeants. La ressource est limitée, ce qui pousse à choisir le bon moment plutôt qu'à en abuser.">On activation, the orb slows down the game's time flow for a short duration while the player's controls stay responsive, giving them a window to read and adjust their movement through the most demanding passages. The resource is limited, which encourages picking the right moment rather than overusing it.</p>
         </div>
 
         <div class="system">
-          <!-- image: replace the placeholder with <img src="assets/Maseylia/teleport-savepoint.png" alt=""> -->
-          <div class="sys-media"><span class="mono" data-fr="image">image</span></div>
+          <div class="sys-media"><img src="assets/Maseylia/teleport-savepoint.gif" alt="Téléportation au point de sauvegarde / Teleport to save point" loading="lazy"></div>
           <span class="sys-tag" data-fr="Outil">Tool</span>
           <h4 data-fr="Téléportation au point de sauvegarde">Teleport to save point</h4>
-          <p data-fr="Renvoie le joueur au dernier point de contrôle : socle du respawn et de l'itération rapide.">Sends the player back to the last checkpoint: the backbone of respawn and fast iteration.</p>
-          <p class="sys-more" data-fr="[Explication technique — à compléter.]">[Technical explanation — to complete.]</p>
+          <p data-fr="Ouvre une fenêtre pour choisir un point de sauvegarde et s'y téléporter instantanément.">Opens a window to pick a save point and teleport straight to it.</p>
+          <p class="sys-more" data-fr="Plutôt qu'un simple respawn au dernier checkpoint, l'outil ouvre une interface listant les points de sauvegarde déjà débloqués ; le joueur en sélectionne un et s'y téléporte instantanément. Il peut ainsi revenir librement sur une zone, relancer un segment précis ou éviter de longs allers-retours. C'est aussi un fort accélérateur d'itération en playtest, pour rejoindre directement la portion de niveau à tester.">Rather than a simple respawn at the last checkpoint, the tool opens an interface listing the save points already unlocked; the player selects one and teleports to it instantly. They can freely return to an area, restart a specific segment or avoid long back-and-forth trips. It is also a strong iteration booster during playtests, letting you jump straight to the slice of level you want to test.</p>
         </div>
 
       </div>
@@ -277,23 +283,20 @@
 
         <div class="system">
           <span class="sys-tag" data-fr="Plateforme">Platform</span>
-          <h4 data-fr="Plateforme roulante">Rolling platform</h4>
-          <p data-fr="Plateforme en rotation/roulement, terrain instable à traverser en rythme.">A rotating/rolling platform, an unstable footing to cross on rhythm.</p>
-          <p class="sys-more" data-fr="[Explication technique — à compléter.]">[Technical explanation — to complete.]</p>
+          <h4 data-fr="Plateforme rotative">Rotating platform</h4>
+          <p data-fr="Plateforme en rotation continue, terrain instable à traverser en rythme.">A continuously rotating platform, an unstable footing to cross on rhythm.</p>
         </div>
 
         <div class="system">
           <span class="sys-tag" data-fr="Piège">Trap</span>
           <h4 data-fr="Pièges chronométrés">Timed traps</h4>
           <p data-fr="Cycles d'activation/désactivation minutés : lecture du rythme et timing.">Timed on/off cycles: reading the rhythm and nailing the timing.</p>
-          <p class="sys-more" data-fr="[Explication technique — à compléter.]">[Technical explanation — to complete.]</p>
         </div>
 
         <div class="system">
           <span class="sys-tag" data-fr="Système">System</span>
           <h4 data-fr="Rollback via les orbes">Rollback with orbs</h4>
           <p data-fr="Ramène le joueur à un état/position antérieur lié aux orbes : reset maîtrisé.">Returns the player to a previous state/position tied to the orbs: a controlled reset.</p>
-          <p class="sys-more" data-fr="[Explication technique — à compléter.]">[Technical explanation — to complete.]</p>
         </div>
 
         <div class="system">
@@ -349,14 +352,11 @@
           </div>
 
           <p class="adds-label" data-fr="Captures">Screenshots</p>
-          <div class="seg-shots">
-            <!-- replace each .shot with <div class="shot"><img src="assets/Maseylia/seg1-01.png" alt=""></div> -->
-            <div class="shot"><span class="mono">01</span></div>
-            <div class="shot"><span class="mono">02</span></div>
-            <div class="shot"><span class="mono">03</span></div>
-            <div class="shot"><span class="mono">04</span></div>
-            <div class="shot"><span class="mono">05</span></div>
-            <div class="shot"><span class="mono">06</span></div>
+          <div class="seg-shots cols-2">
+            <figure><div class="shot"><img src="assets/Maseylia/seg1-01.png" alt="Maseylia — Segment 1, capture 1"></div><figcaption data-fr="Titre 1">Title 1</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg1-02.png" alt="Maseylia — Segment 1, capture 2"></div><figcaption data-fr="Titre 2">Title 2</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg1-03.png" alt="Maseylia — Segment 1, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg1-06.png" alt="Maseylia — Segment 1, capture 4"></div><figcaption data-fr="Titre 4">Title 4</figcaption></figure>
           </div>
         </div>
 
@@ -384,13 +384,12 @@
 
           <p class="adds-label" data-fr="Captures">Screenshots</p>
           <div class="seg-shots">
-            <!-- replace each .shot with <div class="shot"><img src="assets/Maseylia/seg2-01.png" alt=""></div> -->
-            <div class="shot"><span class="mono">01</span></div>
-            <div class="shot"><span class="mono">02</span></div>
-            <div class="shot"><span class="mono">03</span></div>
-            <div class="shot"><span class="mono">04</span></div>
-            <div class="shot"><span class="mono">05</span></div>
-            <div class="shot"><span class="mono">06</span></div>
+            <figure><div class="shot"><img src="assets/Maseylia/seg2-01.png" alt="Maseylia — Segment 2, capture 1"></div><figcaption data-fr="Titre 1">Title 1</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg2-02.png" alt="Maseylia — Segment 2, capture 2"></div><figcaption data-fr="Titre 2">Title 2</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg2-03.png" alt="Maseylia — Segment 2, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg2-04.png" alt="Maseylia — Segment 2, capture 4"></div><figcaption data-fr="Titre 4">Title 4</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg2-05.png" alt="Maseylia — Segment 2, capture 5"></div><figcaption data-fr="Titre 5">Title 5</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg2-06.png" alt="Maseylia — Segment 2, capture 6"></div><figcaption data-fr="Titre 6">Title 6</figcaption></figure>
           </div>
         </div>
 
@@ -418,13 +417,11 @@
 
           <p class="adds-label" data-fr="Captures">Screenshots</p>
           <div class="seg-shots">
-            <!-- replace each .shot with <div class="shot"><img src="assets/Maseylia/seg3-01.png" alt=""></div> -->
-            <div class="shot"><span class="mono">01</span></div>
-            <div class="shot"><span class="mono">02</span></div>
-            <div class="shot"><span class="mono">03</span></div>
-            <div class="shot"><span class="mono">04</span></div>
-            <div class="shot"><span class="mono">05</span></div>
-            <div class="shot"><span class="mono">06</span></div>
+            <figure><div class="shot"><img src="assets/Maseylia/seg3-01.png" alt="Maseylia — Segment 3, capture 1"></div><figcaption data-fr="Titre 1">Title 1</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg3-02.png" alt="Maseylia — Segment 3, capture 2"></div><figcaption data-fr="Titre 2">Title 2</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg3-03.png" alt="Maseylia — Segment 3, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg3-04.png" alt="Maseylia — Segment 3, capture 4"></div><figcaption data-fr="Titre 4">Title 4</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg3-05.png" alt="Maseylia — Segment 3, capture 5"></div><figcaption data-fr="Titre 5">Title 5</figcaption></figure>
           </div>
         </div>
 
@@ -449,13 +446,11 @@
 
           <p class="adds-label" data-fr="Captures">Screenshots</p>
           <div class="seg-shots">
-            <!-- replace each .shot with <div class="shot"><img src="assets/Maseylia/seg4-01.png" alt=""></div> -->
-            <div class="shot"><span class="mono">01</span></div>
-            <div class="shot"><span class="mono">02</span></div>
-            <div class="shot"><span class="mono">03</span></div>
-            <div class="shot"><span class="mono">04</span></div>
-            <div class="shot"><span class="mono">05</span></div>
-            <div class="shot"><span class="mono">06</span></div>
+            <figure><div class="shot"><img src="assets/Maseylia/seg4-01.png" alt="Maseylia — Segment 4, capture 1"></div><figcaption data-fr="Titre 1">Title 1</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg4-02.png" alt="Maseylia — Segment 4, capture 2"></div><figcaption data-fr="Titre 2">Title 2</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg4-03.png" alt="Maseylia — Segment 4, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg4-04.png" alt="Maseylia — Segment 4, capture 4"></div><figcaption data-fr="Titre 4">Title 4</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg4-05.png" alt="Maseylia — Segment 4, capture 5"></div><figcaption data-fr="Titre 5">Title 5</figcaption></figure>
           </div>
         </div>
 
@@ -484,13 +479,12 @@
 
           <p class="adds-label" data-fr="Captures">Screenshots</p>
           <div class="seg-shots">
-            <!-- replace each .shot with <div class="shot"><img src="assets/Maseylia/seg5-01.png" alt=""></div> -->
-            <div class="shot"><span class="mono">01</span></div>
-            <div class="shot"><span class="mono">02</span></div>
-            <div class="shot"><span class="mono">03</span></div>
-            <div class="shot"><span class="mono">04</span></div>
-            <div class="shot"><span class="mono">05</span></div>
-            <div class="shot"><span class="mono">06</span></div>
+            <figure><div class="shot"><img src="assets/Maseylia/seg5-01.png" alt="Maseylia — Segment 5, capture 1"></div><figcaption data-fr="Titre 1">Title 1</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg5-02.png" alt="Maseylia — Segment 5, capture 2"></div><figcaption data-fr="Titre 2">Title 2</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg5-03.png" alt="Maseylia — Segment 5, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg5-04.png" alt="Maseylia — Segment 5, capture 4"></div><figcaption data-fr="Titre 4">Title 4</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg5-05.png" alt="Maseylia — Segment 5, capture 5"></div><figcaption data-fr="Titre 5">Title 5</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg5-06.png" alt="Maseylia — Segment 5, capture 6"></div><figcaption data-fr="Titre 6">Title 6</figcaption></figure>
           </div>
         </div>
 
@@ -523,13 +517,12 @@
 
           <p class="adds-label" data-fr="Captures">Screenshots</p>
           <div class="seg-shots">
-            <!-- replace each .shot with <div class="shot"><img src="assets/Maseylia/seg6-01.png" alt=""></div> -->
-            <div class="shot"><span class="mono">01</span></div>
-            <div class="shot"><span class="mono">02</span></div>
-            <div class="shot"><span class="mono">03</span></div>
-            <div class="shot"><span class="mono">04</span></div>
-            <div class="shot"><span class="mono">05</span></div>
-            <div class="shot"><span class="mono">06</span></div>
+            <figure><div class="shot"><img src="assets/Maseylia/seg6-01.png" alt="Maseylia — Segment 6, capture 1"></div><figcaption data-fr="Titre 1">Title 1</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg6-02.png" alt="Maseylia — Segment 6, capture 2"></div><figcaption data-fr="Titre 2">Title 2</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg6-03.png" alt="Maseylia — Segment 6, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg6-04.png" alt="Maseylia — Segment 6, capture 4"></div><figcaption data-fr="Titre 4">Title 4</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg6-05.png" alt="Maseylia — Segment 6, capture 5"></div><figcaption data-fr="Titre 5">Title 5</figcaption></figure>
+            <figure><div class="shot"><img src="assets/Maseylia/seg6-06.png" alt="Maseylia — Segment 6, capture 6"></div><figcaption data-fr="Titre 6">Title 6</figcaption></figure>
           </div>
         </div>
 
@@ -564,5 +557,25 @@
 </script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/lightbox.js"></script>
+<script>
+  /* Collapse each technical blurb behind a "see more" toggle.
+     Runs before DOMContentLoaded so i18n translates the injected labels. */
+  document.querySelectorAll(".sys-more").forEach(function (more) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "sys-toggle";
+    btn.setAttribute("aria-expanded", "false");
+    btn.innerHTML =
+      '<span class="more-label" data-fr="Voir les explications techniques">See the technical explanation</span>' +
+      '<span class="less-label" data-fr="Masquer les explications techniques">Hide the technical explanation</span>';
+    more.hidden = true;
+    more.parentNode.insertBefore(btn, more);
+    btn.addEventListener("click", function () {
+      var collapsed = more.hidden;
+      more.hidden = !collapsed;
+      btn.setAttribute("aria-expanded", collapsed ? "true" : "false");
+    });
+  });
+</script>
 </body>
 </html>

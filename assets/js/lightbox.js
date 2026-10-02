@@ -29,7 +29,7 @@
 
   // ----- elements made clickable -----
   const media = document.querySelectorAll(
-    ".cover img, .cover video, .media-slot img, .media-slot video, .task-media img, .task-media video"
+    ".cover img, .cover video, .media-slot img, .media-slot video, .task-media img, .task-media video, .sys-media img, .sys-media video, .seg-shots img"
   );
 
   media.forEach(function (el) {
