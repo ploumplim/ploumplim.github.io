@@ -202,7 +202,14 @@ body{ font-size:19.5px; }
 .media img, .media video{ width:100%; height:100%; object-fit:cover; }
 
 /* media & title clickable to the project page */
-.media-link{ display:block; width:100%; height:100%; }
+.media-link{ display:block; width:100%; height:100%; position:relative; }
+
+/* hover preview: key art fades to black, then the gameplay video fades in */
+.media-link .fade, .media-link .hover-video{ position:absolute; inset:0; opacity:0; pointer-events:none; }
+.media-link .fade{ background:#000; transition:opacity .4s var(--ease); }
+.media-link .hover-video{ transition:opacity .4s var(--ease); }
+.project.previewing .media-link .fade{ opacity:1; }
+.project.previewing .media-link .hover-video{ opacity:1; transition-delay:.4s; }
 .media-link img, .media-link video{ transition:transform .4s var(--ease); }
 .project:hover .media-link img, .project:hover .media-link video{ transform:scale(1.04); }
 .title-link{ transition:color .2s var(--ease); }
@@ -376,7 +383,7 @@ body{ font-size:19.5px; }
     <div class="wrap">
         <p class="eyebrow" data-fr="Programmeur Gameplay &amp; Systèmes">Gameplay &amp; Systems Programmer</p>
       <h1 data-fr="Créer des jeux qui<br><span class=&quot;accent&quot;>sonnent</span> juste à jouer.">Building games that<br><span class="accent">feel</span> right to play.</h1>
-      <p class="lead" data-fr="Moreau Baptiste — Développeur de jeux vidéo, étudiant en 4<sup>e</sup> année de Master. Programmeur Gameplay passionné par les mécaniques réactives, les comportements d'IA et le game feel. Je construis des prototypes et des systèmes de gameplay sous Unity, avec une architecture C# propre et maintenable.">
+      <p class="lead" data-fr="Moreau Baptiste, Développeur de jeux vidéo, étudiant en 4<sup>e</sup> année de Master. Programmeur Gameplay passionné par les mécaniques réactives, les comportements d'IA et le game feel. Je construis des prototypes et des systèmes de gameplay sous Unity, avec une architecture C# propre et maintenable.">
         Moreau Baptiste — Game Developer, 4<sup>th</sup>-year Master's student.
           Gameplay Programmer passionate about responsive mechanics, AI behaviors and game feel. I build prototypes and gameplay systems in Unity using clean, maintainable C# architecture.
       </p>
@@ -434,7 +441,7 @@ body{ font-size:19.5px; }
             <li data-fr="Apprentissage d'Unreal Engine 5">Learning Unreal Engine 5</li>
             <li>Godot</li>
             <li>URP / shaders</li>
-          </ul>
+          </ul> 
         </div>
         <div class="skill-col reveal">
           <h4 data-fr="Langages">Languages</h4>
@@ -523,6 +530,7 @@ const PROJECTS = [
     tags: ["Unity", "C#", "Metroidvania"],
     status: [{ label: "Unreleased DLC", hot: true }, { label: "Game released on Steam", hot: true }],
       media: {type : "image", src: "assets/Maseylia/header.jpg"},
+      hover: "assets/Maseylia/maseylia-trailer.mp4",
     links: [
       { label: "Case study", label_fr: "Étude de cas", href: "maseylia.html" },
       { label: "Base game on Steam", label_fr: "Jeu de base sur Steam", href: "https://store.steampowered.com/app/2938870/Maseylia__Echoes_of_the_Past/", muted: true }
@@ -538,6 +546,7 @@ const PROJECTS = [
     note_fr: "Plonge dans les profondeurs de l'océan pour aider et secourir des équipiers en danger ! Répare leurs sous-marins et survis aux menaces des abysses dans ce jeu coopératif.",
     tags: ["Unity", "C#", "Co-op"],
       media: {type : "image", src: "assets/DeepDiveRepairMain.png"},
+      hover: "assets/Trailer%20Deep%20Dive%20Repair%20ICAN%202024.mp4",
       //media: { type: "youtube", id: "cM09wvRl7jY" }, prout
     links: [
       { label: "Case study", label_fr: "Étude de cas", href: "deep-dive-repair.html" },
@@ -555,6 +564,7 @@ const PROJECTS = [
     note_fr: "Jeu d'arcade en versus · Marque grâce aux rebonds sur les murs et aux effets de balle !",
     tags: ["Unity", "C#", "Versus"],
       media: {type : "image", src: "assets/BlitzBallMain.png"},
+      hover: "assets/BBGif/GameFeel.mp4",
     links: [
       { label: "Devlog", href: "#" },
       { label: "Source", href: "#", muted: true }
@@ -644,8 +654,11 @@ function projectHTML(p, lang){
     const label = (lang === "fr" && l.label_fr) ? l.label_fr : l.label;
     return `<a href="${l.href}" class="${l.muted?'muted':''}">${l.muted?'':iconPlay}${label}</a>`;
   }).join("");
+  const preview = p.hover
+    ? `<span class="fade"></span><video class="hover-video" data-src="${p.hover}" muted loop playsinline preload="none"></video>`
+    : "";
   const media = p.page
-    ? `<a class="media-link" href="${p.page}" aria-label="Open ${p.title} case study">${mediaHTML(p.media)}</a>`
+    ? `<a class="media-link" href="${p.page}" aria-label="Open ${p.title} case study">${mediaHTML(p.media)}${preview}</a>`
     : mediaHTML(p.media);
   const titleHTML = p.title.replaceAll("DLC", '<span class="accent">DLC</span>');
   const heading = p.page
@@ -669,6 +682,24 @@ function projectHTML(p, lang){
       </div>
     </article>`;
 }
+// hover preview: only on devices with a real pointer; the video loads on first hover
+function bindHoverPreviews(host){
+  if(!window.matchMedia("(hover: hover)").matches) return;
+  host.querySelectorAll(".project").forEach(card => {
+    const video = card.querySelector(".hover-video");
+    if(!video) return;
+    card.addEventListener("mouseenter", () => {
+      if(!video.src) video.src = video.dataset.src;
+      video.currentTime = 0;
+      card.classList.add("previewing");
+      video.play().catch(() => {});
+    });
+    card.addEventListener("mouseleave", () => {
+      card.classList.remove("previewing");
+      video.pause();
+    });
+  });
+}
 // exposed so the language toggle (i18n.js) can re-render the cards in FR/EN
 function renderProjects(lang){
   lang = lang || (window.getLang ? window.getLang() : "en");
@@ -676,6 +707,7 @@ function renderProjects(lang){
     const host = document.getElementById(id);
     if(!host) return;
     host.innerHTML = list.map(p => projectHTML(p, lang)).join("");
+    bindHoverPreviews(host);
     // on a language switch the reveal pass already ran → show the new cards at once
     if(window.__revealReady){
       host.querySelectorAll(".reveal").forEach(el => el.classList.add("in"));
