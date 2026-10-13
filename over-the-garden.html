@@ -85,7 +85,7 @@
         <h2 data-fr="Game Design">Game Design</h2>
       </div>
 
-      <p data-fr="À compléter : présente tes intentions de design, la boucle de gameplay et les mécaniques principales (combat beat'em up, plantation/récolte, condition de victoire).">To be completed: present your design intentions, the gameplay loop and the core mechanics (beat'em up combat, planting/harvest, win condition).</p>
+      <p data-fr="Over the Garden est un <strong>beat'em up en vue de dessus</strong> sur PC, réalisé en équipe de trois avec Antoine Vacherie et Léa Margnes. L'intention : créer un <strong>décalage</strong> entre un gameplay exigeant, qui demande plus d'un essai pour être terminé, et une direction artistique cartoon, enfantine et joyeuse.">Over the Garden is a <strong>top-down beat'em up</strong> for PC, made by a team of three with Antoine Vacherie and Léa Margnes. The intent: create a <strong>contrast</strong> between demanding gameplay, which should take more than one try to beat, and a cartoonish, childlike, cheerful art direction.</p>
 
       <!-- ── BLOCK 1 ── -->
       <div class="task">
@@ -96,12 +96,15 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label" data-fr="Game Design · À définir">Game Design · TBD</p>
-          <h3 data-fr="Titre du bloc">Block title</h3>
-          <p data-fr="À compléter.">To be completed.</p>
+          <p class="task-label" data-fr="Game Design · Boucle principale">Game Design · Core loop</p>
+          <h3 data-fr="Ratisser, planter, arroser">Rake, plant, water</h3>
+          <p data-fr="On ne tue pas les ennemis, on les plante. Le joueur dispose de trois outils de jardinier à utiliser dans un ordre précis sur les parcelles du terrain pour transformer un ennemi en point d'objectif.">Enemies aren't killed, they're planted. The player has three gardening tools to use in a precise order on the field's plots to turn an enemy into a point toward the objective.</p>
           <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="<strong>Râteau</strong> (L1) : prépare une parcelle vierge"><strong>Rake</strong> (L1): prepares an unprepared plot</li>
+            <li data-fr="<strong>Pelle</strong> (Carré) : plante un ennemi qui passe sur une parcelle préparée, avec un timing qui dépend de sa taille et de sa vitesse"><strong>Shovel</strong> (Square): plants an enemy crossing a prepared plot, with timing that depends on its size and speed</li>
+            <li data-fr="<strong>Arrosoir</strong> (R1) : arrose une parcelle plantée et ajoute le point à l'objectif"><strong>Watering can</strong> (R1): waters a planted plot and adds the point to the objective</li>
+            <li data-fr="Chaque coup déclenche des <strong>freeze frames</strong> : le joueur s'engage sur chaque action et doit lire le terrain avant d'agir">Every swing triggers <strong>freeze frames</strong>: the player commits to each action and has to read the field before acting</li>
+            <li data-fr="Objectifs imbriqués : planter un ennemi, remplir un quota (ex. 3 piments, 15 carottes, 5 patates), puis compléter l'objectif global pour gagner, avec seulement 5 PV">Nested objectives: plant one enemy, fill a quota (e.g. 3 chilies, 15 carrots, 5 potatoes), then complete the global objective to win, with only 5 HP</li>
           </ul>
         </div>
       </div>
@@ -115,12 +118,14 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label" data-fr="Game Design · À définir">Game Design · TBD</p>
-          <h3 data-fr="Titre du bloc">Block title</h3>
-          <p data-fr="À compléter.">To be completed.</p>
+          <p class="task-label" data-fr="Game Design · Itérations">Game Design · Iterations</p>
+          <h3 data-fr="De la vue de côté à une grille lisible">From side view to a readable grid</h3>
+          <p data-fr="La première version était en vue de côté : trois armes, chacune capable de planter un type d'ennemi, et un timer pour mettre la pression. La gestion de l'espace n'était pas lisible, le jeu est donc passé en vue de dessus, puis sur une grille de parcelles inspirée de Plants vs. Zombies.">The first version was in side view: three weapons, each able to plant one enemy type, and a timer to add pressure. Managing space wasn't readable, so the game moved to a top-down view, then to a grid of plots inspired by Plants vs. Zombies.</p>
           <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="Vue de dessus avec 3/4 de l'écran pour le jeu, puis tous les éléments réduits pour libérer de la place">Top-down view with 3/4 of the screen for play, then every element scaled down to free up space</li>
+            <li data-fr="Les ennemis fonçaient d'abord tous sur le joueur ; chacun a ensuite reçu son propre pattern (référence Moonlighter) pour que leurs trajectoires deviennent une information à lire">Enemies first all chased the player; each then got its own pattern (Moonlighter reference) so their paths become information to read</li>
+            <li data-fr="Boucles de prédiction pensées pour les situations clés : planter la patate avant que la carotte arrive, ratisser devant une vague de carottes, planter le piment tout de suite ou garder la place">Prediction loops designed around key situations: plant the potato before the carrot arrives, rake a plot ahead of a carrot wave, plant the chili now or save the spot</li>
+            <li data-fr="Caméra : vue de dessus sur le terrain, mais personnages face caméra en vue de côté">Camera: top-down on the field, but characters face the camera in side view</li>
           </ul>
         </div>
       </div>
@@ -135,7 +140,7 @@
         <h2 data-fr="Programmation">Game Programming</h2>
       </div>
 
-      <p data-fr="À compléter : détaille les systèmes que tu as programmés — combat, IA des légumes, plantation/récolte — l'architecture et les choix techniques.">To be completed: detail the systems you programmed — combat, vegetable AI, planting/harvest — the architecture and technical choices.</p>
+      <p data-fr="Programmation gameplay sous Construct : la machine à états des parcelles liée aux outils, le comportement de chaque ennemi et les feedbacks qui rendent chaque action lisible.">Gameplay programming in Construct: the plot state machine tied to the tools, each enemy's behavior and the feedback that makes every action readable.</p>
 
       <!-- ── BLOCK 1 ── -->
       <div class="task">
@@ -146,12 +151,14 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label" data-fr="Programmation · À définir">Game Programming · TBD</p>
-          <h3 data-fr="Titre du bloc">Block title</h3>
-          <p data-fr="À compléter.">To be completed.</p>
+          <p class="task-label" data-fr="Programmation · Systèmes">Game Programming · Systems</p>
+          <h3 data-fr="Machine à états des parcelles">Plot state machine</h3>
+          <p data-fr="Chaque parcelle passe par quatre états : vierge, ratissée, plantée, arrosée. Chaque outil n'agit que sur l'état correspondant, ce qui traduit l'ordre des outils du design en une règle simple et robuste.">Each plot goes through four states: unprepared, raked, planted, watered. Each tool only acts on the matching state, turning the design's tool order into a simple, robust rule.</p>
           <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="La pelle ne plante que si un ennemi chevauche une parcelle ratissée au moment du coup">The shovel only plants if an enemy overlaps a raked plot when the hit lands</li>
+            <li data-fr="Arroser une parcelle plantée incrémente le compteur de l'ennemi sur la pancarte d'objectif ; l'écran de victoire se lance quand tous les quotas sont remplis">Watering a planted plot increments that enemy's counter on the objective sign; the victory screen loads once every quota is met</li>
+            <li data-fr="Un coup raté laisse la parcelle intacte et joue un son dans le vide, pour que le joueur comprenne pourquoi rien ne s'est passé">A missed hit leaves the plot untouched and plays a whoosh, so the player understands why nothing happened</li>
+            <li data-fr="Un dégât retire un PV et déclenche l'animation du pétale qui tombe ; à 0, la scène de game over se lance">Taking a hit removes 1 HP and triggers the falling-petal animation; at 0, the game-over scene loads</li>
           </ul>
         </div>
       </div>
@@ -165,12 +172,14 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label" data-fr="Programmation · À définir">Game Programming · TBD</p>
-          <h3 data-fr="Titre du bloc">Block title</h3>
-          <p data-fr="À compléter.">To be completed.</p>
+          <p class="task-label" data-fr="Programmation · IA">Game Programming · AI</p>
+          <h3 data-fr="Trois ennemis, trois patterns">Three enemies, three patterns</h3>
+          <p data-fr="Chaque légume a son propre déplacement, pour que le terrain donne toujours au joueur quelque chose à anticiper.">Each vegetable has its own movement, so the field always gives the player something to anticipate.</p>
           <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="<strong>Patate</strong> : la seule qui vise le joueur. Une cible le suit ; dès qu'il est dessus, la patate roule droit sur lui. Un signe « attention » annonce où elle va apparaître"><strong>Potato</strong>: the only one that targets the player. A target follows them; once they're on it, the potato rolls straight at them. A warning sign shows where it will spawn</li>
+            <li data-fr="<strong>Piment</strong> : lent et peureux, il fait des allers-retours de haut en bas et se décale d'une case à chaque mur"><strong>Chili</strong>: slow and fearful, it sweeps up and down the field and shifts one tile over at every wall</li>
+            <li data-fr="<strong>Carotte</strong> : apparaît d'un côté du terrain et le traverse en ligne droite en tournoyant comme une perceuse, par vagues"><strong>Carrot</strong>: spawns on one side of the field and drills straight across it, in waves</li>
+            <li data-fr="<strong>Musique adaptative</strong> : trois versions du même morceau jazz (120 BPM) dont la batterie s'intensifie avec le nombre d'ennemis à l'écran"><strong>Adaptive music</strong>: three versions of the same jazz track (120 BPM) whose drums build up with the number of enemies on screen</li>
           </ul>
         </div>
       </div>
@@ -185,7 +194,7 @@
         <h2 data-fr="Direction artistique">Game Art</h2>
       </div>
 
-      <p data-fr="À compléter : présente ta direction artistique — style visuel, personnages, environnements, animations — et le pipeline de production des assets.">To be completed: present your art direction — visual style, characters, environments, animations — and the asset production pipeline.</p>
+      <p data-fr="Un style cartoon volontairement en décalage avec le défi du gameplay. Chaque choix de couleur sert la lisibilité : un décor plat et sombre, des ennemis aux couleurs chaudes et un fermier en bleu froid qui se détache de tout le reste.">A cartoon style deliberately at odds with the gameplay's challenge. Every color choice serves readability: a flat, dark background, warm-colored enemies and a cool-blue farmer who stands out from everything else.</p>
 
       <!-- ── PLANCHE GAME UI (full height, not zoomable) ── -->
       <figure style="margin:32px auto; max-width:613px">
@@ -202,12 +211,14 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label" data-fr="Game Art · À définir">Game Art · TBD</p>
-          <h3 data-fr="Titre du bloc">Block title</h3>
-          <p data-fr="À compléter.">To be completed.</p>
+          <p class="task-label" data-fr="Game Art · Personnages">Game Art · Characters</p>
+          <h3 data-fr="Des personnages au caractère lisible">Characters with readable personalities</h3>
+          <p data-fr="Le caractère de chaque ennemi passe par ses yeux et sa posture, et son design explique son comportement.">Each enemy's personality comes through its eyes and posture, and its design explains its behavior.</p>
           <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="<strong>Piment</strong> : premier ennemi créé, il a fixé la DA. Sans jambes, il marche sur ses flammes, avec des bottes ailées à la Hermès pour la lisibilité"><strong>Chili</strong>: the first enemy designed, it set the art direction. With no legs, it walks on its flames, with Hermes-style winged boots for readability</li>
+            <li data-fr="<strong>Patate</strong> : la plus itérée, une brute un peu bête inspirée de Cuphead et de Taz, avec une morsure sur le crâne pour un côté zombie"><strong>Potato</strong>: the most iterated, a dim-witted brute inspired by Cuphead and Taz, with a bite on its skull for a zombie touch</li>
+            <li data-fr="<strong>Carotte</strong> : joyeuse et inoffensive en apparence, sa queue devient une perceuse pour expliquer pourquoi elle fait des dégâts"><strong>Carrot</strong>: cheerful and harmless-looking, its tail becomes a drill to explain why it deals damage</li>
+            <li data-fr="<strong>Fermier</strong> : basé sur une référence Ben 10, animé à partir de photos de vrais gestes au râteau, à la pelle et à l'arrosoir (sprite sheets de course et d'attaque)"><strong>Farmer</strong>: based on a Ben 10 reference, animated from photos of real rake, shovel and watering-can gestures (run and attack sprite sheets)</li>
           </ul>
         </div>
       </div>
@@ -221,12 +232,14 @@
           </div>
         </div>
         <div class="task-body">
-          <p class="task-label" data-fr="Game Art · À définir">Game Art · TBD</p>
-          <h3 data-fr="Titre du bloc">Block title</h3>
-          <p data-fr="À compléter.">To be completed.</p>
+          <p class="task-label" data-fr="Game Art · Décor &amp; UI">Game Art · Background &amp; UI</p>
+          <h3 data-fr="Un jardin qui laisse la place au gameplay">A garden that makes room for the gameplay</h3>
+          <p data-fr="Le décor a connu cinq versions : d'une scène colorée avec un ciel à un jardin plat en deux couleurs, vert et marron, délimité par des clôtures, en HD 1920×1080.">The background went through five versions: from a colorful scene with a sky to a flat two-color garden, green and brown, bounded by fences, in HD 1920×1080.</p>
           <ul>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
-            <li data-fr="Point clé à détailler">Key point to detail</li>
+            <li data-fr="Menus faits de panneaux en bois, avec un texte gravé qui s'illumine à la sélection (référence No Place Like Home)">Menus built from wooden signs, with carved text that lights up when selected (No Place Like Home reference)</li>
+            <li data-fr="En jeu, seulement deux éléments d'UI en haut de l'écran pour garder le terrain lisible">In game, only two HUD elements at the top of the screen to keep the field readable</li>
+            <li data-fr="Vie : une fleur rouge à 5 pétales, contrastée avec le fond vert">Health: a red 5-petal flower that contrasts with the green background</li>
+            <li data-fr="Objectif : une pancarte en bois aux icônes gravées plus claires, lisibles d'un coup d'œil sans quitter le personnage des yeux">Objective: a wooden sign with brighter carved icons, readable at a glance without taking your eyes off the character</li>
           </ul>
         </div>
       </div>
