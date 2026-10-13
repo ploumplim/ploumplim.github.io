@@ -70,7 +70,6 @@
       </div>
       <!-- DOCUMENTS -->
       <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:24px">
-        <a href="#" target="_blank" rel="noopener" class="btn btn-primary" data-fr="GDD (Game Design Document)">GDD (Game Design Document)</a>
         <a href="assets/GDD/GameArtDocument_OverTheGarden.pdf" target="_blank" rel="noopener" class="btn btn-primary" data-fr="Game Art Document">Game Art Document</a>
         <a href="assets/GDD/GOD_OverTheGarden.pdf" target="_blank" rel="noopener" class="btn btn-primary" data-fr="GOD (Game Overview Document)">GOD (Game Overview Document)</a>
       </div>
@@ -90,10 +89,7 @@
       <!-- ── BLOCK 1 ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
+          <img src="assets/OverTheGarden/outils.png" alt="Les trois outils : râteau pour ratisser un sol, pelle pour planter les ennemis, arrosoir pour arroser et valider l'objectif / The three tools: rake, shovel and watering can" style="object-fit:contain; background:#6b5434" />
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Game Design · Boucle principale">Game Design · Core loop</p>
@@ -145,10 +141,7 @@
       <!-- ── BLOCK 1 ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13 4l-2 16"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
-          </div>
+          <img src="assets/OverTheGarden/parcelles.png" alt="Parcelles dans leurs différents états : vierge, ratissée, plantée, arrosée / Plots in their different states: unprepared, raked, planted, watered" />
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Programmation · Systèmes">Game Programming · Systems</p>
@@ -166,9 +159,17 @@
       <!-- ── BLOCK 2 ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13 4l-2 16"/></svg>
-            <span class="mono">gif / mp4 / png → assets/…</span>
+          <!-- 3 GIFs side by side: replace each placeholder with <img src="assets/OverTheGarden/patate.gif" alt="…" /> (piment.gif, carotte.gif) -->
+          <div style="position:absolute; inset:0; display:grid; grid-template-columns:repeat(3,1fr); gap:4px">
+            <div class="media-empty" style="position:relative; border:1px dashed var(--line)">
+              <span class="mono" data-fr="Patate">Potato</span>
+            </div>
+            <div class="media-empty" style="position:relative; border:1px dashed var(--line)">
+              <span class="mono" data-fr="Piment">Chili</span>
+            </div>
+            <div class="media-empty" style="position:relative; border:1px dashed var(--line)">
+              <span class="mono" data-fr="Carotte">Carrot</span>
+            </div>
           </div>
         </div>
         <div class="task-body">
