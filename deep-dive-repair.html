@@ -286,6 +286,57 @@ public void Interacting()
             <li data-fr="<strong>Apparition ciblée :</strong> une nouvelle tâche surgit dans un endroit libre, forçant les joueurs à se déplacer pour l'atteindre"><strong>Targeted spawn:</strong> a new task appears in a free spot, forcing the players to move to reach it</li>
             <li data-fr="<strong>Double pression :</strong> le mouvement constant, plus la jauge de vie du sous-marin qui glisse vers zéro"><strong>Twofold pressure:</strong> constant movement, plus the submarine's health gauge creeping toward zero</li>
           </ul>
+          <details class="code-block">
+            <summary><span data-fr="Voir le code · apparition par zones">See the code · zone-based spawning</span><span class="file">C#</span></summary>
+            <div class="code-meta">
+              <span data-fr="L'écran est découpé en 12 zones ; une tâche endormie n'apparaît que hors des zones des deux joueurs.">The screen is split into 12 areas; a sleeping task only spawns outside both players' areas.</span>
+            </div>
+<pre><code class="language-csharp">// TaskSpawnerManager.cs — carried by every task and every player
+public enum ScreenArea
+{
+    TopLeft, TopMiddleLeft, TopMiddleRight, TopRight,
+    MiddleLeftTop, MiddleLeftBottom, MiddleRightTop, MiddleRightBottom,
+    BottomLeft, BottomMiddleLeft, BottomMiddleRight, BottomRight,
+    disable
+};
+public ScreenArea currentArea;
+
+// TaskSpawner.cs — wakes up a task far from both players
+public void ChooseRandomTask()
+{
+    if (sleepingTask.Count &gt;= 1)
+    {
+        if (DialogueCharacters &amp;&amp; DialogueCharacters.isFinished)
+        {
+            int _index = UnityEngine.Random.Range(0, sleepingTask.Count);
+            var taskManager = sleepingTask[_index].GetComponent&lt;TaskSpawnerManager&gt;();
+            if (taskManager.currentArea != player1.currentArea
+                &amp;&amp; taskManager.currentArea != player2.currentArea)
+            {
+                // the top row only opens later in the level
+                if (!topTaskCanSpawn)
+                {
+                    if (taskManager.currentArea != TaskSpawnerManager.ScreenArea.TopLeft
+                        &amp;&amp; taskManager.currentArea != TaskSpawnerManager.ScreenArea.TopRight
+                        &amp;&amp; taskManager.currentArea != TaskSpawnerManager.ScreenArea.TopMiddleLeft
+                        &amp;&amp; taskManager.currentArea != TaskSpawnerManager.ScreenArea.TopMiddleRight)
+                    {
+                        sleepingTask[_index].SetActive(true);
+                        onScreenTask.Add(sleepingTask[_index]);
+                        sleepingTask.Remove(sleepingTask[_index]);
+                    }
+                }
+                else
+                {
+                    sleepingTask[_index].SetActive(true);
+                    onScreenTask.Add(sleepingTask[_index]);
+                    sleepingTask.Remove(sleepingTask[_index]);
+                }
+            }
+        }
+    }
+}</code></pre>
+          </details>
         </div>
       </div>
 
@@ -302,6 +353,52 @@ public void Interacting()
             <li data-fr="Mécanique facile à reproduire">Mechanic that's easy to reproduce</li>
             <li data-fr="Introduit un défi de rythme et de vitesse lié au nombre d'appuis requis">Introduces a rhythm-and-speed challenge tied to the number of presses required</li>
           </ul>
+          <details class="code-block">
+            <summary><span data-fr="Voir le code · Task_Spam">See the code · Task_Spam</span><span class="file">C#</span></summary>
+            <div class="code-meta">
+              <span data-fr="Chaque appui relance une courte fenêtre de temps : trop lent entre deux appuis, et le compteur repart à zéro. (Les effets visuels et sonores autour ont été ajoutés par l'équipe.)">Each press restarts a short time window: too slow between two presses and the count resets. (The visual and sound effects around it were added by the team.)</span>
+            </div>
+<pre><code class="language-csharp">public override void StartInteractingTask(Controller2D player)
+{
+    if (isFinished == false)
+    {
+        _player = player;
+        StartSpamming();
+        spamPlayer++;          // every press counts…
+        timerSpam = 0;         // …and restarts the window
+        player._isRepairing = true;
+        player._isActive = false;
+    }
+}
+
+public void Update()
+{
+    // …
+    if (spamStarted)
+    {
+        timerSpam += Time.deltaTime;
+    }
+
+    // too slow between two presses → the count resets
+    if (timerSpam &gt;= timeRange)
+    {
+        spamPlayer = 0;
+        spamStarted = false;
+        timerSpam = 0;
+        _player._isRepairing = false;
+        _player._isActive = true;
+        spriteRenderer.sprite = spriteState0;
+    }
+
+    if (spamPlayer &gt;= spamGoal)
+    {
+        _isDestroyed = true;   // → validation, VFX and gauge refill
+        _player._isActive = true;
+        spamPlayer = 0;
+    }
+    // …
+}</code></pre>
+          </details>
         </div>
       </div>
 
@@ -378,6 +475,39 @@ public void Interacting()
             <li data-fr="Mécanique intuitive et facile à prendre en main">Intuitive mechanic that's easy to pick up</li>
             <li data-fr="Introduit un défi de vitesse basé sur la rapidité du mouvement">Introduces a speed challenge based on how fast the motion is performed</li>
           </ul>
+          <details class="code-block">
+            <summary><span data-fr="Voir le code · Task_Roulette">See the code · Task_Roulette</span><span class="file">C#</span></summary>
+            <div class="code-meta">
+              <span data-fr="L'angle du stick est converti en degrés et cumulé image par image : on compte de vrais tours complets, dans le bon sens. (L'animation de la vis et les effets autour ont été ajoutés par l'équipe.)">The stick angle is converted to degrees and accumulated frame by frame, so only real full turns in the right direction count. (The screw animation and effects around it were added by the team.)</span>
+            </div>
+<pre><code class="language-csharp">public override void StartInteractingTask(Controller2D player)
+{
+    isInteracting = true;
+    Grab = player.GetComponentInChildren&lt;grab&gt;();   // reads the player's aim stick
+    playerSelected = player;
+}
+
+private void Update()
+{
+    if (Grab != null)
+    {
+        angleOfAim = Grab.RotateVector2;
+        currentAngle = Mathf.Atan2(angleOfAim.y, angleOfAim.x) * Mathf.Rad2Deg;
+
+        // DeltaAngle handles the -180/180 wrap: a full turn always adds up to 360
+        float angleDifference = Mathf.DeltaAngle(previousAngle, currentAngle);
+        totalRotation += angleDifference;
+
+        // clockwise is negative: turning the wrong way winds the count back
+        if (totalRotation &lt;= -360f * TourAttendus)
+        {
+            scoreRotation++;
+        }
+        // … validation, screw animation, VFX
+        previousAngle = currentAngle;
+    }
+}</code></pre>
+          </details>
         </div>
       </div>
 
@@ -394,6 +524,60 @@ public void Interacting()
             <li data-fr="Mécanique simple et facile à reproduire">Simple mechanic that's easy to reproduce</li>
             <li data-fr="Introduit une dimension de skill basée sur la précision du timing">Introduces a skill dimension based on timing precision</li>
           </ul>
+          <details class="code-block">
+            <summary><span data-fr="Voir le code · HitTiimingTask">See the code · HitTiimingTask</span><span class="file">C#</span></summary>
+            <div class="code-meta">
+              <span data-fr="Un curseur fait des allers-retours dans la jauge ; un second appui vérifie s'il est dans la zone, avec une tolérance réglable.">A cursor bounces back and forth in the gauge; a second press checks whether it is inside the zone, with a tunable tolerance.</span>
+            </div>
+<pre><code class="language-csharp">// Update(): the cursor bounces between both ends of the gauge
+if (TaskStarted)
+{
+    timer += Time.deltaTime;
+    if (timer &lt; timerRange)
+    {
+        visor.transform.Translate(Vector3.right * speed * direction * Time.deltaTime);
+        if (visor.transform.position.x &gt;= maxX)
+        {
+            direction = -1;   // move left
+        }
+        else if (visor.transform.position.x &lt;= minX)
+        {
+            direction = 1;    // move right
+        }
+    }
+    else
+    {
+        EndTask();            // too late: the task closes
+    }
+}
+
+// second press on the task → is the cursor inside the zone?
+void CheckAlignment()
+{
+    float visorX = visor.transform.position.x;
+    float pointX = pointToGet.transform.position.x;
+    if (timer &gt; 0.35f)        // ignores the press that opened the task
+    {
+        if (Mathf.Abs(visorX - pointX) &lt;= tolerance)
+        {
+            slider.value += _sliderValue;
+            TaskOnCooldown = true;
+            EndTask();
+            TaskStarted = false;
+            _player._isActive = true;
+            _player = null;
+        }
+        else
+        {
+            TaskOnCooldown = true;
+            EndTask();
+            TaskStarted = false;
+            _player._isActive = true;
+            _player = null;
+        }
+    }
+}</code></pre>
+          </details>
         </div>
       </div>
 
@@ -414,7 +598,7 @@ public void Interacting()
         </div>
       </div>
 
-      <!-- ── TASK 6 (to be completed) ── -->
+      <!-- ── PIPE TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
             <video src="assets/DDRGif/Tuyeau.mp4" aria-label="Pipe task" muted loop playsinline autoplay preload="metadata"></video>
@@ -437,11 +621,67 @@ public void Interacting()
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Tâche · Machine à laver">Task · Washing machine</p>
-          <h3 data-fr="À compléter">To be completed</h3>
-          <p data-fr="À compléter.">To be completed.</p>
+          <h3 data-fr="Charger la balle">Charge the ball</h3>
+          <p data-fr="Inspirée d'un lave-linge : le joueur lance la balle dans la machine, où elle tourne quelques secondes avant de ressortir. Pendant la charge, il reste libre de se déplacer.">Inspired by a washing machine: the player throws the ball into the machine, where it spins for a few seconds before popping back out. While it charges, the player is free to move around.</p>
           <ul>
-            <li data-fr="À compléter.">To be completed.</li>
+            <li data-fr="Rapporte plus de points, mais la balle reste bloquée pendant la charge : un vrai choix tactique">Pays out more, but the ball is locked away while it charges: a real tactical trade-off</li>
+            <li data-fr="Challenge la précision : lancer de loin fait gagner du temps, au risque de rater">Tests precision: throwing from afar saves time, at the risk of missing</li>
+            <li data-fr="La rotation de la balle accélère puis ralentit, suivant une courbe sinusoïdale">The ball's spin speeds up then slows down, following a sine curve</li>
           </ul>
+          <details class="code-block">
+            <summary><span data-fr="Voir le code · Task_CharBallScript">See the code · Task_CharBallScript</span><span class="file">C#</span></summary>
+            <div class="code-meta">
+              <span data-fr="La vraie balle est cachée et remplacée par une copie qui tourne ; à la fin du minuteur, la jauge se remplit et la balle est rendue au joueur.">The real ball is hidden and swapped for a spinning copy; when the timer ends, the gauge fills up and the ball is handed back.</span>
+            </div>
+<pre><code class="language-csharp">private void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Ball"))
+    {
+        other.gameObject.SetActive(false);   // the real ball is "inside" the machine
+        isCharging = true;
+        FakeBall.SetActive(true);
+        playerBall = other.gameObject;
+    }
+}
+
+private void Update()
+{
+    if (isCharging)
+    {
+        timer += Time.deltaTime;
+    }
+
+    if (timer &gt;= timeRange)
+    {
+        timer = 0;
+        sliderGlobal.value += sliderValue;
+        FakeBall.SetActive(false);
+        FakeBall.transform.rotation = initialRotation;
+        playerBall.SetActive(true);              // ball handed back
+        gameObject.SetActive(false);
+        taskSpawner.DeleteTask(gameObject);
+        isCharging = false;
+    }
+    else if (isCharging)
+    {
+        BallSpining();
+    }
+}
+
+public void BallSpining()
+{
+    // elapsed time as a percentage of the total duration
+    float elapsedTime = timer / timeRange;
+
+    // smooth spin curve (ease-in, ease-out)
+    float spinSpeed = maxSpinSpeed * Mathf.Sin(Mathf.PI * elapsedTime);
+
+    if (FakeBall != null)
+    {
+        FakeBall.transform.Rotate(Vector3.up, spinSpeed * Time.deltaTime);
+    }
+}</code></pre>
+          </details>
         </div>
       </div>
 
