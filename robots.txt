@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ploumplim.github.io/sitemap.xml
+Sitemap: https://baptistemoreau.games/sitemap.xml
