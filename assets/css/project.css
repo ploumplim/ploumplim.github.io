@@ -239,6 +239,46 @@ a.media-slot:hover .media-zoom{ opacity:1; }
 }
 .code-meta a{ color:var(--accent); }
 .code-block pre{ margin:0; padding:16px 18px; overflow-x:auto; font-size:14px; line-height:1.6; }   /* own line box: the body line-height is far too tall for code */
+
+/* slider built by code-viewer.js: tabs + ‹ › on top, one fixed-height pane below */
+.code-head{
+  display:flex; align-items:center; gap:8px; padding:8px 10px 0;
+  border-bottom:1px solid var(--line); background:var(--bg-2);
+}
+.code-tabs{ display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; flex:1; min-width:0; }
+.code-tabs::-webkit-scrollbar{ display:none; }
+.code-tab{
+  flex:none; cursor:pointer; white-space:nowrap;
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted);
+  background:none; border:1px solid transparent; border-bottom:none; border-radius:8px 8px 0 0;
+  padding:7px 12px; margin-bottom:-1px;
+  transition:color .2s var(--ease), background .2s var(--ease);
+}
+.code-tab:hover{ color:var(--text); }
+.code-tab.active{ color:var(--text); background:var(--surface); border-color:var(--line); }
+.code-tab.active::after{ content:''; display:block; height:2px; margin-top:5px; border-radius:2px; background:var(--accent); }
+.code-nav{ display:flex; align-items:center; gap:6px; flex:none; padding-bottom:6px; }
+.code-arrow{
+  width:28px; height:28px; border-radius:7px; cursor:pointer;
+  border:1px solid var(--line); background:var(--surface); color:var(--text);
+  font-size:18px; line-height:1; display:flex; align-items:center; justify-content:center;
+  transition:border-color .2s var(--ease);
+}
+.code-arrow:hover{ border-color:var(--accent); }
+.code-count{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--muted-2); min-width:38px; text-align:center; }
+.code-stage{ background:var(--surface); }
+.code-pane{ max-height:340px; overflow:auto; }           /* the "allocated zone": long slides scroll inside */
+.code-pane[hidden]{ display:none; }
+/* dark, thin scrollbars instead of the browser's white ones */
+.code-pane{ scrollbar-width:thin; scrollbar-color:#37404f transparent; }
+.code-pane::-webkit-scrollbar{ width:8px; height:8px; }
+.code-pane::-webkit-scrollbar-thumb{ background:#37404f; border-radius:8px; }
+.code-pane::-webkit-scrollbar-track, .code-pane::-webkit-scrollbar-corner{ background:transparent; }
+@media (max-width:560px){
+  .code-block code{ font-size:12.5px; }
+  .code-pane{ max-height:300px; padding:12px 14px; }
+}
+.code-pane:focus-visible, .code-tab:focus-visible, .code-arrow:focus-visible{ outline:2px solid var(--accent); outline-offset:-2px; }
 .code-block code{
   font-family:'JetBrains Mono',monospace; font-size:14px; line-height:1.6; color:var(--text-2);
   white-space:pre; tab-size:4;

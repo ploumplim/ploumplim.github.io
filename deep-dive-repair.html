@@ -13,7 +13,11 @@
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Deep Dive Repair — Case Study · Baptiste Moreau" />
 <meta property="og:description" content="Unity / C# co-op game: character controller, task system and zone-based spawning." />
-<meta property="og:image" content="https://ploumplim.github.io/assets/DeepDiveRepairMain.png" />
+<meta property="og:image" content="https://ploumplim.github.io/assets/og/deep-dive-repair.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="627" />
+<meta property="og:url" content="https://ploumplim.github.io/deep-dive-repair.html" />
+<meta name="twitter:image" content="https://ploumplim.github.io/assets/og/deep-dive-repair.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -176,7 +180,6 @@
 <pre><code class="language-csharp">// Update(): is there a wall between the player and the reticle?
 Vector3 origin = gameObject.transform.position;
 Vector3 direction = (visor.transform.position - origin).normalized;
-
 maxDistance = Vector3.Distance(gameObject.transform.position, visor.transform.position);
 if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, maxDistance))
 {
@@ -872,6 +875,6 @@ public void BallSpining()
 <!-- syntax highlighting for the code snippets -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
-<script>if(window.hljs) hljs.highlightAll();</script>
+<script src="assets/js/code-viewer.js"></script>
 </body>
 </html>
