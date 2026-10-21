@@ -43,6 +43,7 @@ body{ font-size:19.5px; }
   width:100%;
   height:100%;
   display:block;
+  background:var(--bg);               /* the canvas is cleared every frame */
 }
 /* soft perspective grid, parallax drift on scroll */
 .grid-bg{
@@ -145,6 +146,20 @@ body{ font-size:19.5px; }
 .hero .lead{
   font-size:clamp(21px,2.5vw,25px); color:var(--text-2); max-width:none;
   margin-bottom:36px;
+}
+
+/* text on the left, gameplay showreel on the right (stacked on narrow screens) */
+.hero-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:56px; align-items:center; }
+.hero-grid h1{ font-size:clamp(40px, 4.6vw, 66px); }
+.hero-grid .lead{ font-size:clamp(18px,1.55vw,21px); }
+.hero-reel{
+  position:relative; aspect-ratio:16/9; border-radius:var(--radius); overflow:hidden;
+  border:1px solid var(--line); background:var(--surface-2);
+  box-shadow:0 24px 60px -20px rgba(0,0,0,.65), 0 0 0 1px rgba(76,130,240,.08);
+}
+.hero-reel video{ width:100%; height:100%; object-fit:cover; display:block; }
+@media (max-width:960px){
+  .hero-grid{ grid-template-columns:1fr; gap:40px; }
 }
 
 .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
@@ -380,7 +395,8 @@ body{ font-size:19.5px; }
 
   <!-- ===================== HERO ===================== -->
   <header id="top" class="hero">
-    <div class="wrap">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
         <p class="eyebrow" data-fr="Programmeur Gameplay &amp; Systèmes">Gameplay &amp; Systems Programmer</p>
       <h1 data-fr="Créer des jeux qui<br><span class=&quot;accent&quot;>sonnent</span> juste à jouer.">Building games that<br><span class="accent">feel</span> right to play.</h1>
       <p class="lead" data-fr="Baptiste Moreau, Développeur de jeux vidéo, étudiant en 4<sup>e</sup> année de Master. Programmeur Gameplay passionné par les mécaniques réactives, les comportements d'IA et le game feel. Je construis des prototypes et des systèmes de gameplay sous Unity, avec une architecture C# propre et maintenable.">
@@ -397,6 +413,12 @@ body{ font-size:19.5px; }
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
           <span data-fr="Télécharger le CV">Download CV</span>
         </a>
+      </div>
+      </div>
+
+      <!-- gameplay showreel: Maseylia, Deep Dive Repair, Blitz Ball, Over the Garden -->
+      <div class="hero-reel">
+        <video id="heroReel" src="assets/showreel.mp4" poster="assets/showreel-poster.jpg" muted loop playsinline autoplay preload="auto" aria-label="Gameplay showreel: Maseylia, Deep Dive Repair, Blitz Ball and Over the Garden"></video>
       </div>
     </div>
   </header>
@@ -710,6 +732,14 @@ renderProjects(localStorage.getItem("site-lang") || "en");
    ============================================================ */
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// showreel: no autoplay for users who prefer reduced motion (poster + controls instead)
+const heroReel = document.getElementById("heroReel");
+if(heroReel && window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+  heroReel.removeAttribute("autoplay");
+  heroReel.pause();
+  heroReel.controls = true;
+}
+
 // burger mobile
 const burger = document.getElementById("burger");
 const navLinks = document.getElementById("navLinks");
@@ -746,31 +776,47 @@ sections.forEach(s => navObs.observe(s));
    --------------------------------------------------------
    Particles follow an angle field computed from
    superimposed sine waves → organic "fluid"-like motion.
-   Trails via a slight canvas fade on each frame.
+   Frame-rate independent (dt), with inertia so direction
+   changes are eased, and a fade in/out over each particle's
+   life so nothing pops in or out. Canvas fully cleared each
+   frame: links always match the particles.
    ============================================================ */
 (function flowField(){
   const canvas = document.getElementById("field");
   const ctx = canvas.getContext("2d");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  let W, H, DPR, particles = [];
+  let W = 0, H = 0, DPR, particles = [];
   const isMobile = window.matchMedia("(max-width:760px)").matches;
 
+  const FADE = 1400;                       // ms of fade in / fade out at both ends of a life
+  function spawn(p, now, anywhere){
+    p.x = Math.random()*W; p.y = Math.random()*H;
+    p.vx = 0; p.vy = 0;
+    p.born = now - (anywhere ? Math.random()*8000 : 0);   // first batch starts mid-life
+    p.life = 9000 + Math.random()*9000;
+    return p;
+  }
+  // 0 → 1 → 0 over the particle's life, smoothstep-eased
+  function lifeAlpha(p, now){
+    const age = now - p.born;
+    const k = Math.min(1, age / FADE, (p.life - age) / FADE);
+    return k <= 0 ? 0 : k*k*(3 - 2*k);
+  }
+
   function resize(){
-    DPR = Math.min(window.devicePixelRatio || 1, 1.4); // capped: the full-screen background is filled every frame
+    DPR = Math.min(window.devicePixelRatio || 1, 1.5); // capped: the canvas is redrawn every frame
     W = canvas.clientWidth; H = canvas.clientHeight;
     canvas.width  = Math.floor(W * DPR);
     canvas.height = Math.floor(H * DPR);
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    // particle density scaled to the surface area
+    // particle density scaled to the surface area; existing particles are kept,
+    // so a mobile address-bar resize does not reset the whole field
     const target = Math.min(Math.round((W*H)/(isMobile?16000:9000)), isMobile?140:340);
-    particles = Array.from({length: target}, (_, i) => ({
-      i,                                     // index for the spatial grid (connections)
-      x: Math.random()*W, y: Math.random()*H,
-      hot: Math.random() < 0.12              // a few "hot", more visible particles
-    }));
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#0E1116";
-    ctx.fillRect(0,0,W,H);
+    const now = performance.now();
+    while(particles.length < target) particles.push(spawn({ hot: Math.random() < 0.12 }, now, true));
+    particles.length = target;
+    particles.forEach((p, i) => { p.i = i; });   // index for the spatial grid (connections)
   }
 
   // angle field: superimposed sines → pseudo fluid noise
@@ -781,98 +827,136 @@ sections.forEach(s => navObs.observe(s));
     return (a + b) * Math.PI;
   }
 
-  const SPEED = 0.85;
+  const SPEED = 0.85;                      // px per 60 Hz frame (scaled by dt)
+  const STEER = 0.045;                     // inertia: share of the gap to the field direction closed per frame
   // connections: we link nearby particles ("network" effect).
   // disabled on mobile to preserve performance.
   const LINK = !isMobile;
   const LINK_DIST = 108;                 // max range of a connection (px)
   const CELL = LINK_DIST;                // spatial grid cell size
   const grid = new Map();                // key "cx,cy" → array of particles
+  // links are grouped into a few opacity levels → one stroke() per level instead of one per line
+  const LEVELS = 32;
+  const linkPaths = [[], []].map(() => Array.from({length: LEVELS}, () => []));
 
   // draws the links between neighbouring particles via spatial binning → ~O(n)
   function drawLinks(){
     grid.clear();
     for(const p of particles){
-      const key = ((p.x / CELL) | 0) + "," + ((p.y / CELL) | 0);
+      if(p.a <= 0) continue;
+      const key = Math.floor(p.x / CELL) + "," + Math.floor(p.y / CELL);   // floor: off-screen particles get their own cell
       let bucket = grid.get(key);
       if(!bucket){ bucket = []; grid.set(key, bucket); }
       bucket.push(p);
     }
-    ctx.lineWidth = 1;
     const max2 = LINK_DIST * LINK_DIST;
     for(const p of particles){
-      const cx = (p.x / CELL) | 0, cy = (p.y / CELL) | 0;
-      // only the "forward" cells → each pair is processed onceet
+      if(p.a <= 0) continue;
+      const cx = Math.floor(p.x / CELL), cy = Math.floor(p.y / CELL);
+      // own cell + the 4 "forward" neighbours (E, SE, S, NE) → each pair of cells is visited once
       for(let ox = 0; ox <= 1; ox++){
         for(let oy = (ox === 0 ? 0 : -1); oy <= 1; oy++){
           const bucket = grid.get((cx + ox) + "," + (cy + oy));
           if(!bucket) continue;
+          const sameCell = ox === 0 && oy === 0;
           for(const q of bucket){
-            if(q.i <= p.i) continue;          // avoids duplicates / self-linking
+            // the index order only dedupes pairs inside the same cell; across cells the
+            // forward-only scan already guarantees one visit (filtering there dropped links)
+            if(sameCell && q.i <= p.i) continue;
             const dx = p.x - q.x, dy = p.y - q.y;
             const d2 = dx*dx + dy*dy;
             if(d2 > max2) continue;
-            const a = (1 - Math.sqrt(d2) / LINK_DIST) * 0.11;
-            ctx.strokeStyle = (p.hot || q.hot)
-              ? "rgba(87,215,230," + (a * 1.4) + ")"   // cyan if one particle is "hot"
-              : "rgba(120,150,210," + a + ")";          // subtle cool blue
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.stroke();
+            // quadratic falloff → a link fades out smoothly instead of snapping at LINK_DIST
+            const f = 1 - Math.sqrt(d2) / LINK_DIST;
+            const a = f * f * Math.min(p.a, q.a);
+            const level = Math.min(LEVELS - 1, Math.round(a * (LEVELS - 1)));
+            if(level === 0) continue;          // below ~2 % of full opacity: invisible anyway
+            linkPaths[(p.hot || q.hot) ? 1 : 0][level].push(p.x, p.y, q.x, q.y);
           }
         }
       }
     }
-  }
-
-  function frame(now){
-    const t = now;
-    // fade (leaves a trail) — translucent background colour
-    ctx.fillStyle = "rgba(14,17,22,0.12)";
-    ctx.fillRect(0,0,W,H);
-
-    for(const p of particles){
-      const ang = angle(p.x, p.y, t);
-      p.x += Math.cos(ang) * SPEED;
-      p.y += Math.sin(ang) * SPEED;
-      // wrap around the edges
-      if(p.x < 0) p.x = W; else if(p.x > W) p.x = 0;
-      if(p.y < 0) p.y = H; else if(p.y > H) p.y = 0;
-    }
-
-    if(LINK) drawLinks();                  // links first, points on top
-
-    for(const p of particles){
-      if(p.hot){
-        ctx.fillStyle = "rgba(76,130,240,0.65)";   // dark blue accent
-        ctx.fillRect(p.x, p.y, 1.6, 1.6);
-      } else {
-        ctx.fillStyle = "rgba(150,170,200,0.28)";  // subtle cool tone
-        ctx.fillRect(p.x, p.y, 1.2, 1.2);
+    ctx.lineWidth = 1;
+    for(let c = 0; c < 2; c++){
+      for(let l = 1; l < LEVELS; l++){
+        const seg = linkPaths[c][l];
+        if(!seg.length) continue;
+        const a = l / (LEVELS - 1);
+        ctx.strokeStyle = c
+          ? "rgba(87,215,230," + (a * 0.42) + ")"   // cyan if one particle is "hot"
+          : "rgba(120,150,210," + (a * 0.30) + ")"; // subtle cool blue
+        ctx.beginPath();
+        for(let k = 0; k < seg.length; k += 4){ ctx.moveTo(seg[k], seg[k+1]); ctx.lineTo(seg[k+2], seg[k+3]); }
+        ctx.stroke();
+        seg.length = 0;
       }
     }
+  }
+
+  function drawDots(){
+    const TAU = Math.PI * 2;
+    for(const p of particles){
+      if(p.a <= 0) continue;
+      ctx.globalAlpha = p.a * (p.hot ? 0.9 : 0.5);
+      ctx.fillStyle = p.hot ? "#4C82F0" : "#96AAC8";   // blue accent / subtle cool tone
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.hot ? 1.3 : 0.95, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  let last = 0;
+  function frame(now){
+    // dt in 60 Hz frames: same speed on 60/120/144 Hz; clamped so a background tab doesn't teleport everything
+    const dt = last ? Math.min((now - last) / 16.667, 3) : 1;
+    last = now;
+    const steer = 1 - Math.pow(1 - STEER, dt);
+    const M = 24;                        // off-screen margin before a particle is recycled
+
+    for(const p of particles){
+      if(now - p.born > p.life) spawn(p, now, false);
+      const ang = angle(p.x, p.y, now);
+      p.vx += (Math.cos(ang) * SPEED - p.vx) * steer;
+      p.vy += (Math.sin(ang) * SPEED - p.vy) * steer;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      // leaving the screen → respawn elsewhere (fades in) instead of wrapping to the opposite edge
+      if(p.x < -M || p.x > W + M || p.y < -M || p.y > H + M) spawn(p, now, false);
+      p.a = lifeAlpha(p, now);
+    }
+
+    ctx.clearRect(0, 0, W, H);
+    if(LINK) drawLinks();                  // links first, points on top
+    drawDots();
 
     requestAnimationFrame(frame);
   }
 
   // single static render if the user prefers reduced motion
   function staticFrame(){
+    const now = performance.now();
     for(const p of particles){
-      const ang = angle(p.x, p.y, 0);
-      for(let i=0;i<60;i++){
-        p.x += Math.cos(angle(p.x,p.y,0))*1.4;
-        p.y += Math.sin(angle(p.x,p.y,0))*1.4;
-        if(p.x<0)p.x=W; else if(p.x>W)p.x=0;
-        if(p.y<0)p.y=H; else if(p.y>H)p.y=0;
-        ctx.fillStyle = p.hot ? "rgba(76,130,240,0.45)" : "rgba(150,170,200,0.18)";
-        ctx.fillRect(p.x,p.y,1.2,1.2);
+      p.born = now - FADE; p.life = FADE * 3;   // fully visible
+      for(let i = 0; i < 60; i++){
+        const ang = angle(p.x, p.y, 0);
+        p.x = Math.min(W, Math.max(0, p.x + Math.cos(ang) * 1.4));
+        p.y = Math.min(H, Math.max(0, p.y + Math.sin(ang) * 1.4));
       }
+      p.a = lifeAlpha(p, now) * 0.7;
     }
+    ctx.clearRect(0, 0, W, H);
+    if(LINK) drawLinks();
+    drawDots();
   }
 
   resize();
-  window.addEventListener("resize", resize);
+  // debounced: resizing re-allocates the canvas, no need to do it on every event
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { resize(); if(reduce) staticFrame(); }, 120);
+  });
 
   // parallax: the grid drifts gently on scroll (modulo = seamless loop)
   const gridBg = document.getElementById("gridBg");
