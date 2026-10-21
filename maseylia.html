@@ -60,7 +60,7 @@
   background:var(--surface-2); border:1px dashed var(--line);
   display:flex; align-items:center; justify-content:center; color:var(--muted-2);
 }
-.sys-media img, .sys-media video{ width:100%; height:100%; object-fit:contain; display:block; }
+.sys-media img, .sys-media video{ width:100%; height:100%; object-fit:cover; display:block; }
 .sys-media .mono{ font-size:12px; }
 /* optional longer explanatory text under the summary */
 .sys-more{
@@ -121,7 +121,8 @@
   background:var(--surface-2); border:1px dashed var(--line);
   display:flex; align-items:center; justify-content:center; color:var(--muted-2);
 }
-.seg-shots .shot img{ width:100%; height:100%; object-fit:contain; display:block; }
+.seg-shots .shot img{ width:100%; height:100%; object-fit:cover; display:block; }
+.sys-media .fit, .seg-shots .shot img.fit{ object-fit:contain; }
 .seg-shots .shot .mono{ font-size:11px; }
 .seg-shots figure{ margin:0; }
 .seg-shots figcaption{ margin-top:6px; font-size:12px; color:var(--muted-2); text-align:center; }
@@ -396,7 +397,7 @@
             <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg2-03.png" alt="Maseylia — Segment 2, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
             <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg2-04.png" alt="Maseylia — Segment 2, capture 4"></div><figcaption data-fr="Titre 4">Title 4</figcaption></figure>
             <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg2-05.png" alt="Maseylia — Segment 2, capture 5"></div><figcaption data-fr="Titre 5">Title 5</figcaption></figure>
-            <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg2-06.png" alt="Maseylia — Segment 2, capture 6"></div><figcaption data-fr="Titre 6">Title 6</figcaption></figure>
+            <figure><div class="shot"><img loading="lazy" class="fit" src="assets/Maseylia/seg2-06.png" alt="Maseylia — Segment 2, capture 6"></div><figcaption data-fr="Titre 6">Title 6</figcaption></figure>
           </div>
         </div>
 
@@ -426,7 +427,7 @@
           <div class="seg-shots">
             <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg3-01.png" alt="Maseylia — Segment 3, capture 1"></div><figcaption data-fr="Titre 1">Title 1</figcaption></figure>
             <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg3-02.png" alt="Maseylia — Segment 3, capture 2"></div><figcaption data-fr="Titre 2">Title 2</figcaption></figure>
-            <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg3-03.png" alt="Maseylia — Segment 3, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
+            <figure><div class="shot"><img loading="lazy" class="fit" src="assets/Maseylia/seg3-03.png" alt="Maseylia — Segment 3, capture 3"></div><figcaption data-fr="Titre 3">Title 3</figcaption></figure>
             <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg3-04.png" alt="Maseylia — Segment 3, capture 4"></div><figcaption data-fr="Titre 4">Title 4</figcaption></figure>
             <figure><div class="shot"><img loading="lazy" src="assets/Maseylia/seg3-05.png" alt="Maseylia — Segment 3, capture 5"></div><figcaption data-fr="Titre 5">Title 5</figcaption></figure>
           </div>
