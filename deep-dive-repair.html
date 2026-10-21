@@ -202,6 +202,69 @@
       <p data-fr="Les tâches sont le cœur du gameplay et ont donc occupé une place centrale dans la production du jeu. Elles sont le seul moyen d'action du joueur, servant à la fois de mécanique de progression et de système de survie.">The tasks are the core of the gameplay and therefore held a central place in the game's production. They are the player's only means of action, serving both as a progression mechanic and as a survival system.</p>
       <p data-fr="Leur design devait répondre à plusieurs exigences : être <strong>rapide à comprendre</strong>, se dérouler <strong>en douceur</strong> et permettre un <strong>flow naturel</strong> afin de maintenir un bon rythme de jeu. Concevoir chaque tâche a demandé une attention particulière, car elle façonne directement l'engagement du joueur et l'équilibre global de l'expérience.">Their design had to meet several requirements: be <strong>quick to understand</strong>, play out <strong>smoothly</strong>, and allow a <strong>natural flow</strong> in order to maintain a good gameplay pace. Designing each task required particular attention, as it directly shapes player engagement and the overall balance of the experience.</p>
       <p data-fr="Nous voulions une activité répétitive qui ne devienne jamais ennuyeuse. Chaque tâche devait donc <strong>prendre un peu de temps au joueur</strong> — jamais une complétion instantanée — afin de jouer contre le chrono global de la partie qui s'égrène lentement. Nous avons abouti à <strong>7 tâches différentes</strong> et 1 tâche secondaire.">We wanted a repetitive activity that never became boring. Each task therefore had to <strong>take the player a little time</strong> — never an instant completion — in order to play against the overall match timer that slowly ticks away. We ended up with <strong>7 different tasks</strong> and 1 secondary task.</p>
+
+      <!-- code: task architecture (Task.cs, TaskManager.cs, Controller2D.Interacting) -->
+      <details class="code-block">
+        <summary><span data-fr="Voir le code · architecture des tâches">See the code · task architecture</span><span class="file">C#</span></summary>
+        <div class="code-meta">
+          <span data-fr="Chaque tâche s'enregistre auprès du <strong>TaskManager</strong> ; le joueur interagit toujours avec la <strong>tâche la plus proche</strong>, et chaque type de tâche surcharge deux méthodes.">Each task registers with the <strong>TaskManager</strong>; the player always interacts with the <strong>nearest task</strong>, and every task type overrides two methods.</span>
+        </div>
+<pre><code class="language-csharp">// Task.cs — base class of every task (press, duo, screwdriver, timing…)
+public class Task : MonoBehaviour
+{
+    [SerializeField] private float playerCheckDimensions;
+    [SerializeField] private bool playerInRange;
+
+    void Start()
+    {
+        TaskManager.GetInstance().taskList.Add(this);
+    }
+
+    public void OnDestroy()
+    {
+        TaskManager.GetInstance()?.taskList.Remove(this);
+    }
+
+    public bool playerInRangeMethod(Controller2D player)
+    {
+        playerInRange = Vector2.Distance(player.transform.position, transform.position) &lt; playerCheckDimensions;
+        return playerInRange;
+    }
+
+    public virtual void StartInteractingTask(Controller2D player) { }
+    public virtual void StopInteractingTask(Controller2D player) { }
+}
+
+// TaskManager.cs — returns the nearest task in range of a given player
+public Task CheckTaskinList(Controller2D player)
+{
+    Task taskToReturn = null;
+    float taskDistanceToPlayer = 0;
+    foreach (Task task in taskList)
+    {
+        if (task.playerInRangeMethod(player))
+        {
+            float nearestTaskToPlayer = Vector2.Distance(task.transform.position, player.transform.position);
+            if (taskToReturn == null || nearestTaskToPlayer &lt; taskDistanceToPlayer)
+            {
+                taskToReturn = task;
+                taskDistanceToPlayer = nearestTaskToPlayer;
+            }
+        }
+    }
+    return taskToReturn;
+}
+
+// Controller2D.cs — the interact input just asks the manager
+public void Interacting()
+{
+    Interactingtask = TaskManager.GetInstance().CheckTaskinList(this);
+    if (Interactingtask &amp; isGrounded)
+    {
+        Interactingtask.StartInteractingTask(this);
+    }
+}</code></pre>
+      </details>
     </div>
   </section>
 
@@ -256,6 +319,49 @@
             <li data-fr="Repose sur la coordination et la communication entre les joueurs">Relies on coordination and communication between players</li>
             <li data-fr="Offre une récompense importante en cas de réussite">Offers a significant reward on success</li>
           </ul>
+          <details class="code-block">
+            <summary><span data-fr="Voir le code · TaskSynchro">See the code · TaskSynchro</span><span class="file">C#</span></summary>
+            <div class="code-meta">
+              <span data-fr="Un compteur partagé compte les joueurs engagés ; la tâche ne se valide qu'à 2.">A shared counter tracks the players engaged; the task only completes at 2.</span>
+            </div>
+<pre><code class="language-csharp">public class TaskSynchro : Task
+{
+    public bool isInteracting;
+    public Slider slider;
+    public TaskSpawner taskSpawner;
+    public float _sliderValue;
+
+    private void Update()
+    {
+        // both players are holding the task → validate it and fill the gauge
+        if (CountingSynchro.GetInstance().countingSynchro == 2)
+        {
+            taskSpawner.DeleteTask(gameObject);
+            slider.value += _sliderValue;
+            gameObject.SetActive(false);
+        }
+    }
+
+    public override void StartInteractingTask(Controller2D player)
+    {
+        if (!isInteracting)
+        {
+            CountingSynchro.GetInstance().countingSynchro++;
+            isInteracting = true;
+            player._isRepairing = true;
+            player._isActive = false;   // the player is locked in place while holding
+        }
+    }
+
+    public override void StopInteractingTask(Controller2D player)
+    {
+        CountingSynchro.GetInstance().countingSynchro--;
+        isInteracting = false;
+        player._isRepairing = false;
+        player._isActive = true;
+    }
+}</code></pre>
+          </details>
         </div>
       </div>
 
@@ -440,5 +546,9 @@
 </script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/lightbox.js"></script>
+<!-- syntax highlighting for the code snippets -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+<script>if(window.hljs) hljs.highlightAll();</script>
 </body>
 </html>
