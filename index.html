@@ -207,7 +207,7 @@ body{ font-size:19.5px; }
 /* hover preview: key art fades to black, then the gameplay video fades in */
 .media-link .fade, .media-link .hover-video{ position:absolute; inset:0; opacity:0; pointer-events:none; }
 .media-link .fade{ background:#000; transition:opacity .4s var(--ease); }
-.media-link .hover-video{ transition:opacity .4s var(--ease); }
+.media-link .hover-video{ transition:opacity .4s var(--ease); object-fit:contain; }
 .project.previewing .media-link .fade{ opacity:1; }
 .project.previewing .media-link .hover-video{ opacity:1; transition-delay:.4s; }
 .media-link img, .media-link video{ transition:transform .4s var(--ease); }
