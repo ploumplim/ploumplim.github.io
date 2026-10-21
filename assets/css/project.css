@@ -36,6 +36,15 @@
   transition:color .2s var(--ease), background .2s var(--ease);
 }
 .back:hover{ color:var(--text); background:var(--surface); }
+/* small phones: brand + "Back to projects" + language toggle don't fit on one line →
+   smaller brand, and the back link collapses to an arrow (text kept for screen readers) */
+@media (max-width:560px){
+  .nav-inner{ gap:8px; }
+  .brand{ font-size:17px; white-space:nowrap; }
+  .back{ font-size:0; gap:0; padding:8px 10px; }
+  .back svg{ display:none; }            /* the FR version has no svg anyway (i18n swaps the text) */
+  .back::before{ content:'←'; font-size:20px; line-height:1; }
+}
 
 /* ============================================================
    HERO
@@ -48,7 +57,8 @@
 .eyebrow::before{ content:'// '; color:var(--muted-2); }
 .hero h1{
   font-family:var(--font-display); font-weight:700; letter-spacing:-.03em;
-  font-size:clamp(51px, 8vw, 92px); line-height:1.0; margin-bottom:18px;
+  font-size:clamp(38px, 8vw, 92px); line-height:1.0; margin-bottom:18px;
+  overflow-wrap:break-word;             /* long titles ("Deep Dive Repair") must never overflow on phones */
 }
 .hero h1 .accent{ color:var(--accent); }
 .role-line{
