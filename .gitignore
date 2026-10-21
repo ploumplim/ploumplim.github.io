@@ -11,3 +11,6 @@ assets/*_original.mp4
 
 # Dossier de travail temporaire
 _gifwork/
+
+# Graphify (graphe de connaissances local, non deploye)
+graphify-out/

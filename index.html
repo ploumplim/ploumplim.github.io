@@ -4,12 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Baptiste Moreau Portfolio · Game Developer</title>
-<meta name="description" content="Portfolio of Moreau Baptiste, Game Developer (Unity / Unreal), Master's student. Projects, tech stack and contact." />
+<meta name="description" content="Portfolio of Baptiste Moreau, Game Developer (Unity / Unreal), Master's student. Projects, tech stack and contact." />
 
 <!-- Favicon (inline accent square, no file needed) -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234C82F0'/%3E%3C/svg%3E" />
 
-<!-- Social preview (Open Graph / Twitter). TODO: replace the relative paths with your absolute deployed URL for reliable previews. -->
+<!-- Social preview (Open Graph / Twitter) -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Baptiste Moreau Portfolio · Game Developer" />
 <meta property="og:description" content="Gameplay Programmer (Unity / C#) — responsive mechanics, AI behaviors and game feel." />
@@ -353,7 +353,7 @@ body{ font-size:19.5px; }
   <!-- ===================== NAV ===================== -->
   <nav class="nav">
     <div class="wrap nav-inner">
-      <a href="#top" class="brand"><span class="dot"></span>MOREAU&nbsp;BAPTISTE</a>
+      <a href="#top" class="brand"><span class="dot"></span>BAPTISTE&nbsp;MOREAU</a>
 
       <div class="nav-links" id="navLinks">
         <a href="#work" data-fr="Travail">Work</a>
@@ -383,8 +383,8 @@ body{ font-size:19.5px; }
     <div class="wrap">
         <p class="eyebrow" data-fr="Programmeur Gameplay &amp; Systèmes">Gameplay &amp; Systems Programmer</p>
       <h1 data-fr="Créer des jeux qui<br><span class=&quot;accent&quot;>sonnent</span> juste à jouer.">Building games that<br><span class="accent">feel</span> right to play.</h1>
-      <p class="lead" data-fr="Moreau Baptiste, Développeur de jeux vidéo, étudiant en 4<sup>e</sup> année de Master. Programmeur Gameplay passionné par les mécaniques réactives, les comportements d'IA et le game feel. Je construis des prototypes et des systèmes de gameplay sous Unity, avec une architecture C# propre et maintenable.">
-        Moreau Baptiste — Game Developer, 4<sup>th</sup>-year Master's student.
+      <p class="lead" data-fr="Baptiste Moreau, Développeur de jeux vidéo, étudiant en 4<sup>e</sup> année de Master. Programmeur Gameplay passionné par les mécaniques réactives, les comportements d'IA et le game feel. Je construis des prototypes et des systèmes de gameplay sous Unity, avec une architecture C# propre et maintenable.">
+        Baptiste Moreau — Game Developer, 4<sup>th</sup>-year Master's student.
           Gameplay Programmer passionate about responsive mechanics, AI behaviors and game feel. I build prototypes and gameplay systems in Unity using clean, maintainable C# architecture.
       </p>
       <div class="cta-row">
@@ -447,7 +447,7 @@ body{ font-size:19.5px; }
           <h4 data-fr="Langages">Languages</h4>
           <ul>
             <li>C# &nbsp;<span class="mono" style="color:var(--muted-2);font-size:14.5px">// main</span></li>
-            <li>C++ (Unreal)</li>
+            <li data-fr="C++ (en apprentissage, Unreal)">C++ (learning, Unreal)</li>
             <li>HLSL / shaders</li>
           </ul>
         </div>
@@ -473,12 +473,12 @@ body{ font-size:19.5px; }
       </div>
       <div class="about reveal">
         <div class="avatar">
-          <img src="assets/Photo Profil.jpg" alt="Moreau Baptiste" />
+          <img loading="lazy" src="assets/Photo Profil.jpg" alt="Baptiste Moreau" />
         </div>
         <div class="about-text">
-          <p data-fr="<strong>[À compléter plus tard.]</strong>"><strong>[Placeholder — to fill in later.]</strong> </p>
-          <p></p>
-          <p data-fr="<strong>Près de Paris</strong> · étudiant en 4<sup>e</sup> année de Master · ouvert aux opportunités."><strong>Near Paris</strong> · 4<sup>th</sup>-year Master's student · open to opportunities.</p>
+          <p data-fr="Étudiant en Master à l'<strong>ICAN</strong>, je me spécialise en programmation gameplay. Ce que je préfère, c'est le moment où une mécanique cesse d'être du code et devient agréable en main : régler un saut, un lancer ou un rebond jusqu'à ce qu'il se lise bien.">I'm a Master's student at <strong>ICAN</strong>, specialising in gameplay programming. The part I enjoy most is when a mechanic stops being code and starts feeling good in the hands: tuning a jump, a throw or a bounce until it reads right.</p>
+          <p data-fr="La plupart de mes projets sont des jeux en équipe, où je code les systèmes de gameplay en travaillant de près avec les game designers et les artistes. Je touche aussi au level design et au game design, ce qui m'aide à comprendre ce dont l'équipe a besoin.">Most of my projects are team games, where I write the gameplay systems and work closely with designers and artists. I also do some level and game design, which helps me understand what the rest of the team needs from the code.</p>
+          <p data-fr="<strong>Près de Paris</strong> · étudiant en 4<sup>e</sup> année de Master à l'ICAN · <strong>à la recherche d'une alternance</strong> en programmation gameplay."><strong>Near Paris</strong> · 4<sup>th</sup>-year Master's student at ICAN · <strong>looking for a work-study position</strong> (alternance) in gameplay programming.</p>
         </div>
       </div>
     </div>
@@ -501,7 +501,7 @@ body{ font-size:19.5px; }
 
   <!-- ===================== FOOTER ===================== -->
   <footer class="footer wrap">
-    <span>© <span id="year"></span> Moreau Baptiste</span>
+    <span>© <span id="year"></span> Baptiste Moreau</span>
     <span class="mono" data-fr="fait avec Rider · sans moteur requis">made with Rider · no engine required</span>
   </footer>
 
@@ -547,7 +547,7 @@ const PROJECTS = [
     tags: ["Unity", "C#", "Co-op"],
       media: {type : "image", src: "assets/DeepDiveRepairMain.png"},
       hover: "assets/Trailer%20Deep%20Dive%20Repair%20ICAN%202024.mp4",
-      //media: { type: "youtube", id: "cM09wvRl7jY" }, prout
+      //media: { type: "youtube", id: "cM09wvRl7jY" },
     links: [
       { label: "Case study", label_fr: "Étude de cas", href: "deep-dive-repair.html" },
       { label: "itch.io", href: "https://bragidev.itch.io/deepdiverepair", muted: true }
@@ -566,8 +566,8 @@ const PROJECTS = [
       media: {type : "image", src: "assets/BlitzBallMain.png"},
       hover: "assets/BBGif/GameFeel.mp4",
     links: [
-      { label: "Devlog", href: "#" },
-      { label: "Source", href: "#", muted: true }
+      { label: "Case study", label_fr: "Étude de cas", href: "blitz-ball.html" },
+      { label: "GitHub", href: "https://github.com/Ploumplim", muted: true }
     ]
   },
   {
@@ -579,7 +579,7 @@ const PROJECTS = [
     note: "Take on ruthless vegetables on a battlefield. Plant them to reap \n" +
         "a bountiful harvest and win the game.",
     note_fr: "Affronte des légumes impitoyables sur un champ de bataille. Plante-les pour récolter une moisson abondante et remporter la partie.",
-    tags: ["Construct3D", "Blueprint", "Beat'em Up"],
+    tags: ["Construct 3", "Blueprint", "Beat'em Up"],
       media: {type : "image", src: "assets/OverTheGardenMain.png"},
       hover: "assets/OverTheGarden/over-the-garden-trailer.mp4",
     links: [
@@ -593,7 +593,7 @@ const PROJECTS = [
 const OTHER_PROJECTS = [
   {
     featured: false,
-    title: "Familly Gambit",
+    title: "Family Gambit",
     page: "familly-gambit.html",
     role: "Game Programmer · Game Designer",
     role_fr: "Programmeur · Game Designer",

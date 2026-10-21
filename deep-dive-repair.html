@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Deep Dive Repair — Case Study · Moreau Baptiste</title>
+<title>Deep Dive Repair — Case Study · Baptiste Moreau</title>
 <meta name="description" content="Case study: designing the task system and zone-based spawning of Deep Dive Repair, a Unity / C# co-op game." />
 
 <!-- Favicon (inline accent square, no file needed) -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234C82F0'/%3E%3C/svg%3E" />
 
-<!-- Social preview (Open Graph / Twitter). TODO: replace the relative paths with your absolute deployed URL for reliable previews. -->
+<!-- Social preview (Open Graph / Twitter) -->
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Deep Dive Repair — Case Study · Moreau Baptiste" />
+<meta property="og:title" content="Deep Dive Repair — Case Study · Baptiste Moreau" />
 <meta property="og:description" content="Unity / C# co-op game: character controller, task system and zone-based spawning." />
-<meta property="og:image" content="assets/DeepDiveRepairMain.png" />
+<meta property="og:image" content="https://ploumplim.github.io/assets/DeepDiveRepairMain.png" />
 <meta name="twitter:card" content="summary_large_image" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,7 +34,7 @@
   <!-- ===================== NAV ===================== -->
   <nav class="nav">
     <div class="wrap nav-inner">
-      <a href="index.html#top" class="brand"><span class="dot"></span>MOREAU&nbsp;BAPTISTE</a>
+      <a href="index.html#top" class="brand"><span class="dot"></span>BAPTISTE&nbsp;MOREAU</a>
       <a href="index.html#work" class="back" data-fr="Retour aux projets">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
         Back to projects
@@ -66,10 +66,6 @@
         <span class="tag" data-fr="Coop locale">Local co-op</span>
         <span class="tag">Game feel</span>
       </div>
-
-      <!-- MAIN MEDIA: replace the .media-empty block with:
-           <video src="assets/deepdive.mp4" poster="assets/deepdive.jpg" muted loop playsinline autoplay></video>
-           or  <img src="assets/deepdive.jpg" alt="Deep Dive Repair" /> -->
       <div class="cover">
         <video class="video" src="assets/Trailer Deep Dive Repair ICAN 2024.mp4" muted loop playsinline autoplay controls></video>
       </div>
@@ -95,10 +91,7 @@
             <!-- ── INPUT SYSTEM ── -->
             <div class="task">
               <div class="task-media media-slot">
-                <div class="media-empty">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
-                    <img src="assets/DDRGif/Controller.png" alt="Press task" />
-                </div>
+                <img loading="lazy" src="assets/DDRGif/Controller.png" alt="Controller mapping for two local players" />
               </div>
               <div class="task-body">
                 <p class="task-label">Input · New Input System</p>
@@ -115,7 +108,7 @@
             <!-- ── JUMP PHYSICS ── -->
             <div class="task">
               <div class="task-media media-slot">
-                <img src="assets/DDRGif/Jumping.gif" alt="A jump that feels right" />
+                <video src="assets/DDRGif/Jumping.mp4" aria-label="A jump that feels right" muted loop playsinline autoplay preload="metadata"></video>
               </div>
               <div class="task-body">
                 <p class="task-label" data-fr="Physique · Saut">Physics · Jump</p>
@@ -132,7 +125,7 @@
             <!-- ── COYOTE TIME & JUMP BUFFERING ── -->
             <div class="task">
               <div class="task-media media-slot">
-                <img src="assets/DDRGif/Coyote.gif" alt="Coyote time & jump buffering" />
+                <video src="assets/DDRGif/Coyote.mp4" aria-label="Coyote time & jump buffering" muted loop playsinline autoplay preload="metadata"></video>
               </div>
               <div class="task-body">
                 <p class="task-label" data-fr="Physique · Tolérance de saut">Physics · Jump forgiveness</p>
@@ -149,7 +142,7 @@
             <!-- ── THROW PHYSICS ── -->
             <div class="task">
               <div class="task-media media-slot">
-                <img src="assets/DDRGif/ThrowPartner.gif" alt="Throwing your partner" />
+                <video src="assets/DDRGif/ThrowPartner.mp4" aria-label="Throwing your partner" muted loop playsinline autoplay preload="metadata"></video>
               </div>
               <div class="task-body">
                 <p class="task-label" data-fr="Physique · Lancer">Physics · Throw</p>
@@ -166,7 +159,7 @@
             <!-- ── THROW DIRECTION ── -->
             <div class="task">
               <div class="task-media media-slot">
-                <img src="assets/DDRGif/CorrectThrow.gif" alt="Throw and avoid unrealistic direction" />
+                <video src="assets/DDRGif/CorrectThrow.mp4" aria-label="Throw and avoid unrealistic direction" muted loop playsinline autoplay preload="metadata"></video>
               </div>
               <div class="task-body">
                 <p class="task-label" data-fr="Physique · Lancer">Physics · Throw</p>
@@ -181,7 +174,7 @@
             <!-- ── CUSTOM GRAVITY ── -->
             <div class="task">
               <div class="task-media media-slot">
-                <img src="assets/DDRGif/Gravity.gif" alt="Custom gravity" />
+                <video src="assets/DDRGif/Gravity.mp4" aria-label="Custom gravity" muted loop playsinline autoplay preload="metadata"></video>
               </div>
               <div class="task-body">
                 <p class="task-label" data-fr="Physique · Gravité">Physics · Gravity</p>
@@ -217,9 +210,8 @@
     <div class="wrap">
       <!-- ── ZONE-BASED SPAWN TASK ── -->
       <div class="task">
-        <!-- replace with <img src="assets/spawn-zones.gif"/> or an mp4 showing the zone split -->
         <div class="task-media media-slot">
-          <img src="assets/DDRGif/DelimitationLevel.png" alt="LevelZone" />
+          <img loading="lazy" src="assets/DDRGif/DelimitationLevel.png" alt="LevelZone" />
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Système · Apparition des tâches">System · Task spawning</p>
@@ -236,9 +228,8 @@
 
       <!-- ── PRESS TASK ── -->
       <div class="task">
-        <!-- replace .media-empty with <img src="assets/task-pressoir.gif" alt="Press task"/> -->
         <div class="task-media media-slot">
-          <img src="assets/DDRGif/Press.gif" alt="Press task" />
+          <video src="assets/DDRGif/Press.mp4" aria-label="Press task" muted loop playsinline autoplay preload="metadata"></video>
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Tâche · Presser">Task · Press</p>
@@ -254,7 +245,7 @@
       <!-- ── DUO TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
-            <img src="assets/DDRGif/Duo.gif" alt="Duo task" />
+            <video src="assets/DDRGif/Duo.mp4" aria-label="Duo task" muted loop playsinline autoplay preload="metadata"></video>
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Tâche · Duo">Task · Duo</p>
@@ -271,7 +262,7 @@
       <!-- ── SCREWDRIVER TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
-            <img src="assets/DDRGif/Vis.gif" alt="Screwdriver task" />
+            <video src="assets/DDRGif/Vis.mp4" aria-label="Screwdriver task" muted loop playsinline autoplay preload="metadata"></video>
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Tâche · Tournevis">Task · Screwdriver</p>
@@ -287,7 +278,7 @@
       <!-- ── TIMING TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
-            <img src="assets/DDRGif/Timing.gif" alt="Timing task" />
+            <video src="assets/DDRGif/Timing.mp4" aria-label="Timing task" muted loop playsinline autoplay preload="metadata"></video>
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Tâche · Timing">Task · Timing</p>
@@ -303,7 +294,7 @@
       <!-- ── BATTERY TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
-            <img src="assets/DDRGif/Battery.gif" alt="Battery task" />
+            <video src="assets/DDRGif/Battery.mp4" aria-label="Battery task" muted loop playsinline autoplay preload="metadata"></video>
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Tâche · Batterie">Task · Battery</p>
@@ -320,7 +311,7 @@
       <!-- ── TASK 6 (to be completed) ── -->
       <div class="task">
         <div class="task-media media-slot">
-            <img src="assets/DDRGif/Tuyeau.gif" alt="Pipe task" />
+            <video src="assets/DDRGif/Tuyeau.mp4" aria-label="Pipe task" muted loop playsinline autoplay preload="metadata"></video>
         </div>
         <div class="task-body">
           <p class="task-label">Task · 6</p>
@@ -336,7 +327,7 @@
       <!-- ── WASHING MACHINE TASK ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <img src="assets/DDRGif/WashingMachine.gif" alt="Washing machine task" />
+          <video src="assets/DDRGif/WashingMachine.mp4" aria-label="Washing machine task" muted loop playsinline autoplay preload="metadata"></video>
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Tâche · Machine à laver">Task · Washing machine</p>
@@ -352,8 +343,8 @@
       <div class="task">
         <div class="task-media media-slot">
           <div style="position:absolute; inset:0; display:grid; grid-template-columns:1fr 1fr; gap:4px">
-            <img src="assets/DDRGif/ComputerTask.png" alt="Mission selection interface" />
-            <img src="assets/DDRGif/Computer.png" alt="In-world computer, powered on" />
+            <img loading="lazy" src="assets/DDRGif/ComputerTask.png" alt="Mission selection interface" />
+            <img loading="lazy" src="assets/DDRGif/Computer.png" alt="In-world computer, powered on" />
           </div>
         </div>
         <div class="task-body">
@@ -385,7 +376,7 @@
       <!-- ── INTRO DIALOGUES ── -->
       <div class="task">
         <div class="task-media media-slot">
-          <img src="assets/DDRGif/Dialogue.gif" alt="Level intro dialogues" />
+          <video src="assets/DDRGif/Dialogue.mp4" aria-label="Level intro dialogues" muted loop playsinline autoplay preload="metadata"></video>
         </div>
         <div class="task-body">
           <p class="task-label" data-fr="Narration · Intro de niveau">Narrative · Level intro</p>
@@ -403,8 +394,8 @@
       <div class="task">
         <div class="task-media media-slot">
           <div style="position:absolute; inset:0; display:grid; grid-template-columns:1fr 1fr; gap:4px">
-            <img src="assets/DDRGif/Victory.png" alt="Victory screen" />
-            <img src="assets/DDRGif/Defeat.png" alt="Defeat screen" />
+            <img loading="lazy" src="assets/DDRGif/Victory.png" alt="Victory screen" />
+            <img loading="lazy" src="assets/DDRGif/Defeat.png" alt="Defeat screen" />
           </div>
         </div>
         <div class="task-body">
@@ -419,25 +410,6 @@
         </div>
       </div>
 
-      <!-- ── BEST TIME (LOCAL SAVE) ── -->
-      <div class="task">
-        <div class="task-media media-slot">
-          <div class="media-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>
-            <span class="mono">img → assets/DDRGif/BestTime.png</span>
-          </div>
-        </div>
-        <div class="task-body">
-          <p class="task-label" data-fr="Persistance · Meilleur temps">Persistence · Best time</p>
-          <h3 data-fr="Sauvegarde locale du meilleur temps">Local best-time saving</h3>
-          <p data-fr="Chaque victoire est <strong>chronométrée</strong>, et le <strong>meilleur temps</strong> des joueurs est stocké <strong>en local</strong> pour persister entre les sessions.">Each victory is <strong>timed</strong>, and the players' <strong>best time</strong> is stored <strong>locally</strong> so it persists between sessions.</p>
-          <ul>
-            <li data-fr="À la victoire, le temps de la partie est comparé au record sauvegardé">On victory, the run's time is compared against the saved record</li>
-            <li data-fr="Un meilleur temps est <strong>écrit sur le disque</strong> et survit au redémarrage du jeu">A faster time is <strong>written to disk</strong> and survives relaunching the game</li>
-            <li data-fr="Le meilleur temps est affiché aux joueurs comme objectif à battre">The best time is shown to players as a target to beat</li>
-          </ul>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -446,7 +418,7 @@
     <div class="wrap">
       <div class="cta">
         <h2 data-fr="Envie d'y jouer ?">Want to play it?</h2>
-        <p data-fr="Build jouable, page itch.io ou code source — ajoute tes liens ici.">Playable build, itch.io page or source code — add your links here.</p>
+        <p data-fr="Trouve un coéquipier et plonge : le jeu est jouable sur itch.io.">Grab a partner and dive in: the game is playable on itch.io.</p>
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
           <a href="https://bragidev.itch.io/deepdiverepair" target="_blank" rel="noopener" class="btn btn-primary" data-fr="Jouer / itch.io">Play / itch.io</a>
           <a href="index.html#work" class="btn btn-ghost" data-fr="Autres projets">Other projects</a>
@@ -457,7 +429,7 @@
 
   <!-- ===================== FOOTER ===================== -->
   <footer class="footer wrap">
-    <span>© <span id="year"></span> Moreau Baptiste</span>
+    <span>© <span id="year"></span> Baptiste Moreau</span>
     <span class="mono">Deep Dive Repair · Unity / C#</span>
   </footer>
 
