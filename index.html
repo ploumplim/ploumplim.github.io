@@ -158,6 +158,15 @@ body{ font-size:19.5px; }
   box-shadow:0 24px 60px -20px rgba(0,0,0,.65), 0 0 0 1px rgba(76,130,240,.08);
 }
 .hero-reel video{ width:100%; height:100%; object-fit:cover; display:block; }
+/* play button, only shown when the browser refused autoplay (or reduced motion is on) */
+.reel-play{
+  position:absolute; inset:0; margin:auto; width:72px; height:72px; border-radius:50%;
+  display:none; align-items:center; justify-content:center; cursor:pointer;
+  background:rgba(14,17,22,.62); border:1px solid rgba(255,255,255,.25); color:#fff;
+  backdrop-filter:blur(4px); transition:transform .2s var(--ease), background .2s var(--ease);
+}
+.reel-play:hover{ transform:scale(1.06); background:var(--accent); }
+.hero-reel.blocked .reel-play{ display:flex; }
 @media (max-width:960px){
   .hero-grid{ grid-template-columns:1fr; gap:40px; }
 }
@@ -419,6 +428,9 @@ body{ font-size:19.5px; }
       <!-- gameplay showreel: Maseylia, Deep Dive Repair, Blitz Ball, Over the Garden -->
       <div class="hero-reel">
         <video id="heroReel" src="assets/showreel.mp4" poster="assets/showreel-poster.jpg" muted loop playsinline autoplay preload="auto" aria-label="Gameplay showreel: Maseylia, Deep Dive Repair, Blitz Ball and Over the Garden"></video>
+        <button class="reel-play" id="reelPlay" type="button" aria-label="Play the showreel">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
       </div>
     </div>
   </header>
@@ -589,7 +601,7 @@ const PROJECTS = [
       hover: "assets/BBGif/GameFeel.mp4",
     links: [
       { label: "Case study", label_fr: "Étude de cas", href: "blitz-ball.html" },
-      { label: "GitHub", href: "https://github.com/Ploumplim", muted: true }
+      { label: "Source", href: "https://github.com/ploumplim/BlitzBall", muted: true }
     ]
   },
   {
@@ -732,12 +744,38 @@ renderProjects(localStorage.getItem("site-lang") || "en");
    ============================================================ */
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// showreel: no autoplay for users who prefer reduced motion (poster + controls instead)
+// showreel: the autoplay attribute alone is not enough everywhere (browser "block autoplay"
+// settings, battery saver, iOS low power mode) → play() from JS, retry on the first user
+// gesture, and fall back to a play button instead of a frozen frame.
+// Users who prefer reduced motion get the play button straight away.
 const heroReel = document.getElementById("heroReel");
-if(heroReel && window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-  heroReel.removeAttribute("autoplay");
-  heroReel.pause();
-  heroReel.controls = true;
+if(heroReel){
+  const reelBox = heroReel.parentElement;
+  heroReel.muted = true;                 // the property (not just the attribute) is what autoplay policies check
+  heroReel.defaultMuted = true;
+  let wanted = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tryPlay = () => {
+    if(!wanted) return;
+    heroReel.play()
+      .then(() => reelBox.classList.remove("blocked"))
+      .catch(() => { if(heroReel.paused) reelBox.classList.add("blocked"); });
+  };
+  document.getElementById("reelPlay").addEventListener("click", () => { wanted = true; tryPlay(); });
+  heroReel.addEventListener("playing", () => reelBox.classList.remove("blocked"));   // whatever started it
+  if(!wanted){
+    heroReel.removeAttribute("autoplay");
+    heroReel.pause();
+    reelBox.classList.add("blocked");
+  }
+  tryPlay();
+  heroReel.addEventListener("canplay", () => { if(heroReel.paused) tryPlay(); }, { once:true });
+  ["pointerdown", "keydown", "touchstart"].forEach(ev =>
+    window.addEventListener(ev, () => { if(heroReel.paused) tryPlay(); }, { once:true, passive:true }));
+  // pause while off-screen (saves battery), resume when scrolled back
+  new IntersectionObserver(([e]) => {
+    if(e.isIntersecting){ if(heroReel.paused) tryPlay(); }
+    else if(!heroReel.paused) heroReel.pause();
+  }, { threshold:.2 }).observe(heroReel);
 }
 
 // burger mobile
