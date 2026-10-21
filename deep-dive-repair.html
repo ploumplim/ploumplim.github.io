@@ -166,8 +166,38 @@
                 <h3 data-fr="Empêcher les lancers irréalistes">Preventing unrealistic throws</h3>
                 <p data-fr="S'assurer que les lancers suivent une physique crédible et ne prennent pas de trajectoires impossibles — pas de passage à travers les murs fins ni de glitch dans la géométrie.">Making sure throws follow believable physics and can't take impossible trajectories — no clipping through thin walls or glitching into geometry.</p>
                 <ul>
-                    <li data-fr="Vérification de l'angle de lancer avec un raycast (DrawLine) et un produit scalaire pour calculer la portée, empêchant l'objet lancé de glitcher dans la géométrie proche ou d'être projeté hors des limites">Verify the throw angle with a raycast (DrawLine) and a dot product to compute the range, preventing the thrown item from glitching into nearby geometry or being thrown out of bounds</li>
+                    <li data-fr="Vérification de la trajectoire avec un raycast du joueur vers son réticule, sur la distance qui les sépare : si un mur se trouve entre les deux, le lancer est bloqué, ce qui empêche l'objet de glitcher dans la géométrie proche ou d'être projeté hors des limites">Check the trajectory with a raycast from the player to their reticle, over the distance between them: if a wall sits in between, the throw is blocked, preventing the thrown item from glitching into nearby geometry or being thrown out of bounds</li>
                 </ul>
+                <details class="code-block">
+                  <summary><span data-fr="Voir le code · grab.cs (visée)">See the code · grab.cs (aiming)</span><span class="file">C#</span></summary>
+                  <div class="code-meta">
+                    <span data-fr="Chaque image, un raycast part du joueur vers son réticule : si un mur se trouve entre les deux, le lancer est bloqué.">Every frame, a raycast goes from the player to their aiming reticle: if a wall sits in between, the throw is blocked.</span>
+                  </div>
+<pre><code class="language-csharp">// Update(): is there a wall between the player and the reticle?
+Vector3 origin = gameObject.transform.position;
+Vector3 direction = (visor.transform.position - origin).normalized;
+
+maxDistance = Vector3.Distance(gameObject.transform.position, visor.transform.position);
+if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, maxDistance))
+{
+    if (hitInfo.transform.gameObject.layer == 3)   // level geometry
+    {
+        canThrow = false;
+    }
+}
+else
+{
+    Debug.DrawLine(origin, origin + direction * maxDistance, Color.green);
+    canThrow = true;
+}
+
+// … and the throw itself simply refuses to fire
+public void Throw()
+{
+    if (!canThrow) return;
+    // …
+}</code></pre>
+                </details>
               </div>
             </div>
 
@@ -595,6 +625,57 @@ void CheckAlignment()
             <li data-fr="Introduit un défi de précision par la visée">Introduces a precision challenge through aiming</li>
             <li class="warn" data-fr="Échec punitif : une perte importante si le lancer échoue">Punishing failure: a significant loss if the throw misses</li>
           </ul>
+          <details class="code-block">
+            <summary><span data-fr="Voir le code · Task_Power">See the code · Task_Power</span><span class="file">C#</span></summary>
+            <div class="code-meta">
+              <span data-fr="Tant que le joueur maintient l'interaction, un minuteur avance ; au bout de <strong>timeRange</strong>, chaque lumière du sous-marin retrouve son intensité d'origine.">While the player holds the interaction a timer runs; after <strong>timeRange</strong>, every light in the submarine gets its original intensity back.</span>
+            </div>
+<pre><code class="language-csharp">public class Task_Power : Task
+{
+    public bool isInteracting;
+    public float timeRange = 3f;
+    public float timerPower = 0f;
+
+    public GameObject _lights;
+    private int i;
+
+    private void Start()
+    {
+        _lights = GameObject.Find("lights");
+        i = 0;
+    }
+
+    void Update()
+    {
+        if (isInteracting)
+        {
+            timerPower += Time.deltaTime;
+        }
+
+        if (timerPower &gt;= timeRange)
+        {
+            // power is back: restore each light to the intensity stored when it went off
+            foreach (Transform t in _lights.GetComponentInChildren&lt;Transform&gt;())
+            {
+                t.GetComponent&lt;Light&gt;().intensity = _lights.GetComponent&lt;Power_Off&gt;()._LightListIntensity[i];
+                i++;
+            }
+            timerPower = 0f;
+        }
+    }
+
+    public override void StartInteractingTask(Controller2D player)
+    {
+        isInteracting = true;
+    }
+
+    public override void StopInteractingTask(Controller2D player)
+    {
+        isInteracting = false;
+        timerPower = 0;     // letting go resets the charge
+    }
+}</code></pre>
+          </details>
         </div>
       </div>
 

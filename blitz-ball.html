@@ -190,6 +190,60 @@
             <li data-fr="Elle est ensuite reliée à tous ses objets dépendants — <em>SpawnPlayer</em>, valeurs, visuels et contrôle">It is then linked to all its dependent objects — <em>SpawnPlayer</em>, values, visuals and control</li>
             <li data-fr="Comme chaque manette est enregistrée dans le HashSet, une <strong>manette qui se reconnecte</strong> est reconnue et ré-attribuée au même joueur">Because each controller is recorded in the HashSet, a <strong>reconnecting pad</strong> is recognised and re-assigned to the same player</li>
           </ul>
+          <details class="code-block">
+            <summary><span data-fr="Voir le code · MultiplayerManager">See the code · MultiplayerManager</span><span class="file">C#</span></summary>
+            <div class="code-meta">
+              <span data-fr="Version actuelle du projet : chaque manette détectée au lancement fait apparaître un joueur appairé à cette manette, et le couple joueur/manette est mémorisé.">Current version of the project: every gamepad found at launch spawns a player paired to that device, and each player/gamepad pair is stored.</span>
+              <a href="https://github.com/ploumplim/BlitzBall/blob/BaptisteBranch/Assets/MultiplayerManager.cs" target="_blank" rel="noopener" data-fr="Voir sur GitHub ↗">View on GitHub ↗</a>
+            </div>
+<pre><code class="language-csharp">// MultiplayerManager.cs — one player per connected gamepad
+void Start()
+{
+    GamepadList = Gamepad.all.ToList();
+    SpawnPlayersForGamepads();
+}
+
+public void SpawnPlayersForGamepads()
+{
+    foreach (Gamepad gamepad in GamepadList)
+    {
+        PlayerInput playerInput = PlayerInput.Instantiate(
+            PlayerPrefab,
+            controlScheme: "Gamepad",
+            pairWithDevice: gamepad,      // this player only listens to this pad
+            splitScreenIndex: -1
+        );
+
+        playerInput.gameObject.name = $"Base Player {playerInput.playerIndex}";
+
+        PlayerScript playerScript = playerInput.GetComponent&lt;PlayerScript&gt;();
+        if (playerScript != null)
+        {
+            GameManager.Instance.PlayerScriptList.Add(playerScript);
+
+            int playerIndex = playerInput.playerIndex;
+            GameManager.Instance.PlayerScriptDictionary[playerScript] = new PlayerData(gamepad, playerIndex);
+
+            playerInput.SwitchCurrentControlScheme(gamepad);
+        }
+    }
+}
+
+// GameManager.cs — what the game remembers about each player
+public Dictionary&lt;PlayerScript, PlayerData&gt; PlayerScriptDictionary = new Dictionary&lt;PlayerScript, PlayerData&gt;();
+
+public struct PlayerData
+{
+    public Gamepad gamepad;
+    public int userId;
+
+    public PlayerData(Gamepad gamepad, int userId)
+    {
+        this.gamepad = gamepad;
+        this.userId = userId;
+    }
+}</code></pre>
+          </details>
         </div>
       </div>
 
@@ -348,5 +402,9 @@
 </script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/lightbox.js"></script>
+<!-- syntax highlighting for the code snippets -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+<script>if(window.hljs) hljs.highlightAll();</script>
 </body>
 </html>
