@@ -54,32 +54,6 @@
 .system .sys-tag{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); }
 .system h4{ font-family:var(--font-display); font-weight:700; font-size:17px; margin:6px 0 6px; }
 .system p{ font-size:14.5px; color:var(--text-2); }
-/* optional gif/video thumbnail at the top of a system card */
-.sys-media{
-  aspect-ratio:16/9; border-radius:10px; margin-bottom:14px; overflow:hidden;
-  background:var(--surface-2); border:1px dashed var(--line);
-  display:flex; align-items:center; justify-content:center; color:var(--muted-2);
-}
-.sys-media img, .sys-media video{ width:100%; height:100%; object-fit:cover; display:block; }
-.sys-media .mono{ font-size:12px; }
-/* optional longer explanatory text under the summary */
-.sys-more{
-  margin-top:12px; padding-top:12px; border-top:1px solid var(--line);
-  font-size:14px; color:var(--muted); font-style:italic;
-}
-.sys-more[hidden]{ display:none; }
-/* "see more" toggle (injected by JS) */
-.sys-toggle{
-  margin-top:12px; background:none; border:0; padding:0; cursor:pointer;
-  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent);
-  display:inline-flex; align-items:center; gap:6px;
-}
-.sys-toggle:hover{ text-decoration:underline; }
-.sys-toggle::after{ content:"\25BE"; font-size:10px; transition:transform .2s ease; }
-.sys-toggle[aria-expanded="true"]::after{ transform:rotate(180deg); }
-.sys-toggle .less-label{ display:none; }
-.sys-toggle[aria-expanded="true"] .more-label{ display:none; }
-.sys-toggle[aria-expanded="true"] .less-label{ display:inline; }
 
 /* ---- Maseylia: level-design progression ---- */
 .segments{ display:flex; flex-direction:column; gap:16px; margin-top:24px; }
@@ -122,7 +96,7 @@
   display:flex; align-items:center; justify-content:center; color:var(--muted-2);
 }
 .seg-shots .shot img{ width:100%; height:100%; object-fit:cover; display:block; }
-.sys-media .fit, .seg-shots .shot img.fit{ object-fit:contain; }
+.seg-shots .shot img.fit{ object-fit:contain; }
 .seg-shots .shot .mono{ font-size:11px; }
 .seg-shots figure{ margin:0; }
 .seg-shots figcaption{ margin-top:6px; font-size:12px; color:var(--muted-2); text-align:center; }
@@ -226,56 +200,409 @@
 
       <p data-fr="En tant que <strong>Programmeur Gameplay</strong>, j'ai développé sur Unity ces <strong>nouveaux systèmes</strong> — orbes, plateformes, pièges et outils — ajoutés par-dessus les mécaniques existantes pour donner vie à la progression du DLC.">As <strong>Gameplay Programmer</strong>, I developed in Unity these <strong>new systems</strong> — orbs, platforms, traps and tools — added on top of the existing mechanics to bring the DLC's progression to life.</p>
 
-      <div class="systems">
+      <!-- media on one side, text + code on the other (same layout as the Deep Dive Repair tasks) -->
+      <div class="sys-tasks">
 
-        <!-- ── With gif/video (shown first) ── -->
+        <!-- ── SWING ORB ── -->
+        <div class="task">
+          <div class="task-media media-slot">
+            <video src="assets/Maseylia/swing-orb.mp4" aria-label="Orbe de balancier / Swing orb" muted loop playsinline autoplay preload="metadata"></video>
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Orbe · Balancier">Orb · Swing</p>
+            <h3 data-fr="Orbe de balancier">Swing Orb</h3>
+            <p data-fr="Ancre de balancier : le joueur s'accroche et prend de l'élan pour être projeté.">A swing anchor: the player latches on, builds momentum and gets launched.</p>
+            <p data-fr="Placée en hauteur, l'orbe sert de point d'accroche : une fois le joueur attaché, il oscille autour d'elle et c'est le moment où il se lâche qui décide de la direction et de la force de la projection. Elle permet de franchir des vides trop larges pour un saut, et le timing du lâcher devient une compétence à part entière, à enchaîner avec les autres capacités pour garder son élan.">Placed up high, the orb acts as an anchor point: once attached, the player swings around it, and the moment they let go decides the direction and strength of the launch. It lets the player clear gaps too wide for a jump, and the release timing becomes a skill in its own right, to be chained with the other abilities to keep momentum going.</p>
+            <details class="code-block">
+              <summary><span data-fr="Voir le code · GrappleOrb.cs + simulation de la corde">See the code · GrappleOrb.cs + rope simulation</span><span class="file">C#</span></summary>
+              <div class="code-meta">
+                <span data-fr="Le balancier tourne dans la boucle de vélocité du <strong>Kinematic Character Controller</strong> : gravité + élan du joueur, puis la vitesse est contrainte pour que la frame suivante reste sur la sphère de la corde.">The swing runs inside the <strong>Kinematic Character Controller</strong>'s velocity loop: gravity + player input, then the velocity is constrained so the next frame stays on the rope's sphere.</span>
+              </div>
+<pre><code class="language-csharp">// GrappleOrb.cs — the orb is hit by the grapple shot and hands over to the controller
+private void OnTriggerEnter(Collider collider)
+{
+    if (isOnCooldown || isOnFight || !player.canGrapple) return;
+    if (!collider.CompareTag("playerMissile")) return;
 
-        <div class="system">
-          <div class="sys-media"><video src="assets/Maseylia/swing-orb.mp4" aria-label="Orbe de balancier / Swing orb" muted loop playsinline autoplay preload="metadata"></video></div>
-          <span class="sys-tag">Orb</span>
-          <h4 data-fr="Orbe de balancier">Swing Orb</h4>
-          <p data-fr="Ancre de balancier : le joueur s'accroche et prend de l'élan pour être projeté.">A swing anchor: the player latches on, builds momentum and gets launched.</p>
-          <p class="sys-more" data-fr="Placée en hauteur, l'orbe sert de point d'accroche : une fois le joueur attaché, il oscille autour d'elle et c'est le moment où il se lâche qui décide de la direction et de la force de la projection. Elle permet de franchir des vides trop larges pour un saut, et le timing du lâcher devient une compétence à part entière, à enchaîner avec les autres capacités pour garder son élan.">Placed up high, the orb acts as an anchor point: once attached, the player swings around it, and the moment they let go decides the direction and strength of the launch. It lets the player clear gaps too wide for a jump, and the release timing becomes a skill in its own right, to be chained with the other abilities to keep momentum going.</p>
+    // The controller picks pull or swing from the orb's type
+    if (!player.HandleOrbHit(this)) return;
+    player.JumpCounter = 0;   // hitting an orb refills jump, dash and bash
+    player.DashCounter = 0;
+    player.BashCounter = 0;
+
+    // A swing orb only goes on cooldown once the player lets go (OnSwingReleased)
+    if (orbType == OrbType.Grapple)
+        StartCooldownOnce(3f);
+}
+
+// ExampleCharacterController.cs — rope simulation, run in the KCC velocity update
+private bool UpdateSwingVelocity(ref Vector3 currentVelocity, float deltaTime)
+{
+    // … guard clauses (orb disabled, swimming, dashing, landed) → StopSwing()
+
+    Vector3 anchor = _swingOrb.transform.position;   // follows the orb on moving platforms
+    Vector3 pivot = GetSwingPivot();
+    Vector3 toPlayer = pivot - anchor;
+    Vector3 ropeDir = toPlayer.sqrMagnitude &gt; 0.0001f ? toPlayer.normalized : -Motor.CharacterUp;
+
+    // Jump = leave the swing and keep the momentum
+    if (_jumpRequested)
+    {
+        _jumpRequested = false;
+        ReleaseSwingWithJump(ref currentVelocity);
+        return true;
+    }
+
+    // Reel the rope in progressively toward its target length
+    _swingRopeLength = Mathf.MoveTowards(_swingRopeLength, _swingTargetRopeLength, _swingReelSpeed * deltaTime);
+
+    // Forces: gravity + stick input tangent to the rope (to "pump" the swing)
+    currentVelocity += Gravity * deltaTime;
+    if (_moveInputVector.sqrMagnitude &gt; 0.01f)
+    {
+        Vector3 tangentInput = Vector3.ProjectOnPlane(_moveInputVector, ropeDir);
+        currentVelocity += tangentInput * _swingInputAcceleration * deltaTime;
+    }
+    currentVelocity *= 1f / (1f + _swingDrag * deltaTime);
+
+    // Rope constraint: if next frame overshoots the rope length, pull it back onto the sphere
+    Vector3 nextOffset = (pivot + currentVelocity * deltaTime) - anchor;
+    if (nextOffset.magnitude &gt; _swingRopeLength)
+    {
+        Vector3 constrainedNext = anchor + nextOffset.normalized * _swingRopeLength;
+        currentVelocity = (constrainedNext - pivot) / deltaTime;
+    }
+
+    currentVelocity = Vector3.ClampMagnitude(currentVelocity, _swingMaxSpeed);
+    return true;
+}
+
+// Release: keep (and boost) the swing momentum, while guaranteeing an upward impulse
+private void ReleaseSwingWithJump(ref Vector3 currentVelocity)
+{
+    StopSwing();
+
+    Vector3 up = Motor.CharacterUp;
+    float upVel = Vector3.Dot(currentVelocity, up);
+    currentVelocity *= _swingReleaseVelocityMultiplier;
+    // never cancels an upward speed that is already stronger
+    currentVelocity += up * (Mathf.Max(upVel * _swingReleaseVelocityMultiplier, _swingReleaseJumpSpeed)
+                             - upVel * _swingReleaseVelocityMultiplier);
+
+    Motor.ForceUnground();
+    JumpCounter = 1;   // the release counts as a jump
+}</code></pre>
+            </details>
+          </div>
         </div>
 
-        <div class="system">
-          <div class="sys-media"><video src="assets/Maseylia/flip-platform.mp4" aria-label="Plateformes rotatives / Flip platforms" muted loop playsinline autoplay preload="metadata"></video></div>
-          <span class="sys-tag" data-fr="Plateforme">Platform</span>
-          <h4 data-fr="Plateforme qui se retourne">Flip platform</h4>
-          <p data-fr="Bascule au saut du joueur, forçant à anticiper l'appui et la retombée.">Flips when the player jumps, forcing you to anticipate the input and the landing.</p>
-          <p class="sys-more" data-fr="Objet de plateforming qui réagit au saut du joueur : en basculant, il l'oblige à garder ses sauts restants en réserve pour corriger sa trajectoire. Un même appui demande donc d'anticiper la retombée, ce qui ouvre de nouvelles possibilités et ajoute de la profondeur aux phases de saut. Note : l'animation et le visuel définitifs de la plateforme ne sont pas encore implémentés.">A platforming object that reacts to the player's jump: by flipping, it forces them to keep their remaining jumps in reserve to correct their trajectory. A single input now requires anticipating the landing, opening up new possibilities and adding depth to the jumping sequences. Note: the final animation and visuals for the platform are not implemented yet.</p>
+        <!-- ── FLIP PLATFORM ── -->
+        <div class="task">
+          <div class="task-media media-slot">
+            <video src="assets/Maseylia/flip-platform.mp4" aria-label="Plateformes rotatives / Flip platforms" muted loop playsinline autoplay preload="metadata"></video>
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Plateforme · Saut">Platform · Jump</p>
+            <h3 data-fr="Plateforme qui se retourne">Flip platform</h3>
+            <p data-fr="Bascule au saut du joueur, forçant à anticiper l'appui et la retombée.">Flips when the player jumps, forcing you to anticipate the input and the landing.</p>
+            <p data-fr="Objet de plateforming qui réagit au saut du joueur : en basculant, il l'oblige à garder ses sauts restants en réserve pour corriger sa trajectoire. Un même appui demande donc d'anticiper la retombée, ce qui ouvre de nouvelles possibilités et ajoute de la profondeur aux phases de saut. Note : l'animation et le visuel définitifs de la plateforme ne sont pas encore implémentés.">A platforming object that reacts to the player's jump: by flipping, it forces them to keep their remaining jumps in reserve to correct their trajectory. A single input now requires anticipating the landing, opening up new possibilities and adding depth to the jumping sequences. Note: the final animation and visuals for the platform are not implemented yet.</p>
+            <details class="code-block">
+              <summary><span data-fr="Voir le code · FlipPlateform.cs">See the code · FlipPlateform.cs</span><span class="file">C#</span></summary>
+              <div class="code-meta">
+                <span data-fr="Chaque plateforme appartient au groupe A ou B ; un <strong>état statique partagé</strong> garde toutes les plateformes synchronisées, et l'échange d'état se fait à mi-rotation.">Each platform belongs to group A or B; a <strong>shared static state</strong> keeps every platform in sync, and the state swaps halfway through the rotation.</span>
+              </div>
+<pre><code class="language-csharp">// FlipPlateform.cs — only one group (A or B) is solid at any time
+private static Group _solidGroup;          // shared by every platform so they stay in sync
+private static int _lastFlipFrame = -1;    // stops several instances flipping on the same frame
+private static event System.Action OnFlip;
+
+// Fired on every player jump (static event broadcast by the StateManager)
+private void OnJumpStateChanged(bool _)
+{
+    // Every platform receives it on the same frame: only the first one flips the shared state
+    if (Time.frameCount != _lastFlipFrame)
+    {
+        _lastFlipFrame = Time.frameCount;
+        _solidGroup = (_solidGroup == Group.A) ? Group.B : Group.A;
+        OnFlip?.Invoke();
+    }
+}
+
+private IEnumerator FlipRoutine()
+{
+    Quaternion startRot = transform.rotation;
+    // Alternate +180° / -180° so the platform rocks back and forth instead of piling up rotation
+    float flipAngle = (_solidGroup == Group.B) ? -180f : 180f;
+    Quaternion endRot = startRot * Quaternion.Euler(flipAngle, 0f, 0f);
+
+    float elapsed = 0f;
+    bool swapped = false;
+    while (elapsed &lt; flipDuration)
+    {
+        elapsed += Time.deltaTime;
+        float p = Mathf.Clamp01(elapsed / flipDuration);
+        transform.rotation = Quaternion.Slerp(startRot, endRot, p);
+
+        // Halfway (platform on its edge): swap solid / ghost in one go
+        if (!swapped &amp;&amp; p &gt;= 0.5f)
+        {
+            swapped = true;
+            ApplyState(IsSolid);
+        }
+        yield return null;
+    }
+
+    transform.rotation = endRot;
+    ApplyState(IsSolid);   // guarantees the exact final state
+}</code></pre>
+            </details>
+          </div>
         </div>
 
-        <div class="system">
-          <div class="sys-media"><video src="assets/Maseylia/paraglider.mp4" aria-label="Paravoile / Paraglider" muted loop playsinline autoplay preload="metadata"></video></div>
-          <span class="sys-tag" data-fr="Capacité">Ability</span>
-          <h4 data-fr="Paravoile">Paraglider</h4>
-          <p data-fr="Plané contrôlé qui allonge et infléchit la trajectoire de chute.">A controlled glide that stretches and steers the fall trajectory.</p>
-          <p class="sys-more" data-fr="Capacité de plané qui, une fois en l'air, réduit la vitesse de chute et laisse le joueur infléchir sa trajectoire horizontale pour franchir de plus grandes distances et ajuster son point d'atterrissage. Elle transforme un simple saut en véritable phase de traversée aérienne, à combiner avec les autres capacités.">A gliding ability that, once airborne, reduces fall speed and lets the player steer their horizontal trajectory to clear larger gaps and fine-tune their landing point. It turns a simple jump into a genuine aerial traversal phase, meant to be combined with the other abilities.</p>
+        <!-- ── PARAGLIDER ── -->
+        <div class="task">
+          <div class="task-media media-slot">
+            <video src="assets/Maseylia/paraglider.mp4" aria-label="Paravoile / Paraglider" muted loop playsinline autoplay preload="metadata"></video>
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Capacité · Plané">Ability · Glide</p>
+            <h3 data-fr="Paravoile">Paraglider</h3>
+            <p data-fr="Plané contrôlé qui allonge et infléchit la trajectoire de chute.">A controlled glide that stretches and steers the fall trajectory.</p>
+            <p data-fr="Capacité de plané qui, une fois en l'air, réduit la vitesse de chute et laisse le joueur infléchir sa trajectoire horizontale pour franchir de plus grandes distances et ajuster son point d'atterrissage. Elle transforme un simple saut en véritable phase de traversée aérienne, à combiner avec les autres capacités.">A gliding ability that, once airborne, reduces fall speed and lets the player steer their horizontal trajectory to clear larger gaps and fine-tune their landing point. It turns a simple jump into a genuine aerial traversal phase, meant to be combined with the other abilities.</p>
+            <details class="code-block">
+              <summary><span data-fr="Voir le code · GliderController.cs">See the code · GliderController.cs</span><span class="file">C#</span></summary>
+              <div class="code-meta">
+                <span data-fr="Le planeur ne touche à la vélocité que pendant <strong>UpdateVelocity</strong> : seule la vitesse de <strong>descente</strong> est plafonnée, le contrôle aérien reste intact.">The glider only touches the velocity during <strong>UpdateVelocity</strong>: only the <strong>falling</strong> speed is capped, air control stays untouched.</span>
+              </div>
+<pre><code class="language-csharp">// GliderController.cs — glide ability plugged into the Kinematic Character Controller
+public void StartGlide()
+{
+    if (IsGliding || controller == null) return;
+
+    // Only glide when actually airborne
+    if (controller.Motor.GroundingStatus.IsStableOnGround) return;
+
+    IsGliding = true;
+    SetAnimatorGliding(true);
+    if (gliderVisual != null) gliderVisual.SetActive(true);
+}
+
+// Called by the character controller in UpdateVelocity, after gravity, while airborne.
+// Only the DESCENT is capped: upward momentum and horizontal control stay untouched.
+public void PostAirVelocity(ref Vector3 currentVelocity, float deltaTime)
+{
+    if (!IsGliding || controller == null) return;
+
+    Vector3 up = controller.Motor.CharacterUp;
+    float vertical = Vector3.Dot(currentVelocity, up);
+
+    // Falling faster than the cap: ease toward it (frame-rate independent)
+    if (vertical &lt; -glideMaxFallSpeed)
+    {
+        float target = -glideMaxFallSpeed;
+        float smoothed = Mathf.Lerp(vertical, target, 1f - Mathf.Exp(-glideFallSharpness * deltaTime));
+        currentVelocity += up * (smoothed - vertical);   // replace only the vertical component
+    }
+}</code></pre>
+            </details>
+          </div>
         </div>
 
-        <div class="system">
-          <div class="sys-media"><video src="assets/Maseylia/rails.mp4" aria-label="Rails" muted loop playsinline autoplay preload="metadata"></video></div>
-          <span class="sys-tag" data-fr="Traversée">Traversal</span>
-          <h4>Rails</h4>
-          <p data-fr="Système de rails guidant le joueur le long d'un tracé défini.">A rail system that guides the player along a defined path.</p>
-          <p class="sys-more" data-fr="Une fois accroché, le joueur suit automatiquement un tracé défini à l'avance par le level designer, à vitesse contrôlée, et peut s'en détacher à tout moment pour enchaîner sur un saut ou une autre capacité. Le rail sert autant à franchir des zones infranchissables à pied qu'à cadrer des moments plus spectaculaires ou à rythmer la traversée d'un segment.">Once latched on, the player automatically follows a path laid out in advance by the level designer, at a controlled speed, and can detach at any time to chain into a jump or another ability. The rail is used both to cross areas that can't be traversed on foot and to frame more spectacular moments or set the pacing of a segment.</p>
+        <!-- ── RAILS ── -->
+        <div class="task">
+          <div class="task-media media-slot">
+            <video src="assets/Maseylia/rails.mp4" aria-label="Rails" muted loop playsinline autoplay preload="metadata"></video>
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Traversée · Splines">Traversal · Splines</p>
+            <h3>Rails</h3>
+            <p data-fr="Système de rails guidant le joueur le long d'un tracé défini.">A rail system that guides the player along a defined path.</p>
+            <p data-fr="Une fois accroché, le joueur suit automatiquement un tracé défini à l'avance par le level designer, à vitesse contrôlée, et peut s'en détacher à tout moment pour enchaîner sur un saut ou une autre capacité. Le rail sert autant à franchir des zones infranchissables à pied qu'à cadrer des moments plus spectaculaires ou à rythmer la traversée d'un segment.">Once latched on, the player automatically follows a path laid out in advance by the level designer, at a controlled speed, and can detach at any time to chain into a jump or another ability. The rail is used both to cross areas that can't be traversed on foot and to frame more spectacular moments or set the pacing of a segment.</p>
+            <details class="code-block">
+              <summary><span data-fr="Voir le code · RailsRoller.cs">See the code · RailsRoller.cs</span><span class="file">C#</span></summary>
+              <div class="code-meta">
+                <span data-fr="Le rail est une <strong>Spline Unity</strong> ; à l'accroche, il <strong>remplace le contrôleur du personnage</strong> dans le moteur KCC, puis le lui rend au saut.">The rail is a <strong>Unity Spline</strong>; on attach it <strong>replaces the character controller</strong> in the KCC motor, then hands it back on jump.</span>
+              </div>
+<pre><code class="language-csharp">// RailsRoller.cs — auto-attach to the nearest spline while falling
+void Update()
+{
+    if (!_kinematicCharacterMotor.GroundingStatus.IsStableOnGround
+        &amp;&amp; _kinematicCharacterMotor.Velocity.y &lt; 0.1f
+        &amp;&amp; !_isGrinding
+        &amp;&amp; Time.time - _lastDetachTime &gt; attachCooldown)
+    {
+        if (TryFindNearestSpline(out SplineContainer nearestSpline, out float nearestT))
+            Attach(nearestSpline, nearestT);
+    }
+}
+
+public bool TryFindNearestSpline(out SplineContainer bestSpline, out float bestT)
+{
+    bestSpline = null;
+    bestT = 0f;
+    float bestDistance = float.MaxValue;
+
+    foreach (var spline in FindObjectsByType&lt;SplineContainer&gt;(FindObjectsSortMode.None))
+    {
+        Vector3 splineLocalPos = spline.transform.InverseTransformPoint(transform.position);
+        SplineUtility.GetNearestPoint(spline.Spline, splineLocalPos, out float3 nearestPoint, out float nearestT);
+        float distance = Vector3.Distance(transform.position, spline.transform.TransformPoint(nearestPoint));
+
+        if (distance &lt; bestDistance)
+        {
+            bestDistance = distance;
+            bestSpline = spline;
+            bestT = nearestT;
+        }
+    }
+
+    return bestDistance &lt; 1f;   // only attach under the grab threshold
+}
+
+// Take over the KCC motor: the rail becomes the character's controller
+public void Attach(SplineContainer spline, float startT)
+{
+    splineContainer = spline;
+    t = startT;
+    splineLength = splineContainer.CalculateLength();   // computed once
+    _kinematicCharacterMotor.CharacterController = this;
+    _kinematicCharacterMotor.SetPositionAndRotation(splineContainer.EvaluatePosition(t),
+        Quaternion.LookRotation(splineContainer.EvaluateTangent(t)));
+    _isGrinding = true;
+}
+
+// Advance along the spline at a real speed in m/s
+public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
+{
+    t += deltaTime * speed / splineLength;   // normalised: 0 = start, 1 = end
+    currentVelocity = splineContainer.EvaluateTangent(t);
+    currentVelocity = currentVelocity.normalized * speed;
+    if (t &gt; 1f) t -= 1f;   // loops on the rail
+}
+
+// Jump = leave the rail with an up + forward impulse, then hand control back
+public void Detach(SplineContainer spline)
+{
+    _isGrinding = false;
+    _lastDetachTime = Time.time;
+
+    Vector3 DetachImpulseUp = Vector3.up * jumpForce;
+    Vector3 DetachImpulseForward = splineContainer.EvaluateTangent(t) / 2;
+    _kinematicCharacterMotor.ForceUnground();
+    _kinematicCharacterMotor.BaseVelocity = DetachImpulseUp + DetachImpulseForward;
+    _kinematicCharacterMotor.CharacterController = _previousController;
+}</code></pre>
+            </details>
+          </div>
         </div>
 
-        <div class="system">
-          <div class="sys-media"><video src="assets/Maseylia/slow-mo-orb.mp4" aria-label="Slow-mo orb" muted loop playsinline autoplay preload="metadata"></video></div>
-          <span class="sys-tag">Orb</span>
-          <h4 data-fr="Orbe de ralenti">Slow-Mo Orb</h4>
-          <p data-fr="Ralentit le temps à l'activation pour négocier les passages les plus nerveux.">Slows down time on activation to thread the most nerve-racking passages.</p>
-          <p class="sys-more" data-fr="À l'activation, l'orbe réduit l'écoulement du temps du jeu sur une courte durée, tandis que les contrôles du joueur restent réactifs : il gagne ainsi une fenêtre pour lire et ajuster ses déplacements dans les passages les plus exigeants. La ressource est limitée, ce qui pousse à choisir le bon moment plutôt qu'à en abuser.">On activation, the orb slows down the game's time flow for a short duration while the player's controls stay responsive, giving them a window to read and adjust their movement through the most demanding passages. The resource is limited, which encourages picking the right moment rather than overusing it.</p>
+        <!-- ── SLOW-MO ORB ── -->
+        <div class="task">
+          <div class="task-media media-slot">
+            <video src="assets/Maseylia/slow-mo-orb.mp4" aria-label="Slow-mo orb" muted loop playsinline autoplay preload="metadata"></video>
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Orbe · Temps">Orb · Time</p>
+            <h3 data-fr="Orbe de ralenti">Slow-Mo Orb</h3>
+            <p data-fr="Une zone de ralenti autour de l'orbe : tant que le joueur est dedans, le temps s'écoule au ralenti pour négocier les passages les plus nerveux.">A slow-motion zone around the orb: while the player is inside it, time slows down to thread the most nerve-racking passages.</p>
+            <p data-fr="Quand le joueur entre dans la zone de l'orbe, le temps du jeu ralentit <strong>progressivement</strong> jusqu'à un quart de sa vitesse, au lieu de se figer d'un coup ; le pas de la physique suit le même rythme pour que les déplacements restent fluides. La rotation de la caméra est accélérée d'autant, si bien que la visée reste aussi réactive qu'à vitesse normale. Dès que le joueur sort de la zone, le temps remonte en douceur à sa vitesse normale. Le level designer place ces zones là où il veut offrir un instant pour lire et ajuster sa trajectoire, par exemple au milieu d'un enchaînement d'orbes.">When the player enters the orb's zone, game time slows down <strong>gradually</strong> to a quarter of its speed instead of freezing all at once; the physics step follows the same pace so movement stays smooth. The camera rotation is sped up by the same factor, so aiming stays as responsive as at normal speed. As soon as the player leaves the zone, time eases back to normal speed. The level designer places these zones wherever they want to give the player a moment to read and adjust their trajectory, for instance in the middle of a chain of orbs.</p>
+            <details class="code-block">
+              <summary><span data-fr="Voir le code · SlowMotionOrb.cs">See the code · SlowMotionOrb.cs</span><span class="file">C#</span></summary>
+              <div class="code-meta">
+                <span data-fr="Le <strong>timeScale</strong> descend progressivement au lieu de couper net, le pas de physique suit, et la caméra est accélérée d'autant pour rester réactive.">The <strong>timeScale</strong> eases down instead of snapping, the physics step follows it, and the camera is sped up by the same factor to stay responsive.</span>
+              </div>
+<pre><code class="language-csharp">// SlowMotionOrb.cs — time slows down while the player is inside the orb's trigger
+private void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Player")) Slow_MotionOn();
+}
+private void OnTriggerExit(Collider other)
+{
+    if (other.CompareTag("Player")) Slow_MotionOFF();
+}
+
+// Ease Time.timeScale down, and scale fixedDeltaTime with it so physics stays smooth
+IEnumerator SlowTime()
+{
+    while (Time.timeScale &gt; slowMoTimeScale)
+    {
+        Time.timeScale -= Time.timeScale * slowMoSpeed;
+        Time.fixedDeltaTime = currentFixedTimeScale * Time.timeScale;
+        yield return null;
+    }
+
+    Time.timeScale = slowMoTimeScale;
+    Time.fixedDeltaTime = currentFixedTimeScale * Time.timeScale;
+}
+
+// Camera rotation boosted by 1 / timeScale so aiming stays responsive in slow motion
+private void BoostCamera()
+{
+    if (characterCamera == null || slowMoTimeScale &lt;= 0f) return;
+
+    float factor = 1f / slowMoTimeScale;
+    characterCamera.RotationSpeed = origRotationSpeed * factor * cameraSpeedMultiplier;
+}</code></pre>
+            </details>
+          </div>
         </div>
 
-        <div class="system">
-          <div class="sys-media"><video src="assets/Maseylia/teleport-savepoint.mp4" aria-label="Téléportation au point de sauvegarde / Teleport to save point" muted loop playsinline autoplay preload="metadata"></video></div>
-          <span class="sys-tag" data-fr="Outil">Tool</span>
-          <h4 data-fr="Téléportation au point de sauvegarde">Teleport to save point</h4>
-          <p data-fr="Ouvre une fenêtre pour choisir un point de sauvegarde et s'y téléporter instantanément.">Opens a window to pick a save point and teleport straight to it.</p>
-          <p class="sys-more" data-fr="Plutôt qu'un simple respawn au dernier checkpoint, l'outil ouvre une interface listant les points de sauvegarde déjà débloqués ; le joueur en sélectionne un et s'y téléporte instantanément. Il peut ainsi revenir librement sur une zone, relancer un segment précis ou éviter de longs allers-retours. C'est aussi un fort accélérateur d'itération en playtest, pour rejoindre directement la portion de niveau à tester.">Rather than a simple respawn at the last checkpoint, the tool opens an interface listing the save points already unlocked; the player selects one and teleports to it instantly. They can freely return to an area, restart a specific segment or avoid long back-and-forth trips. It is also a strong iteration booster during playtests, letting you jump straight to the slice of level you want to test.</p>
+        <!-- ── TELEPORT TO SAVE POINT ── -->
+        <div class="task">
+          <div class="task-media media-slot">
+            <video src="assets/Maseylia/teleport-savepoint.mp4" aria-label="Téléportation au point de sauvegarde / Teleport to save point" muted loop playsinline autoplay preload="metadata"></video>
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Outil · Éditeur">Tool · Editor</p>
+            <h3 data-fr="Téléportation au point de sauvegarde">Teleport to save point</h3>
+            <p data-fr="Un outil d'éditeur Unity qui liste les points de sauvegarde du niveau et y téléporte le joueur en un clic.">A Unity editor tool that lists the level's save points and teleports the player to any of them in one click.</p>
+            <p data-fr="Un outil de développement, pas une fonctionnalité pour le joueur : une fenêtre de l'éditeur (Tools ▸ Teleport Player To Save) récupère tous les points de sauvegarde des scènes chargées et les range en <strong>dossiers par zone</strong>, avec un filtre. Pour chacun, on peut modifier son index et son nom, le retrouver dans la hiérarchie, ajouter une note qui survit au Play Mode et au redémarrage de l'éditeur, et surtout <strong>téléporter le joueur</strong> dessus, en jeu comme en édition. Sur un DLC découpé en six segments, cela évite de rejouer tout le niveau pour tester une portion précise : un vrai accélérateur d'itération en level design et en playtest.">A development tool, not a player-facing feature: an editor window (Tools ▸ Teleport Player To Save) gathers every save point in the loaded scenes and sorts them into <strong>folders by zone</strong>, with a filter. For each one, you can edit its index and name, find it in the hierarchy, add a note that survives Play Mode and editor restarts, and above all <strong>teleport the player</strong> to it, in play mode or in edit mode. On a DLC split into six segments, it avoids replaying the whole level to test one specific slice: a real iteration booster for level design and playtests.</p>
+            <details class="code-block">
+              <summary><span data-fr="Voir le code · TeleportPlayerToSaveTools.cs">See the code · TeleportPlayerToSaveTools.cs</span><span class="file">C#</span></summary>
+              <div class="code-meta">
+                <span data-fr="Une <strong>EditorWindow</strong> qui regroupe les points de sauvegarde par zone et téléporte le joueur, en Play Mode comme en édition.">An <strong>EditorWindow</strong> that groups the save points by zone and teleports the player, both in Play Mode and in edit mode.</span>
+              </div>
+<pre><code class="language-csharp">// TeleportPlayerToSaveTools.cs — editor window (Tools ▸ Teleport Player To Save)
+private void RefreshSaveSpots()
+{
+    saveSpots = new List&lt;savespot&gt;(FindObjectsByType&lt;savespot&gt;(FindObjectsSortMode.None));
+
+    // Group the save points into zones by thousand (5000, 6000…) for the folders and the filter
+    zoneBands = saveSpots
+        .Where(s =&gt; s != null)
+        .Select(s =&gt; (s.LocationIndex / 1000) * 1000)
+        .Distinct()
+        .OrderBy(band =&gt; band)
+        .ToList();
+}
+
+// Teleport the player (the object carrying the KinematicCharacterMotor)
+private void TeleportPlayer(Vector3 target)
+{
+    KinematicCharacterMotor[] motors = FindObjectsByType&lt;KinematicCharacterMotor&gt;(FindObjectsSortMode.None);
+    if (motors.Length == 0) return;
+    KinematicCharacterMotor motor = motors[0];
+
+    if (Application.isPlaying)
+    {
+        // Play mode: go through the KCC API so the motor doesn't overwrite the position next frame
+        motor.SetPosition(target);
+    }
+    else
+    {
+        // Edit mode: move the transform directly, with Ctrl+Z support
+        Undo.RecordObject(motor.transform, "Teleport Player To Save");
+        motor.transform.position = target;
+    }
+}
+
+// Per-save-point note kept in EditorPrefs: survives Play Mode and editor restarts
+private static string NoteKey(savespot spot)
+{
+    return "SavespotNote_" + GlobalObjectId.GetGlobalObjectIdSlow(spot).ToString();
+}</code></pre>
+            </details>
+          </div>
         </div>
 
       </div>
@@ -564,25 +891,9 @@
 </script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/lightbox.js"></script>
-<script>
-  /* Collapse each technical blurb behind a "see more" toggle.
-     Runs before DOMContentLoaded so i18n translates the injected labels. */
-  document.querySelectorAll(".sys-more").forEach(function (more) {
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "sys-toggle";
-    btn.setAttribute("aria-expanded", "false");
-    btn.innerHTML =
-      '<span class="more-label" data-fr="Voir les explications techniques">See the technical explanation</span>' +
-      '<span class="less-label" data-fr="Masquer les explications techniques">Hide the technical explanation</span>';
-    more.hidden = true;
-    more.parentNode.insertBefore(btn, more);
-    btn.addEventListener("click", function () {
-      var collapsed = more.hidden;
-      more.hidden = !collapsed;
-      btn.setAttribute("aria-expanded", collapsed ? "true" : "false");
-    });
-  });
-</script>
+<!-- syntax highlighting for the code snippets -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+<script src="assets/js/code-viewer.js"></script>
 </body>
 </html>
