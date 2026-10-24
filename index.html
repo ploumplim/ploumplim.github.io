@@ -420,9 +420,9 @@ body{ font-size:19.5px; }
           <span data-fr="Voir mes projets">View work</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <!-- Two CVs next to index.html: CV_Baptiste_Moreau.pdf (gameplay programming, French only) and
-             the game design + programming one, in English (Resume_…) or French (CV_…) via data-fr-href -->
-        <a href="CV_Baptiste_Moreau.pdf" download class="btn btn-ghost">
+        <!-- Four CVs next to index.html: gameplay programming and game design + programming,
+             each in English (Resume_…, the href) and French (CV_…, data-fr-href) -->
+        <a href="Resume_Baptiste_Moreau.pdf" data-fr-href="CV_Baptiste_Moreau.pdf" download class="btn btn-ghost">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
           <span data-fr="CV Gameplay Programmer">Resume Gameplay Programmer</span>
         </a>
@@ -1022,6 +1022,6 @@ sections.forEach(s => navObs.observe(s));
   else requestAnimationFrame(frame);
 })();
 </script>
-<script src="assets/js/i18n.js"></script>
+<script src="assets/js/i18n.js?v=2"></script>
 </body>
 </html>
