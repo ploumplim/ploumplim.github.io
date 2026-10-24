@@ -8,6 +8,8 @@
    - Inside data-fr you can use inline HTML (<strong>, <em>, <sup>…).
      If you need a tag WITH an attribute, escape the quotes:
        data-fr="… <span class=&quot;accent&quot;>juste</span> …"
+   - A link carrying data-fr-href="…" points to its original href in
+     English and to data-fr-href in French (e.g. a resume PDF per language).
    - The chosen language is stored in localStorage, so it sticks
      across pages and reloads.
    - The home page generates its project cards in JS; it can expose
@@ -24,6 +26,12 @@
       // capture the English original the first time we see this element
       if (el.dataset.en === undefined) el.dataset.en = el.innerHTML;
       el.innerHTML = lang === "fr" ? el.getAttribute("data-fr") : el.dataset.en;
+    });
+
+    // same idea for link targets: the original href is the English one
+    document.querySelectorAll("[data-fr-href]").forEach((el) => {
+      if (el.dataset.enHref === undefined) el.dataset.enHref = el.getAttribute("href");
+      el.setAttribute("href", lang === "fr" ? el.getAttribute("data-fr-href") : el.dataset.enHref);
     });
 
     // reflect state on the toggle
