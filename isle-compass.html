@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Isle Compass — Case Study · Baptiste Moreau</title>
+<meta name="description" content="Case study: Isle Compass — a real-time companion web app for Archipelago multiworld randomizers (Node.js, WebSocket). Design, back-end, front-end and security by Baptiste Moreau." />
+
+<!-- Favicon (inline accent square, no file needed) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234C82F0'/%3E%3C/svg%3E" />
+
+<!-- Social preview (Open Graph / Twitter) -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Isle Compass — Case Study · Baptiste Moreau" />
+<meta property="og:description" content="A real-time companion app for Archipelago multiworld randomizers: live logic, interactive maps, room progress — and never a spoiler." />
+<meta property="og:image" content="https://baptistemoreau.games/assets/og/isle-compass.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="627" />
+<meta property="og:url" content="https://baptistemoreau.games/isle-compass.html" />
+<meta name="twitter:image" content="https://baptistemoreau.games/assets/og/isle-compass.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/project.css" />
+
+<style>
+/* ---- Isle Compass: hero subtitle ---- */
+.subtitle{
+  font-family:'JetBrains Mono',monospace; font-size:15px; color:var(--muted);
+  letter-spacing:.02em; margin:-8px 0 14px;
+}
+/* highlighted roles in the role line */
+.role-line .hl{
+  color:var(--text); background:var(--accent-dim);
+  border:1px solid var(--accent); border-radius:6px; padding:0 8px;
+}
+/* screenshots of a UI: show them whole, on the app's own dark background */
+.media-slot.ui{ background:#000; }
+
+/* ---- key figures under the hero ---- */
+.figures{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:28px; }
+@media (max-width:760px){ .figures{ grid-template-columns:repeat(2,1fr); } }
+.figure{
+  background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+}
+.figure b{ display:block; font-family:var(--font-display); font-weight:700; font-size:28px; color:var(--text); letter-spacing:-.01em; }
+.figure span{ font-size:14px; color:var(--muted); }
+
+/* ---- design principles grid (same as the Maseylia systems grid) ---- */
+.systems{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:24px; }
+@media (max-width:760px){ .systems{ grid-template-columns:1fr; } }
+.system{
+  background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:18px 20px;
+  transition:border-color .2s var(--ease), transform .2s var(--ease);
+}
+.system:hover{ border-color:var(--accent); transform:translateY(-2px); }
+.system .sys-tag{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); }
+.system h4{ font-family:var(--font-display); font-weight:700; font-size:17px; margin:6px 0 6px; }
+.system p{ font-size:14.5px; color:var(--text-2); }
+
+/* ---- architecture diagram ---- */
+.arch{ display:flex; align-items:stretch; gap:10px; flex-wrap:wrap; margin-top:24px; }
+.arch .node{
+  flex:1 1 170px; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px;
+}
+.arch .node.core{ border-color:var(--accent); background:var(--accent-dim); }
+.arch .node b{ display:block; font-family:var(--font-display); font-size:16px; margin-bottom:4px; }
+.arch .node span{ font-size:13.5px; color:var(--text-2); }
+.arch .link{ align-self:center; font-family:'JetBrains Mono',monospace; color:var(--accent); font-size:18px; }
+@media (max-width:760px){ .arch .link{ transform:rotate(90deg); margin:0 auto; } }
+</style>
+
+</head>
+
+<body>
+
+<div class="grid-bg"></div>
+
+<div class="page">
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a href="index.html#top" class="brand"><span class="dot"></span>BAPTISTE&nbsp;MOREAU</a>
+      <a href="index.html#work" class="back" data-fr="Retour aux projets">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        Back to projects
+      </a>
+      <button class="lang-toggle" id="langToggle" role="switch" aria-label="Switch language / Changer de langue" aria-checked="false">
+        <span class="lang-thumb" aria-hidden="true"></span>
+        <span class="lang-opt active" data-lang="en">EN</span>
+        <span class="lang-opt" data-lang="fr">FR</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow" data-fr="node.js · application web temps réel · outil">node.js · real-time web app · tooling</p>
+      <h1>Isle <span class="accent">Compass</span></h1>
+      <p class="subtitle" data-fr="Le compagnon en direct des parties Archipelago multiworld — outil personnel, non affilié">A live companion for Archipelago multiworld randomizers — personal tool, unaffiliated</p>
+      <p class="role-line" data-fr="Développeur solo · <span class=&quot;hl&quot;>Programmeur Outils &amp; Systèmes</span> · UX/UI Designer"><span>Solo Developer</span> · <span class="hl">Tools &amp; Systems Programmer</span> · UX/UI Designer</p>
+
+      <div class="lead">
+        <p data-fr="<strong>Archipelago</strong> mélange plusieurs jeux en un seul « multiworld » : les objets de ton jeu sont cachés dans les jeux de tes amis, et inversement. On joue souvent <strong>plusieurs jeux à la fois</strong>, en attendant les objets des autres — et on finit vite par ne plus savoir quoi faire ni où aller.">In <strong>Archipelago</strong>, several games are shuffled into one “multiworld”: the items of your game are hidden in your friends' games, and the other way around. You often play <strong>several games at once</strong> while waiting for the others' items — and quickly lose track of what to do and where to go.</p>
+        <p data-fr="J'ai conçu et développé seul <strong>Isle Compass</strong>, une <strong>application web en temps réel</strong> qui se connecte à la partie en <strong>lecture seule</strong> et répond à ces questions pour tous mes jeux d'une même room : ce qui est <strong>faisable</strong>, ce qui me <strong>bloque</strong>, ce que les autres <strong>attendent de moi</strong> — sans jamais rien dévoiler de ce que contient un check.">I designed and built on my own <strong>Isle Compass</strong>, a <strong>real-time web app</strong> that connects to the game <strong>read-only</strong> and answers those questions for all my games in a room: what is <strong>doable</strong>, what is <strong>blocking</strong> me, what the others <strong>are waiting for</strong> — without ever revealing what a check holds.</p>
+      </div>
+
+      <div class="tags">
+        <span class="tag">Node.js</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">WebSocket</span>
+        <span class="tag" data-fr="Temps réel">Real-time</span>
+        <span class="tag" data-fr="Zéro dépendance">Zero dependencies</span>
+        <span class="tag" data-fr="Outils">Tooling</span>
+      </div>
+
+      <!-- MAIN MEDIA — the overview of a game -->
+      <div class="cover">
+        <img src="assets/IsleCompass/overview.webp" alt="Isle Compass — overview of a game: checks done, reachable now, items, play time, check map and where to go next" />
+      </div>
+
+      <div class="figures">
+        <div class="figure"><b>0</b><span data-fr="dépendance npm : Node.js seul">npm dependencies: Node.js only</span></div>
+        <div class="figure"><b>3</b><span data-fr="jeux suivis en même temps dans ma room">games tracked at once in my room</span></div>
+        <div class="figure"><b>12</b><span data-fr="modules côté page, après refactor">front-end modules, after refactoring</span></div>
+        <div class="figure"><b>EN · FR</b><span data-fr="interface bilingue, anglais par défaut">bilingual interface, English by default</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SECTION 01 · CONCEPT ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2 data-fr="Le problème">The problem</h2>
+      </div>
+
+      <p data-fr="Les outils existants couvrent chacun une partie du besoin : la page de suivi du site Archipelago liste les checks mais ne dit pas ce qui est faisable ; PopTracker dessine de belles cartes, mais pour <strong>un seul jeu</strong> et sans rien savoir de la room ; le Universal Tracker connaît la vraie logique du jeu, mais sous forme de liste brute. Quand on joue trois jeux dans la même partie, on jongle entre trois fenêtres et un salon Discord.">The existing tools each cover part of the need: the Archipelago website's tracker lists checks but doesn't say what is doable; PopTracker draws great maps, but for <strong>a single game</strong> and knows nothing about the room; the Universal Tracker knows the game's real logic, but as a raw list. When you play three games in the same multiworld, you juggle three windows and a Discord channel.</p>
+      <p data-fr="L'objectif : <strong>un seul écran</strong> pour toute la room, qui réunit la vraie logique, une carte en direct et ce que font les autres joueurs — et une règle absolue, <strong>aucun spoil</strong> : l'appli dit ce qu'il te manque, jamais où c'est.">The goal: <strong>one screen</strong> for the whole room, bringing together the real logic, a live map and what the other players are doing — with one absolute rule, <strong>no spoilers</strong>: the app tells you what you're missing, never where it is.</p>
+
+      <div class="arch" aria-label="Architecture">
+        <div class="node"><b data-fr="Room Archipelago">Archipelago room</b><span data-fr="Serveur de la partie (WebSocket)">The game server (WebSocket)</span></div>
+        <span class="link">⇄</span>
+        <div class="node core"><b data-fr="Serveur local (Node.js)">Local server (Node.js)</b><span data-fr="Connexions en lecture seule, logique, cartes, sécurité">Read-only connections, logic, maps, security</span></div>
+        <span class="link">⇄</span>
+        <div class="node"><b data-fr="Page web en direct">Live web page</b><span data-fr="PC, et téléphone sur le même Wi-Fi">PC, and phone on the same Wi-Fi</span></div>
+      </div>
+      <div class="arch">
+        <div class="node"><b>Universal Tracker</b><span data-fr="Piloté sans fenêtre : la vraie logique de chaque jeu">Driven headless: each game's real logic</span></div>
+        <div class="node"><b data-fr="Packs PopTracker">PopTracker packs</b><span data-fr="Cartes et positions des lieux">Maps and location positions</span></div>
+        <div class="node"><b data-fr="Page de suivi publique">Public tracker page</b><span data-fr="Progression de chaque joueur de la room">Every player's progress in the room</span></div>
+        <div class="node"><b>Discord</b><span data-fr="Webhook optionnel : items reçus, joueur bloqué">Optional webhook: items received, player stuck</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 02 · MY ROLE ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2 data-fr="Mon rôle">My role</h2>
+      </div>
+
+      <div class="task" style="grid-template-columns:1fr">
+        <div class="task-body">
+          <p class="task-label" data-fr="Développeur solo · Programmeur Outils &amp; Systèmes · UX/UI Designer">Solo Developer · Tools &amp; Systems Programmer · UX/UI Designer</p>
+          <h3 data-fr="De l'idée à l'outil utilisé en vraie partie">From the idea to a tool used in real sessions</h3>
+          <p data-fr="J'ai tout fait de bout en bout : la conception, le serveur, l'interface, la sécurité et les tests. L'appli tourne pendant nos vraies parties entre amis, et chaque fonctionnalité est née d'un besoin rencontré en jouant — puis a été retravaillée à partir des retours.">I did everything end to end: the design, the server, the interface, the security and the tests. The app runs during our real sessions with friends, and every feature came from a need met while playing — then was reworked from feedback.</p>
+          <ul>
+            <li data-fr="<strong>Back-end</strong> : protocole réseau Archipelago, pilotage du Universal Tracker, lecture des packs PopTracker, capture de fenêtres Windows"><strong>Back-end</strong>: Archipelago network protocol, Universal Tracker driving, PopTracker pack parsing, Windows window capture</li>
+            <li data-fr="<strong>Front-end &amp; UX</strong> : interface en direct sans framework, carte zoomable, console, options d'affichage, anglais et français"><strong>Front-end &amp; UX</strong>: live interface without a framework, zoomable map, console, display options, English and French</li>
+            <li data-fr="<strong>Sécurité &amp; qualité</strong> : audit, protection contre les autres sites, accès téléphone en lecture seule, tests automatiques"><strong>Security &amp; quality</strong>: audit, protection against other websites, read-only phone access, automated tests</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 03 · SYSTEMS ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2 data-fr="Programmation : les systèmes">Programming: the systems</h2>
+      </div>
+
+      <p data-fr="Un serveur <strong>Node.js sans aucune dépendance</strong> fait tout le travail lourd ; la page n'affiche que le résultat, mis à jour en direct.">A <strong>Node.js server with zero dependencies</strong> does all the heavy lifting; the page only displays the result, updated live.</p>
+
+      <div class="sys-tasks">
+
+        <!-- ── REAL LOGIC ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img class="fit" loading="lazy" src="assets/IsleCompass/unlock.webp" alt="What would unlock you: the items that open the most checks, and the hint advice" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Logique · Universal Tracker">Logic · Universal Tracker</p>
+            <h3 data-fr="La vraie logique de chaque jeu">Each game's real logic</h3>
+            <p data-fr="Plutôt que de réécrire la logique de chaque jeu, le serveur <strong>pilote le Universal Tracker sans fenêtre</strong> : il lui envoie des commandes et lit ses réponses, pour savoir quels checks sont faisables et ce qui manque à chacun des autres.">Instead of rewriting each game's logic, the server <strong>drives the Universal Tracker headless</strong>: it sends it commands and reads its answers, to know which checks are doable and what each of the others is missing.</p>
+            <p data-fr="Il additionne ensuite ces manques par item : « cet item ouvrirait 14 checks à lui seul ». C'est ce qui donne le <strong>conseil de hint</strong> — quel item demander quand on a assez de points — sans jamais dire où il est.">It then adds up those needs per item: “this item would open 14 checks on its own”. That's what powers the <strong>hint advice</strong> — which item to ask for when you have enough points — without ever saying where it is.</p>
+            <details class="code-block">
+              <summary><span data-fr="Voir le code · ut.mjs, une console pilotée par messages">See the code · ut.mjs, a console driven by messages</span><span class="file">JS</span></summary>
+              <div class="code-meta">
+                <span data-fr="Le Universal Tracker est un programme en console : on ne sait pas quand sa réponse est finie. Chaque question est suivie d'une <strong>commande inconnue unique</strong> : son message d'erreur marque la fin de la réponse.">The Universal Tracker is a console program: there's no way to know when its answer ends. Each question is followed by a <strong>unique unknown command</strong>: its error message marks the end of the answer.</span>
+              </div>
+<pre><code class="language-javascript">// ut.mjs — one question at a time, answers delimited by a sentinel command
+_ask(lines, timeout = 30000) {
+  const run = () =&gt; new Promise((resolve) =&gt; {
+    if (this.closed || !this.proc) return resolve("");
+    const sentinel = `zz_fin_${++this.seq}_x`;
+    this.wait = { from: this.buf.length, sentinel, resolve,
+                  timer: setTimeout(() =&gt; { this.wait = null; resolve(null); }, timeout) };
+    // the question, then an unknown command whose "not found" echo ends the answer
+    this.proc.stdin.write(lines.map((l) =&gt; `${l}\n`).join("") + `/${sentinel}\n`);
+  });
+  const p = this.queue.then(run);   // questions are queued: never two at once
+  this.queue = p.catch(() =&gt; {});
+  return p;
+}
+
+// ut.mjs — refreshed on every check or item, debounced so UT sees the new items
+refresh(delay = 2500) {
+  clearTimeout(this.timer);
+  this.timer = setTimeout(async () =&gt; {
+    const out = await this._ask(["/locations_in_logic"]);
+    if (out === null || this.closed) return;
+    const ids = [];
+    for (const line of out.split(/\r?\n/)) {
+      const id = this.idOf.get(line.trim());
+      if (id !== undefined) ids.push(id);
+    }
+    this.state = { ...this.state, status: "ready", at: Date.now(), inLogic: ids };
+    this.onUpdate(this.state);
+    this._explainLocked(new Set(ids));   // then: what each blocked check is missing
+  }, delay);
+}</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- ── LIVE MAP ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img loading="lazy" src="assets/IsleCompass/map-console.webp" alt="Live map of the world in full screen, with the map list and the live console" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Carte · Packs PopTracker">Map · PopTracker packs</p>
+            <h3 data-fr="Une carte en direct">A live map</h3>
+            <p data-fr="Le serveur lit les <strong>packs PopTracker</strong> (cartes, lieux, positions) et les croise avec la logique : chaque point prend sa couleur — à faire, en partie, pas encore faisable, fait, hint ici. Il retrouve aussi à quelle carte appartient chaque check, pour qu'une zone soit comptée une seule fois.">The server reads <strong>PopTracker packs</strong> (maps, locations, positions) and crosses them with the logic: each dot gets its colour — to do, partly, not doable yet, done, hint here. It also works out which map each check belongs to, so a zone is counted only once.</p>
+            <ul>
+              <li data-fr="<strong>Suit le joueur</strong> : la carte change toute seule quand il change de lieu"><strong>Follows the player</strong>: the map switches by itself when they move</li>
+              <li data-fr="<strong>Zoom</strong> à la molette, déplacement à la souris, plein écran à colonnes fixes"><strong>Zoom</strong> with the wheel, drag to pan, full screen with fixed columns</li>
+              <li data-fr="<strong>Console</strong> en direct : items reçus mis en avant, couleur par type d'item et par joueur"><strong>Live console</strong>: received items highlighted, colour per item type and per player</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ── WHAT A DOT NEEDS ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img loading="lazy" src="assets/IsleCompass/map-zoom.webp" alt="Zoomed map: hovering a dot shows what its check still needs" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="UX · Sans spoil">UX · No spoilers</p>
+            <h3 data-fr="Ce qui manque, jamais où c'est">What's missing, never where it is</h3>
+            <p data-fr="Au survol d'un point, une bulle liste les checks du lieu et, pour ceux qui sont bloqués, <strong>l'item qui manque</strong> (« missing: Earth Badge »). C'est l'information utile pour jouer, sans gâcher la surprise.">Hovering a dot lists the place's checks and, for the blocked ones, <strong>the missing item</strong> (“missing: Earth Badge”). It's the information you need to play, without spoiling the surprise.</p>
+            <p data-fr="Le même principe guide toute l'appli : elle peut dire ce qu'il te faut, ce qu'un item a débloqué, ou qu'un ami attend un item de ton monde ; elle ne dit jamais ce que contient un check.">The same principle guides the whole app: it can say what you need, what an item unlocked, or that a friend is waiting for an item from your world; it never says what a check holds.</p>
+          </div>
+        </div>
+
+        <!-- ── ROOM PROGRESS ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img class="fit" loading="lazy" src="assets/IsleCompass/room-progress.webp" alt="Room progress: checks done by every player of the room" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Multijoueur · Alertes">Multiplayer · Alerts</p>
+            <h3 data-fr="Jouer ensemble, pas chacun de son côté">Playing together, not side by side</h3>
+            <p data-fr="Le protocole du jeu ne donne que le statut des autres joueurs. En lisant la <strong>page de suivi publique</strong> de la room, l'appli affiche la progression de chacun, une fois par minute au plus.">The game protocol only gives the other players' status. By reading the room's <strong>public tracker page</strong>, the app shows everyone's progress, at most once a minute.</p>
+            <ul>
+              <li data-fr="<strong>Alertes</strong> : item de progression reçu, plus rien de faisable, un ami attend un item de ton monde, assez de points pour un hint"><strong>Alerts</strong>: progression item received, nothing doable left, a friend waits for an item from your world, enough points for a hint</li>
+              <li data-fr="<strong>« Je suis bloqué »</strong> : un clic prévient la room et Discord, avec l'item qui débloquerait le plus"><strong>“I'm stuck”</strong>: one click tells the room and Discord, with the item that would unlock the most</li>
+              <li data-fr="<strong>Écran</strong> : le live Discord d'un ami affiché à côté de la carte, capturé par le serveur"><strong>Screen</strong>: a friend's Discord stream shown next to the map, captured by the server</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ── ENDGAME ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img class="fit" loading="lazy" src="assets/IsleCompass/endgame.webp" alt="Endgame: every remaining check with what it still needs" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Fin de partie">Endgame</p>
+            <h3 data-fr="Les derniers checks">The last checks</h3>
+            <p data-fr="Quand il reste peu de checks, la vue d'ensemble bascule en <strong>mode fin de partie</strong> : tous les checks restants, les faisables d'abord, chacun avec ce qu'il lui faut, et en tête les items qui débloqueraient le plus le reste.">When few checks are left, the overview switches to <strong>endgame mode</strong>: every remaining check, doable ones first, each with what it needs, and at the top the items that would unlock most of the rest.</p>
+          </div>
+        </div>
+
+        <!-- ── SECURITY ── -->
+        <div class="task">
+          <div class="task-body" style="grid-column:1 / -1">
+            <p class="task-label" data-fr="Sécurité · Audit">Security · Audit</p>
+            <h3 data-fr="Un outil local qui reste local">A local tool that stays local</h3>
+            <p data-fr="En auditant l'appli, j'ai trouvé une vraie faille : par « <strong>DNS rebinding</strong> », n'importe quel site ouvert dans le navigateur pouvait se faire passer pour le tracker et lire l'état des parties, la clé du téléphone, voire l'image des fenêtres capturées. Je l'ai prouvée, corrigée, puis couverte par des tests automatiques.">While auditing the app, I found a real vulnerability: through “<strong>DNS rebinding</strong>”, any website open in the browser could pose as the tracker and read the game state, the phone key, even the image of captured windows. I proved it, fixed it, then covered it with automated tests.</p>
+            <details class="code-block">
+              <summary><span data-fr="Voir le code · security.mjs + ses tests">See the code · security.mjs + its tests</span><span class="file">JS</span></summary>
+              <div class="code-meta">
+                <span data-fr="Le nom d'hôte doit être ce PC, et l'API ne répond qu'aux pages du tracker lui-même (en-têtes <strong>Sec-Fetch-Site</strong> et <strong>Origin</strong>). Un lien posté sur Discord ouvre toujours la page normalement.">The host name must be this PC, and the API only answers the tracker's own pages (<strong>Sec-Fetch-Site</strong> and <strong>Origin</strong> headers). A link posted on Discord still opens the page normally.</span>
+              </div>
+<pre><code class="language-javascript">// security.mjs — only this PC, and only the tracker's own pages, may use the API
+export function trustedRequest(req, url, lanAddresses = []) {
+  const host = String(req.headers.host || "").toLowerCase();
+  const name = host.replace(/:\d+$/, "").replace(/^\[|\]$/g, "");
+  // DNS rebinding: a foreign name pointed at 127.0.0.1 is refused
+  if (!["localhost", "127.0.0.1", "::1", ...lanAddresses].includes(name)) return false;
+  if (!url.pathname.startsWith("/api/")) return true;   // the page itself: links from anywhere are fine
+  const site = req.headers["sec-fetch-site"];
+  if (site &amp;&amp; site !== "same-origin" &amp;&amp; site !== "none") return false;
+  const origin = req.headers.origin;
+  if (origin === "null") return false;
+  if (origin) { try { if (new URL(origin).host.toLowerCase() !== host) return false; } catch { return false; } }
+  return true;
+}
+
+// security.test.mjs — run with `npm test` (node:test, no library)
+test("DNS rebinding: a foreign host name is refused, page and API", () =&gt; {
+  assert.equal(ok(...req("/api/lan", { host: "attacker.example:8787" })), false);
+  assert.equal(ok(...req("/", { host: "attacker.example:8787" })), false);
+});
+test("other sites cannot use the API", () =&gt; {
+  assert.equal(ok(...req("/api/runs", { "sec-fetch-site": "cross-site" })), false);
+  assert.equal(ok(...req("/api/lan", { origin: "https://evil.example" })), false);
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 04 · PRINCIPLES ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2 data-fr="Choix techniques">Engineering choices</h2>
+      </div>
+
+      <p data-fr="Quelques décisions qui ont guidé le projet, et ce qu'elles m'ont appris.">A few decisions that shaped the project, and what they taught me.</p>
+
+      <div class="systems">
+        <div class="system">
+          <span class="sys-tag" data-fr="Règle de design">Design rule</span>
+          <h4 data-fr="Jamais de spoil">Never a spoiler</h4>
+          <p data-fr="Chaque écran a été pensé pour aider sans dévoiler : les besoins, oui ; le contenu des checks, jamais.">Every screen was designed to help without revealing: needs, yes; what checks hold, never.</p>
+        </div>
+        <div class="system">
+          <span class="sys-tag" data-fr="Réseau">Network</span>
+          <h4 data-fr="Lecture seule">Read-only</h4>
+          <p data-fr="Le tracker se connecte comme simple observateur : il n'envoie aucun check et ne peut pas abîmer une partie.">The tracker connects as a mere observer: it sends no check and cannot harm a game.</p>
+        </div>
+        <div class="system">
+          <span class="sys-tag" data-fr="Architecture">Architecture</span>
+          <h4 data-fr="Zéro dépendance">Zero dependencies</h4>
+          <p data-fr="Node.js seul, sans npm ni étape de build : un ami lance <code>start.bat</code> et c'est parti.">Node.js only, no npm packages nor build step: a friend runs <code>start.bat</code> and that's it.</p>
+        </div>
+        <div class="system">
+          <span class="sys-tag" data-fr="Temps réel">Real-time</span>
+          <h4 data-fr="Serveur → page en direct">Server → page, live</h4>
+          <p data-fr="WebSocket vers la room, Server-Sent Events vers la page : tout se met à jour sans recharger.">WebSocket to the room, Server-Sent Events to the page: everything updates without reloading.</p>
+        </div>
+        <div class="system">
+          <span class="sys-tag" data-fr="Mobile">Mobile</span>
+          <h4 data-fr="Téléphone en lecture seule">Read-only phone</h4>
+          <p data-fr="Accès par Wi-Fi avec une clé secrète ; par défaut, le téléphone regarde mais ne peut rien envoyer à la room.">Wi-Fi access with a secret key; by default, the phone can look but cannot send anything to the room.</p>
+        </div>
+        <div class="system">
+          <span class="sys-tag" data-fr="Qualité">Quality</span>
+          <h4 data-fr="Refactor &amp; tests">Refactor &amp; tests</h4>
+          <p data-fr="Un fichier de 1 900 lignes découpé en 12 modules, le code mort supprimé, et des tests automatiques sur la sécurité et la traduction.">A 1,900-line file split into 12 modules, dead code removed, and automated tests on security and translation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <section class="section" style="border-bottom:1px solid var(--line)">
+    <div class="wrap">
+      <div class="cta">
+        <h2 data-fr="Envie d'en savoir plus ?">Want to know more?</h2>
+        <p data-fr="C'est un outil personnel, utilisé pendant nos parties entre amis. Je vous le montre volontiers en démo.">It's a personal tool, used during our sessions with friends. I'd be happy to show it to you in a demo.</p>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
+          <a href="index.html#contact" class="btn btn-primary" data-fr="Me contacter">Contact me</a>
+          <a href="index.html#work" class="btn btn-ghost" data-fr="Autres projets">Other projects</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer wrap">
+    <span>© <span id="year"></span> Baptiste Moreau</span>
+    <span class="mono">Isle Compass</span>
+  </footer>
+
+</div><!-- /.page -->
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/lightbox.js"></script>
+<!-- syntax highlighting for the code snippets -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+<script src="assets/js/code-viewer.js"></script>
+</body>
+</html>
