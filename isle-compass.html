@@ -62,6 +62,18 @@
 .system h4{ font-family:var(--font-display); font-weight:700; font-size:17px; margin:6px 0 6px; }
 .system p{ font-size:14.5px; color:var(--text-2); }
 
+/* ---- screenshot gallery (same as the Maseylia segment shots) ---- */
+.seg-shots{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:24px; }
+@media (max-width:760px){ .seg-shots{ grid-template-columns:1fr; } }
+.seg-shots .shot{
+  aspect-ratio:16/10; border-radius:10px; overflow:hidden; background:#000; border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+}
+.seg-shots .shot img{ width:100%; height:100%; object-fit:contain; display:block; }
+.seg-shots figure{ margin:0; }
+.seg-shots figcaption{ margin-top:8px; font-size:14px; color:var(--text-2); }
+.seg-shots figcaption b{ color:var(--text); font-weight:600; display:block; margin-bottom:2px; }
+
 /* ---- architecture diagram ---- */
 .arch{ display:flex; align-items:stretch; gap:10px; flex-wrap:wrap; margin-top:24px; }
 .arch .node{
@@ -348,11 +360,102 @@ test("other sites cannot use the API", () =&gt; {
     </div>
   </section>
 
-  <!-- ===================== SECTION 04 · PRINCIPLES ===================== -->
+  <!-- ===================== SECTION 04 · THE WHOLE ROOM ===================== -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">04</span>
+        <h2 data-fr="Toute la room dans une seule appli">The whole room in one app</h2>
+      </div>
+
+      <p data-fr="Au-delà de la carte, l'appli accompagne tout le reste d'une partie : choisir quoi lancer, parler à la room, savoir ce qu'on a reçu — et même choisir son prochain jeu.">Beyond the map, the app supports everything else in a session: choosing what to launch, talking to the room, knowing what you received — and even picking your next game.</p>
+
+      <div class="sys-tasks">
+
+        <!-- ── RUNS ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img loading="lazy" src="assets/IsleCompass/runs.webp" alt="Runs page: every game of the room, with progress, play time, reachable checks and what others need from you" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Multi-jeux · Temps de jeu">Multi-game · Play time</p>
+            <h3 data-fr="Tous mes jeux d'un coup d'œil">All my games at a glance</h3>
+            <p data-fr="Quand on joue plusieurs slots dans la même partie, ils sont <strong>regroupés par room</strong>, et l'appli dit lequel lancer maintenant : celui où d'autres joueurs t'attendent, où tu as reçu du nouveau, ou qui touche à sa fin.">When you play several slots in the same multiworld, they are <strong>grouped by room</strong>, and the app tells you which one to launch now: the one where other players are waiting for you, where you received something new, or that is close to the end.</p>
+            <ul>
+              <li data-fr="<strong>Temps de jeu</strong> par jeu, mesuré à partir des connexions du client et des checks"><strong>Play time</strong> per game, measured from the game client's connections and the checks</li>
+              <li data-fr="<strong>Jaquettes</strong> récupérées automatiquement sur Steam, sinon sur Wikipédia"><strong>Cover art</strong> fetched automatically from Steam, else from Wikipedia</li>
+              <li data-fr="<strong>Pause</strong> d'une run : la connexion se coupe et la room peut s'endormir"><strong>Pause</strong> a run: the connection closes and the room can go to sleep</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ── ADVISOR ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img loading="lazy" src="assets/IsleCompass/advisor.webp" alt="Advice page: which run to play now, and which game to pick for a new multiworld" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Conseil · Données">Advice · Data</p>
+            <h3 data-fr="Quel jeu prendre pour la prochaine partie">Which game to pick next</h3>
+            <p data-fr="Avant même de lancer une partie, l'appli conseille un jeu (ou un lot de 2–3 jeux) dont la <strong>durée</strong> et le <strong>nombre de checks</strong> collent à ceux des autres joueurs, d'un genre différent, et assez ouvert au départ si leurs jeux démarrent fermés.">Even before a multiworld starts, the app suggests a game (or a bundle of 2–3 games) whose <strong>length</strong> and <strong>number of checks</strong> match the other players', of a different genre, and open enough early on if their games start closed.</p>
+            <p data-fr="Le nombre de checks n'est pas deviné : l'appli <strong>génère une vraie partie</strong> à un joueur avec chaque apworld installé et compte les items placés. Elle croise aussi la <strong>liste communautaire</strong> d'environ 880 jeux Archipelago.">The number of checks isn't guessed: the app <strong>generates a real one-player game</strong> with each installed apworld and counts the placed items. It also cross-references the <strong>community list</strong> of about 880 Archipelago games.</p>
+          </div>
+        </div>
+
+        <!-- ── COMMAND BAR ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img class="fit" loading="lazy" src="assets/IsleCompass/command.webp" alt="Command bar with autocompletion of the Archipelago commands" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Commandes · Autocomplétion">Commands · Autocompletion</p>
+            <h3 data-fr="Parler à la room sans quitter l'appli">Talk to the room without leaving the app</h3>
+            <p data-fr="La barre de commande remplace le client texte d'Archipelago : <code>!hint</code>, <code>!missing</code>, le chat… avec l'<strong>autocomplétion</strong> des commandes, des noms d'items et des lieux, l'historique aux flèches, et une confirmation avant les commandes irréversibles.">The command bar replaces Archipelago's text client: <code>!hint</code>, <code>!missing</code>, chat… with <strong>autocompletion</strong> of commands, item names and locations, history with the arrow keys, and a confirmation before irreversible commands.</p>
+          </div>
+        </div>
+
+        <!-- ── ITEMS ── -->
+        <div class="task">
+          <div class="task-media media-slot ui">
+            <img loading="lazy" src="assets/IsleCompass/items.webp" alt="Items tab: received items sorted by Archipelago type, key items marked" />
+          </div>
+          <div class="task-body">
+            <p class="task-label" data-fr="Items · Lisibilité">Items · Readability</p>
+            <h3 data-fr="Une couleur par type d'item">A colour per item type</h3>
+            <p data-fr="Partout dans l'appli, un item porte la couleur de son <strong>type Archipelago</strong> (progression, utile, filler, piège), la même pour tous les jeux de la room ; chaque joueur garde aussi sa propre couleur. Au survol, l'appli dit combien de checks étaient <strong>coincés derrière</strong> un item.">Everywhere in the app, an item wears the colour of its <strong>Archipelago type</strong> (progression, useful, filler, trap), the same for every game in the room; each player keeps their own colour too. On hover, the app tells how many checks were <strong>stuck behind</strong> an item.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 05 · EVERYWHERE ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <h2 data-fr="Ta session, partout">Your session, everywhere</h2>
+      </div>
+
+      <p data-fr="Le reste des fonctions, en images.">The rest of the features, in pictures.</p>
+
+      <div class="seg-shots">
+        <figure><div class="shot"><img loading="lazy" src="assets/IsleCompass/session.webp" alt="Last session and progress chart"></div><figcaption><b data-fr="Objectifs de session">Session goals</b><span data-fr="Objectif de checks, heure d'arrêt avec alerte, et courbe de progression.">Check goal, stop time with an alert, and progress chart.</span></figcaption></figure>
+        <figure><div class="shot"><img loading="lazy" src="assets/IsleCompass/recap.webp" alt="Exported recap page"></div><figcaption><b data-fr="Récap à partager">Shareable recap</b><span data-fr="Une page HTML autonome : chiffres, graphique, items de progression reçus.">A self-contained HTML page: numbers, chart, progression items received.</span></figcaption></figure>
+        <figure><div class="shot"><img loading="lazy" src="assets/IsleCompass/phone.webp" alt="The tracker on a phone"></div><figcaption><b data-fr="Sur le téléphone">On the phone</b><span data-fr="Par le Wi-Fi, avec une clé secrète, en lecture seule par défaut.">Over Wi-Fi, with a secret key, read-only by default.</span></figcaption></figure>
+        <figure><div class="shot"><img loading="lazy" src="assets/IsleCompass/screen.webp" alt="The Screen panel: a window of the PC or a video next to the map"></div><figcaption><b data-fr="Écran">Screen</b><span data-fr="Une fenêtre du PC (le live Discord d'un ami) ou une vidéo YouTube / Twitch à côté de la carte.">A window of the PC (a friend's Discord stream) or a YouTube / Twitch video next to the map.</span></figcaption></figure>
+        <figure><div class="shot"><img loading="lazy" src="assets/IsleCompass/options.webp" alt="Options: language, theme, text size, tabs and windows"></div><figcaption><b data-fr="À ta façon">Your way</b><span data-fr="Langue, thème, taille du texte, onglets et fenêtres à afficher.">Language, theme, text size, which tabs and windows to show.</span></figcaption></figure>
+        <figure><div class="shot"><img loading="lazy" src="assets/IsleCompass/nomap.webp" alt="A game without a map: key items and tracker links"></div><figcaption><b data-fr="Jeux sans carte">Games without a map</b><span data-fr="Les items clés reçus et attendus, et le tracker indiqué par la liste communautaire.">Key items received and awaited, and the tracker given by the community list.</span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION 06 · PRINCIPLES ===================== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">06</span>
         <h2 data-fr="Choix techniques">Engineering choices</h2>
       </div>
 
